@@ -1,4 +1,4 @@
-FalstadCircutsSharp
+FalstadCircuitsSharp
 =======
 
 This is a C# port of Paul Falstad's excellent [circuit simulator](http://www.falstad.com/circuit/) applet. 
@@ -13,9 +13,50 @@ Licence: MIT/Boost C++
 
 - Access modifiers are a mess, determine what functions need to be public and what should be made protected or private.
 - Same thing goes for properties, look at the old option screen code for direction on what variables should be exposed as properties.
+- Remove dependants on the Point class, the library itself should not care about the spacial relationship between elements and their lead points.
+- Ensure nothing relies on static reference objects / singletons.
 - Finish removing all the vestigial rendering code so we can use it as a library.
 - The API is an absolute mess, improve usability! There needs to be an easy way to connect two elements.
-- Write an equality operator for the point class
+
+**API notes**
+
+- Create verbose properties for element leads where plausible, for example a transistor should have 3 properties: base, collector and emitter, that can be used to simplify connecting elements.
+
+```csharp
+
+// Desired API usage
+acSource.Attach<Resistor>().Attach<Inductor>().WireTo(acSource);
+
+// ... would create the circuit described in the first example below
+
+// Create
+sim.Create<T>(params args) where T : CircuitElm
+
+elm.Attach<T>(); // Create a new T and attach to first open lead
+elm.Attach<T>(params args); // Create a new T and pass args to the constructor
+elm.Attach<T>([int lead / string lead]); // Create a new T and connect to a specific lead
+elm.Attach<T>([int lead / string lead],params args); // combined
+
+// Also do Attach(Type typ, ...) versions
+
+elm.Attach([int lead / string lead],CircuitElm elm); // Add elm to the sim if it doesn't exist yet
+
+// WireTo should the same thing as Attach(), but use a wire in between the two leads
+elm.WireTo<T>([int lead / string lead],params args);
+
+// If attach or WireTo are called on an element, use the first open node,
+// otherwise Attach and WireTo can be called on specific leads
+
+elm.Attach<T>();
+elm.lead.Attach(); // Named lead
+elm.GetLead(0).Attach();
+elm.GetLead("base").Attach();
+
+// Perhaps??
+elm["base"].Attach()
+elm[0].Attach()
+
+```
 
 ## Tested Elements
 
@@ -35,7 +76,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Circuts;
+using Circuits;
 
 public class Example {
 	
@@ -105,7 +146,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Circuts;
+using Circuits;
 
 public class Example {
 	
@@ -202,10 +243,10 @@ public class Example {
 
 ## Licence
 
-The applet source code [[download](http://www.falstad.com/circuit/src.zip)] does not spesify a paticular licence. Since the code is freely downloadable from the website I've decided to licence the code under the Boost variant of the MIT Licence.
+The applet source code [[download](http://www.falstad.com/circuit/src.zip)] does not specify a particular licence. Since the code is freely downloadable from the website I've decided to licence the code under the Boost variant of the MIT Licence.
 
 ```
-FalstadCircutsSharp (c) 2014 Riley 'Mervill' Godard
+FalstadCircuitsSharp (c) 2014 Riley 'Mervill' Godard
 
 Java -> C# language conversion project based almost entirely on:
 
