@@ -62,10 +62,6 @@ namespace Circuts {
 			//}
 		}
 
-		public override int getDumpType() {
-			return 'j';
-		}
-
 		// these values are taken from Hayes+Horowitz p155
 		public override double getDefaultThreshold() {
 			return -4;

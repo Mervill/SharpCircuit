@@ -17,14 +17,6 @@ namespace Circuts {
 			coolTime = .4;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + temp + " " + nom_pow + " " + nom_v + " " + warmTime + " " + coolTime;
-		}
-
-		public override int getDumpType() {
-			return 181;
-		}
-
 		public Point[] bulbLead, filament;
 		public Point bulb;
 		public int bulbR;

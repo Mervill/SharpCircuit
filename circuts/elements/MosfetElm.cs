@@ -40,16 +40,6 @@ namespace Circuts {
 			lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = curcount = 0;
 		}
 
-
-		public override String dump() {
-			return base.dump() + " " + vt;
-		}
-
-
-		public override int getDumpType() {
-			return 'f';
-		}
-
 		public int hs = 16;
 
 		/*public void draw(Graphics g) {

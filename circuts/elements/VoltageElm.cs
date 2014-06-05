@@ -24,14 +24,6 @@ namespace Circuts {
 			reset();
 		}
 
-		public override int getDumpType() {
-			return 'v';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + waveform + " " + frequency + " "+ maxVoltage + " " + bias + " " + phaseShift + " " + dutyCycle;
-		}
-
 		/*
 		 * void setCurrent(double c) { current = c;
 		 * System.out.print("v current set to " + c + "\n"); }

@@ -16,14 +16,6 @@ namespace Circuts {
 			noDiagonal = true;
 		}
 
-		public override int getDumpType() {
-			return 'S';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + link;
-		}
-
 		public int openhs = 16;
 		public Point[] swposts, swpoles;
 
@@ -147,9 +139,6 @@ namespace Circuts {
 		bool hasCenterOff() {
 			return (flags & FLAG_CENTER_OFF) != 0;
 		}
-
-		public override int getShortcut() {
-			return 'S';
-		}
+		
 	}
 }

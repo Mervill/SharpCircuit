@@ -20,14 +20,6 @@ namespace Circuts {
 			return true;
 		}
 
-		public override int getDumpType() {
-			return 187;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + onresistance + " " + offresistance + " " + breakdown + " " + holdcurrent;
-		}
-
 		//public Polygon arrow1, arrow2;
 
 		public override void setPoints() {

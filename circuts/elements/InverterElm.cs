@@ -12,14 +12,6 @@ namespace Circuts {
 			slewRate = .5;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + slewRate;
-		}
-
-		public override int getDumpType() {
-			return 'I';
-		}
-
 		/*public override void draw(Graphics g) {
 			drawPosts(g);
 			draw2Leads(g);
@@ -96,9 +88,6 @@ namespace Circuts {
 		public override bool hasGroundConnection(int n1) {
 			return (n1 == 1);
 		}
-
-		public override int getShortcut() {
-			return '1';
-		}
+		
 	}
 }

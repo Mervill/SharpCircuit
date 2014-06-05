@@ -12,10 +12,6 @@ namespace Circuts {
 
 		}
 
-		public override int getDumpType() {
-			return 182;
-		}
-
 		public override void doStep() {
 			double v0 = volts[1];
 			double @out;

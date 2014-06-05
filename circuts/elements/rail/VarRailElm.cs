@@ -12,14 +12,6 @@ namespace Circuts {
 			waveform = WF_VAR;
 		}
 
-		public override String dump() {
-			return base.dump();
-		}
-
-		public override int getDumpType() {
-			return 172;
-		}
-
 		public override double getVoltage() {
 			frequency = slider * (maxVoltage - bias) / 100.0 + bias;
 			return frequency;
@@ -53,8 +45,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 0;
-		}
 	}
 }

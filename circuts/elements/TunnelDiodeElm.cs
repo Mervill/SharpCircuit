@@ -16,10 +16,6 @@ namespace Circuts {
 
 		public void setup() { }
 
-		public override int getDumpType() {
-			return 175;
-		}
-
 		public int hs = 8;
 		//public Polygon poly;
 		public Point[] cathode;

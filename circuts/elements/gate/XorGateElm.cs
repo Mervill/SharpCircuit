@@ -23,12 +23,5 @@ namespace Circuts {
 			return f;
 		}
 
-		public override int getDumpType() {
-			return 154;
-		}
-
-		public override int getShortcut() {
-			return '4';
-		}
 	}
 }

@@ -21,14 +21,6 @@ namespace Circuts {
 			curcount = new double[2];
 		}
 
-		public override int getDumpType() {
-			return 'T';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + inductance + " " + ratio + " " + current[0] + " " + current[1] + " " + couplingCoef;
-		}
-
 		public bool isTrapezoidal() {
 			return (flags & FLAG_BACK_EULER) == 0;
 		}

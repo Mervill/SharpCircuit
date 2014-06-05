@@ -52,9 +52,6 @@ namespace Circuts {
 		public override int getPostCount() {
 			return bits + 2;
 		}
-
-		public override int getDumpType() {
-			return 166;
-		}
+		
 	}
 }

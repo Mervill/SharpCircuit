@@ -76,10 +76,6 @@ namespace Circuts {
 			lastClock = pins[3].value;
 		}
 
-		public override int getDumpType() {
-			return 155;
-		}
-
 		/*public EditInfo getEditInfo(int n) {
 			if (n == 2) {
 				EditInfo ei = new EditInfo("", 0, -1, -1);

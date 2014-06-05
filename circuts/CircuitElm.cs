@@ -24,24 +24,6 @@ namespace Circuts {
 		public bool noDiagonal;
 		public bool selected;
 
-		public virtual int getDumpType() {
-			return 0;
-		}
-		
-		public virtual Type getDumpClass() {
-			return GetType();
-		}
-
-		public virtual int getDefaultFlags() {
-			return 0;
-		}
-
-		// --> Added
-		public CircuitElm() {
-			flags = getDefaultFlags();
-			allocNodes();
-		}
-
 		public CircuitElm(int xx, int yy, CirSim s) {
 			x = x2 = xx;
 			y = y2 = yy;
@@ -51,14 +33,13 @@ namespace Circuts {
 			sim = s;
 		}
 
+		public virtual int getDefaultFlags() {
+			return 0;
+		}
+
 		public virtual void allocNodes() {
 			nodes = new int[getPostCount() + getInternalNodeCount()];
 			volts = new double[getPostCount() + getInternalNodeCount()];
-		}
-
-		public virtual String dump() {
-			int t = getDumpType();
-			return (t < 127 ? ((char) t) + " " : t + " ") + x + " " + y + " " + x2 + " " + y2 + " " + flags;
 		}
 
 		public virtual void reset() {
@@ -78,10 +59,12 @@ namespace Circuts {
 		}
 
 		public virtual void doStep() { }
-
 		public virtual void delete() { }
-
 		public virtual void startIteration() { }
+		public virtual void doAdjust() { }
+		public virtual void setupAdjust() { }
+		public virtual void getInfo(String[] arr) { }
+		public virtual void calculateCurrent() { }
 
 		public virtual double getPostVoltage(int x) {
 			return volts[x];
@@ -91,8 +74,6 @@ namespace Circuts {
 			volts[n] = c;
 			calculateCurrent();
 		}
-
-		public virtual void calculateCurrent() { }
 
 		public virtual void setPoints() {
 			dx = x2 - x;
@@ -115,50 +96,6 @@ namespace Circuts {
 			lead2 = interpPoint(point1, point2, (dn + len) / (2 * dn));
 		}
 
-		public Point interpPoint(Point a, Point b, double f) {
-			Point p = new Point();
-			interpPoint(a, b, p, f);
-			return p;
-		}
-
-		public void interpPoint(Point a, Point b, Point c, double f) {
-			// double q = (a.x*(1-f)+b.x*f+.48); System.out.println(q + " " + (int) q);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + .48);
-		}
-
-		public void interpPoint(Point a, Point b, Point c, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-		}
-
-		public Point interpPoint(Point a, Point b, double f, double g) {
-			Point p = new Point();
-			interpPoint(a, b, p, f, g);
-			return p;
-		}
-
-		public void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-			d.x = (int) Math.Floor(a.x * (1 - f) + b.x * f - g * gx + .48);
-			d.y = (int) Math.Floor(a.y * (1 - f) + b.y * f - g * gy + .48);
-		}
-
-		public Point[] newPointArray(int n) {
-			Point[] a = new Point[n];
-			while (n > 0) {
-				a[--n] = new Point();
-			}
-			return a;
-		}
-
 		public virtual void move(int dx, int dy) {
 			x += dx;
 			y += dy;
@@ -167,8 +104,7 @@ namespace Circuts {
 			setPoints();
 		}
 
-		// determine if moving this element by (dx,dy) will put it on top of another
-		// element
+		// determine if moving this element by (dx,dy) will put it on top of another element
 		public bool allowMove(int dx, int dy) {
 			int nx = x + dx;
 			int ny = y + dy;
@@ -224,10 +160,6 @@ namespace Circuts {
 			return volts[0] - volts[1];
 		}
 
-		public virtual bool nonLinear() {
-			return false;
-		}
-
 		public virtual int getPostCount() {
 			return 2;
 		}
@@ -238,18 +170,6 @@ namespace Circuts {
 
 		public virtual Point getPost(int n) {
 			return (n == 0) ? point1 : (n == 1) ? point2 : null;
-		}
-
-		public virtual void doAdjust() { }
-
-		public virtual void setupAdjust() { }
-
-		public virtual void getInfo(String[] arr) { }
-
-		public virtual int getBasicInfo(String[] arr) {
-			arr[1] = "I = " + getCurrentDText(getCurrent());
-			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
-			return 3;
 		}
 
 		public virtual double getPower() {
@@ -276,6 +196,10 @@ namespace Circuts {
 			return false;
 		}
 
+		public virtual bool nonLinear() {
+			return false;
+		}
+
 		public virtual bool canViewInScope() {
 			return getPostCount() <= 2;
 		}
@@ -284,16 +208,54 @@ namespace Circuts {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
 		}
 
-		public virtual bool needsShortcut() {
-			return getShortcut() > 0;
+		public Point interpPoint(Point a, Point b, double f) {
+			Point p = new Point();
+			interpPoint(a, b, p, f);
+			return p;
+		}
+		
+		public void interpPoint(Point a, Point b, Point c, double f) {
+			// double q = (a.x*(1-f)+b.x*f+.48); System.out.println(q + " " + (int) q);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + .48);
+		}
+		
+		public void interpPoint(Point a, Point b, Point c, double f, double g) {
+			int gx = b.y - a.y;
+			int gy = a.x - b.x;
+			g /= Math.Sqrt(gx * gx + gy * gy);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
+		}
+		
+		public Point interpPoint(Point a, Point b, double f, double g) {
+			Point p = new Point();
+			interpPoint(a, b, p, f, g);
+			return p;
+		}
+		
+		public void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
+			int gx = b.y - a.y;
+			int gy = a.x - b.x;
+			g /= Math.Sqrt(gx * gx + gy * gy);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
+			d.x = (int) Math.Floor(a.x * (1 - f) + b.x * f - g * gx + .48);
+			d.y = (int) Math.Floor(a.y * (1 - f) + b.y * f - g * gy + .48);
+		}
+		
+		public Point[] newPointArray(int n) {
+			Point[] a = new Point[n];
+			while (n > 0) {
+				a[--n] = new Point();
+			}
+			return a;
 		}
 
-		public virtual int getShortcut() {
-			return 0;
-		}
-
-		public virtual bool isGraphicElmt() {
-			return false;
+		public int getBasicInfo(String[] arr) {
+			arr[1] = "I = " + getCurrentDText(getCurrent());
+			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
+			return 3;
 		}
 
 		#region Static methods

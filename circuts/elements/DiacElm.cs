@@ -25,14 +25,6 @@ namespace Circuts {
 			return true;
 		}
 
-		public override int getDumpType() {
-			return 203;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + onresistance + " " + offresistance + " " + breakdown + " " + holdcurrent;
-		}
-
 		public Point ps3, ps4;
 
 		public override void setPoints() {

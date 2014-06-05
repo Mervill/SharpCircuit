@@ -29,10 +29,6 @@ namespace Circuts {
 			flags = (s == 1) ? FLAG_SMALL : 0;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + inputCount + " " + volts[inputCount];
-		}
-
 		public Point[] inPosts, inGates;
 		public int ww;
 

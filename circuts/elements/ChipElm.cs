@@ -174,21 +174,6 @@ namespace Circuts {
 			lastClock = false;
 		}
 
-		public override String dump() {
-			getDumpType();
-			String s = base.dump();
-			if (needsBits()) {
-				s += " " + bits;
-			}
-			int i;
-			for (i = 0; i != getPostCount(); i++) {
-				if (pins[i].state) {
-					s += " " + volts[i];
-				}
-			}
-			return s;
-		}
-
 		public override void getInfo(String[] arr) {
 			arr[0] = getChipName();
 			int i, a = 1;

@@ -14,14 +14,6 @@ namespace Circuts {
 			colorG = colorB = 0;
 		}
 
-		public override int getDumpType() {
-			return 162;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + colorR + " " + colorG + " " + colorB;
-		}
-
 		public Point ledLead1, ledLead2, ledCenter;
 
 		public override void setPoints() {
@@ -100,8 +92,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 'l';
-		}
 	}
 }

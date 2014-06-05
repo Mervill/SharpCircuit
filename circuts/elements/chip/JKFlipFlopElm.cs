@@ -72,10 +72,6 @@ namespace Circuts {
 			}
 		}
 
-		public override int getDumpType() {
-			return 156;
-		}
-
 		/*public EditInfo getEditInfo(int n) {
 			if (n == 2) {
 				EditInfo ei = new EditInfo("", 0, -1, -1);

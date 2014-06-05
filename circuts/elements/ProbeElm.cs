@@ -11,10 +11,6 @@ namespace Circuts {
 			
 		}
 
-		public override int getDumpType() {
-			return 'p';
-		}
-
 		public Point center;
 
 		public override void setPoints() {

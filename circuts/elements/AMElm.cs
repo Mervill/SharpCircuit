@@ -17,14 +17,6 @@ namespace Circuts {
 			reset();
 		}
 
-		public override int getDumpType() {
-			return 200;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + carrierfreq + " " + signalfreq + " " + maxVoltage;
-		}
-
 		/*
 		 * void setCurrent(double c) { current = c;
 		 * System.out.print("v current set to " + c + "\n"); }

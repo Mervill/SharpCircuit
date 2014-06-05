@@ -79,14 +79,6 @@ namespace Circuts {
 
 		}
 
-		public override int getDumpType() {
-			return 188;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + data + " " + oneshot;
-		}
-
 		/*public EditInfo getEditInfo(int n) {
 			// My code
 			if (n == 0) {

@@ -28,14 +28,6 @@ namespace Circuts {
 			curcount = 0;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + mu + " " + kg1;
-		}
-
-		public override int getDumpType() {
-			return 173;
-		}
-
 		public Point[] plate, grid, cath; 
 		public Point midgrid, midcath;
 		public int circler;

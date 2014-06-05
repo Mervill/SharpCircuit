@@ -15,14 +15,6 @@ namespace Circuts {
 			threshold = 2.5;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + threshold;
-		}
-
-		public override int getDumpType() {
-			return 'M';
-		}
-
 		public override int getPostCount() {
 			return 1;
 		}
@@ -113,8 +105,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 'o';
-		}
 	}
 }

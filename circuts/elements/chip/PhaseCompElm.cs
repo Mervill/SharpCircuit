@@ -69,9 +69,6 @@ namespace Circuts {
 		public override int getVoltageSourceCount() {
 			return 1;
 		}
-
-		public override int getDumpType() {
-			return 161;
-		}
+		
 	}
 }

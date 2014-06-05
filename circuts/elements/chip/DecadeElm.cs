@@ -65,10 +65,6 @@ namespace Circuts {
 			}
 			lastClock = pins[0].value;
 		}
-
 		
-		public override int getDumpType() {
-			return 163;
-		}
 	}
 }

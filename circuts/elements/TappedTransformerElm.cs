@@ -20,14 +20,6 @@ namespace Circuts {
 			a = new double[9];
 		}
 
-		public override int getDumpType() {
-			return 169;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + inductance + " " + ratio + " " + current[0] + " " + current[1] + " " + current[2];
-		}
-
 		/*public void draw(Graphics g) {
 			int i;
 			for (i = 0; i != 5; i++) {

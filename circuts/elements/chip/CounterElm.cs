@@ -12,10 +12,6 @@ namespace Circuts {
 			
 		}
 
-		public override String dump() {
-			return base.dump() + " " + invertreset;
-		}
-
 		public override bool needsBits() {
 			return true;
 		}
@@ -131,9 +127,6 @@ namespace Circuts {
 			}
 			lastClock = pins[0].value;
 		}
-
-		public override int getDumpType() {
-			return 164;
-		}
+		
 	}
 }

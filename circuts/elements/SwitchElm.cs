@@ -21,14 +21,6 @@ namespace Circuts {
 			posCount = 2;
 		}
 
-		public override int getDumpType() {
-			return 's';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + position + " " + momentary;
-		}
-
 		public Point ps;
 
 		public override void setPoints() {
@@ -124,8 +116,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 's';
-		}
 	}
 }

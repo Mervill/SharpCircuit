@@ -14,14 +14,6 @@ namespace Circuts {
 			ind.setup(inductance, current, flags);
 		}
 
-		public override int getDumpType() {
-			return 'l';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + inductance + " " + current;
-		}
-
 		public override void setPoints() {
 			base.setPoints();
 			calcLeads(32);

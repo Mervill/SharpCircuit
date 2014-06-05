@@ -15,14 +15,6 @@ namespace Circuts {
 			r_off = 1e10;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + r_on + " " + r_off;
-		}
-
-		public override int getDumpType() {
-			return 180;
-		}
-
 		public bool open;
 		public Point ps, point3, point4, lead3;
 		//public Polygon gatePoly;

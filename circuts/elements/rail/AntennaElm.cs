@@ -32,12 +32,5 @@ namespace Circuts {
 					* (1.3 + Math.Sin(2 * pi * sim.t * 14)) * 3 + fm;
 		}
 
-		public override int getDumpType() {
-			return 'A';
-		}
-
-		public override int getShortcut() {
-			return 0;
-		}
 	}
 }

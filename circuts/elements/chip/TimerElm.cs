@@ -102,8 +102,5 @@ namespace Circuts {
 			return 1;
 		}
 
-		public override int getDumpType() {
-			return 165;
-		}
 	}
 }

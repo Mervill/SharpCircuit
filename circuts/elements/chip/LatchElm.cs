@@ -56,8 +56,5 @@ namespace Circuts {
 			return bits * 2 + 1;
 		}
 
-		public override int getDumpType() {
-			return 168;
-		}
 	}
 }

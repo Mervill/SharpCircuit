@@ -32,14 +32,6 @@ namespace Circuts {
 			lastvbc = lastvbe = curcount_c = curcount_e = curcount_b = 0;
 		}
 
-		public override int getDumpType() {
-			return 't';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + pnp + " " + (volts[0] - volts[1]) + " " + (volts[0] - volts[2]) + " " + beta;
-		}
-
 		public double ic, ie, ib, curcount_c, curcount_e, curcount_b;
 		//public Polygon rectPoly, arrowPoly;
 

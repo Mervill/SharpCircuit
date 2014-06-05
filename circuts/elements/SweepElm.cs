@@ -18,19 +18,11 @@ namespace Circuts {
 			reset();
 		}
 
-		public override int getDumpType() {
-			return 170;
-		}
-
 		public override int getPostCount() {
 			return 1;
 		}
 
 		public int circleSize = 17;
-
-		public override String dump() {
-			return base.dump() + " " + minF + " " + maxF + " " + maxV + " " + sweepTime;
-		}
 
 		public override void setPoints() {
 			base.setPoints();

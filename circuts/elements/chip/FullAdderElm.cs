@@ -48,9 +48,5 @@ namespace Circuts {
 					|| (pins[3].value && pins[4].value);
 		}
 
-		public override int getDumpType() {
-			return 196;
-		}
-
 	}
 }

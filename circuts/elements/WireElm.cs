@@ -50,10 +50,6 @@ namespace Circuts {
 			arr[2] = "V = " + getVoltageText(volts[0]);
 		}
 
-		public override int getDumpType() {
-			return 'w';
-		}
-
 		public override double getPower() {
 			return 0;
 		}
@@ -97,8 +93,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 'w';
-		}
 	}
 }

@@ -10,10 +10,6 @@ namespace Circuts {
 			
 		}
 
-		public override int getDumpType() {
-			return 'g';
-		}
-
 		public override int getPostCount() {
 			return 1;
 		}
@@ -59,8 +55,5 @@ namespace Circuts {
 			return true;
 		}
 
-		public override int getShortcut() {
-			return 'g';
-		}
 	}
 }

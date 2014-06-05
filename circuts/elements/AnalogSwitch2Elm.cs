@@ -54,14 +54,6 @@ namespace Circuts {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 3) ? ctlPoint : swposts[n - 1];
-		}
-
-		public override int getDumpType() {
-			return 160;
-		}
-
 		public override void calculateCurrent() {
 			if (open) {
 				current = (volts[0] - volts[2]) / r_on;

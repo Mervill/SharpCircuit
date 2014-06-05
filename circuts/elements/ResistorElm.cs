@@ -11,14 +11,6 @@ namespace Circuts {
 			resistance = 100;
 		}
 
-		public override int getDumpType() {
-			return 'r';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + resistance;
-		}
-
 		public Point ps3, ps4;
 
 		public override void setPoints() {
@@ -114,9 +106,6 @@ namespace Circuts {
 				resistance = ei.value;
 			}
 		}*/
-
-		public override int getShortcut() {
-			return 'r';
-		}
+		
 	}
 }

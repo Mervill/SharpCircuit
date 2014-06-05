@@ -10,8 +10,5 @@ namespace Circuts {
 			
 		}
 
-		public override int getShortcut() {
-			return 0;
-		}
 	}
 }

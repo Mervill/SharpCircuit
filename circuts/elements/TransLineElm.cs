@@ -17,20 +17,12 @@ namespace Circuts {
 			reset();
 		}
 
-		public override int getDumpType() {
-			return 171;
-		}
-
 		public override int getPostCount() {
 			return 4;
 		}
 
 		public override int getInternalNodeCount() {
 			return 2;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + delay + " " + imped + " " + width + " " + 0.0;
 		}
 
 		public Point[] posts, inner;

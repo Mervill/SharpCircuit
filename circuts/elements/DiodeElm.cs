@@ -25,15 +25,6 @@ namespace Circuts {
 			diode.setup(fwdrop, zvoltage);
 		}
 
-		public override int getDumpType() {
-			return 'd';
-		}
-
-		public override String dump() {
-			flags |= FLAG_FWDROP;
-			return base.dump() + " " + fwdrop;
-		}
-
 		public int hs = 8;
 		//public Polygon poly;
 		public Point[] cathode;
@@ -109,8 +100,5 @@ namespace Circuts {
 			setup();
 		}*/
 
-		public override int getShortcut() {
-			return 'd';
-		}
 	}
 }

@@ -15,10 +15,6 @@ namespace Circuts {
 			gain = g;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + gain;
-		}
-
 		public override String getChipName() {
 			return "CC2";
 		}
@@ -62,9 +58,6 @@ namespace Circuts {
 			return 1;
 		}
 
-		public override int getDumpType() {
-			return 179;
-		}
 	}
 
 	class CC2NegElm : CC2Elm {

@@ -48,16 +48,6 @@ namespace Circuts {
 			lastvag = lastvac = curcount_a = curcount_c = curcount_g = 0;
 		}
 
-		public override int getDumpType() {
-			return 206;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + (volts[anode] - volts[cnode]) + " "
-					+ (volts[anode] - volts[gnode]) + " " + triggerI + " "
-					+ holdingI + " " + cresistance;
-		}
-
 		public double ia, ic, ig, curcount_a, curcount_c, curcount_g;
 		public double lastvac, lastvag;
 		public double cresistance, triggerI, holdingI;

@@ -18,12 +18,5 @@ namespace Circuts {
 			return "NAND gate";
 		}
 
-		public override int getDumpType() {
-			return 151;
-		}
-
-		public override int getShortcut() {
-			return '@';
-		}
 	}
 }

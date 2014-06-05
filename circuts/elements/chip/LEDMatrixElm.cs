@@ -120,12 +120,5 @@ namespace Circuts {
 			return 0;
 		}
 
-		public override int getDumpType() {
-			return 207;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + negateRows + " " + negateColumns + " " + colorR + " " + colorG + " " + colorB;
-		}
 	}
 }

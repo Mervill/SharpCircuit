@@ -16,14 +16,6 @@ namespace Circuts {
 			resistance = 100;
 		}
 
-		public override int getDumpType() {
-			return 'm';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + r_on + " " + r_off + " " + dopeWidth + " " + totalWidth + " " + mobility;
-		}
-
 		public Point ps3, ps4;
 
 		public override void setPoints() {

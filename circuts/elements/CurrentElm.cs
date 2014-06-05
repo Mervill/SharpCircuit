@@ -12,14 +12,6 @@ namespace Circuts {
 			currentValue = 0.01;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + currentValue;
-		}
-
-		public override int getDumpType() {
-			return 'i';
-		}
-
 		//Polygon arrow;
 		//Point ashaft1, ashaft2;
 		//Point center;

@@ -18,14 +18,6 @@ namespace Circuts {
 			base.setup();
 		}
 
-		public override int getDumpType() {
-			return 'z';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + zvoltage;
-		}
-
 		public Point[] wing;
 
 		public override void setPoints() {
@@ -94,8 +86,5 @@ namespace Circuts {
 			setup();
 		}*/
 
-		public override int getShortcut() {
-			return 0;
-		}
 	}
 }

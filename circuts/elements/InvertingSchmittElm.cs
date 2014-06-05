@@ -20,14 +20,6 @@ namespace Circuts {
 			upperTrigger = 3.33;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + slewRate + " " + lowerTrigger + " " + upperTrigger;
-		}
-
-		public override int getDumpType() {
-			return 183;
-		}// Trying to find unused type
-
 		/*void draw(Graphics g) {
 			drawPosts(g);
 			draw2Leads(g);

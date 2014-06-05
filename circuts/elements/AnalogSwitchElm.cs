@@ -13,14 +13,6 @@ namespace Circuts {
 			r_off = 1e10;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + r_on + " " + r_off;
-		}
-
-		public override int getDumpType() {
-			return 159;
-		}
-
 		public bool open;
 		public Point ps, point3, lead3;
 

@@ -27,10 +27,6 @@ namespace Circuts {
 			gain = ((flags & FLAG_LOWGAIN) != 0) ? 1000 : 100000;
 		}
 
-		public override String dump() {
-			return base.dump() + " " + maxOut + " " + minOut + " " + gbw;
-		}
-
 		public override bool nonLinear() {
 			return true;
 		}
@@ -176,10 +172,6 @@ namespace Circuts {
 
 		public override double getVoltageDiff() {
 			return volts[2] - volts[1];
-		}
-
-		public override int getDumpType() {
-			return 'a';
 		}
 
 		/*public EditInfo getEditInfo(int n) {

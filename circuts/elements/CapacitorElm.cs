@@ -29,14 +29,6 @@ namespace Circuts {
 			voltdiff = 1e-3;
 		}
 
-		public override int getDumpType() {
-			return 'c';
-		}
-
-		public override String dump() {
-			return base.dump() + " " + capacitance + " " + voltdiff;
-		}
-
 		public override void setPoints() {
 			base.setPoints();
 			double f = (dn / 2 - 4) / dn;
@@ -159,8 +151,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override int getShortcut() {
-			return 'c';
-		}
 	}
 }

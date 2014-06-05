@@ -57,14 +57,6 @@ namespace Circuts {
 			}
 		}
 
-		public override int getDumpType() {
-			return 178;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + poleCount + " " + inductance + " " + coilCurrent + " " + r_on + " " + r_off + " " + onCurrent + " " + coilR;
-		}
-
 		/*public void draw(Graphics g) {
 			int i, p;
 			for (i = 0; i != 2; i++) {
@@ -342,12 +334,5 @@ namespace Circuts {
 			}
 		}*/
 
-		public override bool getConnection(int n1, int n2) {
-			return (n1 / 3 == n2 / 3);
-		}
-
-		public override int getShortcut() {
-			return 'R';
-		}
 	}
 }

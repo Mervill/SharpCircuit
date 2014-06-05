@@ -22,16 +22,8 @@ namespace Circuts {
 			return 3;
 		}
 
-		public override int getDumpType() {
-			return 174;
-		}
-
 		public override Point getPost(int n) {
 			return (n == 0) ? point1 : (n == 1) ? point2 : post3;
-		}
-
-		public override String dump() {
-			return base.dump() + " " + maxResistance + " " + position;
 		}
 
 		public Point post3, corner2, arrowPoint, midpoint, arrow1, arrow2;
