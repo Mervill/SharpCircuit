@@ -7,7 +7,6 @@ namespace Circuts {
 	public abstract class CircuitElm {
 		
 		public static double voltageRange = 5;
-		public static int colorScaleCount = 32;
 		public static double currentMult, powerMult;
 		public static Point ps1, ps2;
 		public static CirSim sim;
@@ -59,7 +58,7 @@ namespace Circuts {
 		}
 
 		public virtual void doStep() { }
-		public virtual void delete() { }
+		//public virtual void delete() { }
 		public virtual void startIteration() { }
 		public virtual void doAdjust() { }
 		public virtual void setupAdjust() { }
@@ -208,42 +207,6 @@ namespace Circuts {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
 		}
 
-		public Point interpPoint(Point a, Point b, double f) {
-			Point p = new Point();
-			interpPoint(a, b, p, f);
-			return p;
-		}
-		
-		public void interpPoint(Point a, Point b, Point c, double f) {
-			// double q = (a.x*(1-f)+b.x*f+.48); System.out.println(q + " " + (int) q);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + .48);
-		}
-		
-		public void interpPoint(Point a, Point b, Point c, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-		}
-		
-		public Point interpPoint(Point a, Point b, double f, double g) {
-			Point p = new Point();
-			interpPoint(a, b, p, f, g);
-			return p;
-		}
-		
-		public void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-			d.x = (int) Math.Floor(a.x * (1 - f) + b.x * f - g * gx + .48);
-			d.y = (int) Math.Floor(a.y * (1 - f) + b.y * f - g * gy + .48);
-		}
-		
 		public Point[] newPointArray(int n) {
 			Point[] a = new Point[n];
 			while (n > 0) {
@@ -259,6 +222,42 @@ namespace Circuts {
 		}
 
 		#region Static methods
+		protected static Point interpPoint(Point a, Point b, double f) {
+			Point p = new Point();
+			interpPoint(a, b, p, f);
+			return p;
+		}
+		
+		protected static void interpPoint(Point a, Point b, Point c, double f) {
+			// double q = (a.x*(1-f)+b.x*f+.48); System.out.println(q + " " + (int) q);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + .48);
+		}
+		
+		protected static void interpPoint(Point a, Point b, Point c, double f, double g) {
+			int gx = b.y - a.y;
+			int gy = a.x - b.x;
+			g /= Math.Sqrt(gx * gx + gy * gy);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
+		}
+		
+		protected static Point interpPoint(Point a, Point b, double f, double g) {
+			Point p = new Point();
+			interpPoint(a, b, p, f, g);
+			return p;
+		}
+		
+		protected static void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
+			int gx = b.y - a.y;
+			int gy = a.x - b.x;
+			g /= Math.Sqrt(gx * gx + gy * gy);
+			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
+			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
+			d.x = (int) Math.Floor(a.x * (1 - f) + b.x * f - g * gx + .48);
+			d.y = (int) Math.Floor(a.y * (1 - f) + b.y * f - g * gy + .48);
+		}
+
 		public static String getVoltageDText(double v) {
 			return getUnitText(Math.Abs(v), "V");
 		}

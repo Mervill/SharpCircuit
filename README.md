@@ -15,6 +15,7 @@ Licence: MIT/Boost C++
 - Same thing goes for properties, look at the old option screen code for direction on what variables should be exposed as properties.
 - Finish removing all the vestigial rendering code so we can use it as a library.
 - The API is an absolute mess, improve usability! There needs to be an easy way to connect two elements.
+- Write an equality operator for the point class
 
 ## Tested Elements
 

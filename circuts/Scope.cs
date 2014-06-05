@@ -22,7 +22,7 @@ namespace Circuts {
 		public int ptr, ctr, speed, position;
 		public int value, ivalue;
 		public String text;
-		public bool showI, showV, showMax, showMin, showFreq, lockScale, plot2d, plotXY;
+		public bool showI, showV, showMax, showMin, showFreq, lockScale;
 		public CircuitElm elm, xElm, yElm;
 		public double[] pixels;
 		public int draw_ox, draw_oy;
@@ -80,7 +80,6 @@ namespace Circuts {
 			speed = 64;
 			showI = showV = showMax = true;
 			showFreq = lockScale = showMin = false;
-			plot2d = false;
 			// no showI for Output
 			if (elm != null
 					&& (elm is OutputElm || elm is LogicOutputElm || elm is ProbeElm)) {
@@ -609,31 +608,5 @@ namespace Circuts {
 			showMin = (flags & 256) != 0;
 		}*/
 
-		public void select() {
-			sim.mouseElm = elm;
-			if (plotXY) {
-				sim.plotXElm = elm;
-				sim.plotYElm = yElm;
-			}
-		}
-
-		public void selectY() {
-			int e = yElm == null ? -1 : sim.locateElm(yElm);
-			int firstE = e;
-			while (true) {
-				for (e++; e < sim.elmList.Count; e++) {
-					CircuitElm ce = sim.getElm(e);
-					if ((ce is OutputElm || ce is ProbeElm)
-							&& ce != elm) {
-						yElm = ce;
-						return;
-					}
-				}
-				if (firstE == -1) {
-					return;
-				}
-				e = firstE = -1;
-			}
-		}
 	}
 }

@@ -120,8 +120,6 @@ namespace Circuts {
 			return pins[n].post;
 		}
 
-		//public abstract int getVoltageSourceCount(); // output count
-
 		public override void setVoltageSource(int j, int vs) {
 			int i;
 			for (i = 0; i != getPostCount(); i++) {
@@ -158,8 +156,7 @@ namespace Circuts {
 			for (i = 0; i != getPostCount(); i++) {
 				Pin p = pins[i];
 				if (p.output) {
-					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5
-							: 0);
+					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
 				}
 			}
 		}

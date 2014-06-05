@@ -60,7 +60,6 @@ namespace Circuts {
 				volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
 			}
 			hs2 = gwidth * (inputCount / 2 + 1);
-			//setBbox(point1, point2, hs2);
 		}
 
 		/*public override void draw(Graphics g) {
@@ -86,7 +85,6 @@ namespace Circuts {
 			drawPosts(g);
 		}*/
 
-		//public Polygon gatePoly;
 		public Point pcircle;
 		public Point[] linePoints;
 

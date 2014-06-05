@@ -274,6 +274,10 @@ namespace Circuts {
 					+ getVoltageDText(volts[nCoil1] - volts[nCoil2]);
 		}
 
+		public override bool getConnection(int n1, int n2) {
+			return (n1 / 3 == n2 / 3);
+		}
+
 		/*public EditInfo getEditInfo(int n) {
 			if (n == 0) {
 				return new EditInfo("Inductance (H)", inductance, 0, 0);

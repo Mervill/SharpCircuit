@@ -25,7 +25,7 @@ namespace Circuts {
 				zoffset = 0;
 			} else {
 				// calculate offset which will give us 5mA at zvoltage
-				double i = -.005;
+				double i = -0.005;
 				zoffset = zvoltage - Math.Log(-(1 + i / leakage)) / vdcoef;
 			}
 		}
@@ -99,7 +99,7 @@ namespace Circuts {
 
 		public void doStep(double voltdiff) {
 			// used to have .1 here, but needed .01 for peak detector
-			if (Math.Abs(voltdiff - lastvoltdiff) > .01) {
+			if (Math.Abs(voltdiff - lastvoltdiff) > 0.01) {
 				sim.converged = false;
 			}
 			voltdiff = limitStep(voltdiff, lastvoltdiff);

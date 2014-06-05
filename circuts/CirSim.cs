@@ -10,19 +10,29 @@ namespace Circuts {
 
 	public class CirSim {
 
+		public static double pi = 3.14159265358979323846;
+		public static int sourceRadius = 7;
+		public static double freqMult = 3.14159265 * 2 * 4;
+		public static String muString = "u";
+		public static String ohmString = "ohm";
+
+		public static int HINT_LC = 1;
+		public static int HINT_RC = 2;
+		public static int HINT_3DB_C = 3;
+		public static int HINT_TWINT = 4;
+		public static int HINT_3DB_L = 5;
+
 		System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
 
 		public Random random;
-		public static int sourceRadius = 7;
-		public static double freqMult = 3.14159265 * 2 * 4;
 
 		public bool stoppedCheck;
+
 		public bool smallGridCheckItem;
 		public bool conventionCheckItem;
 		public double speedBar = Math.Log(10 * 14.3) * 24 + 61.5; // 14.3
 		public double currentBar = 50;
 		public double powerBar = 50;
-		public static double pi = 3.14159265358979323846;
 		public int gridSize, gridMask, gridRound;
 		public bool analyzeFlag;
 		public bool dumpMatrix;
@@ -30,18 +40,11 @@ namespace Circuts {
 		public int hintType = -1, hintItem1, hintItem2;
 		public String stopMessage;
 		public double timeStep = 5e-6;
-		public static int HINT_LC = 1;
-		public static int HINT_RC = 2;
-		public static int HINT_3DB_C = 3;
-		public static int HINT_TWINT = 4;
-		public static int HINT_3DB_L = 5;
+
 		public List<CircuitElm> elmList = new List<CircuitElm>();
-		public CircuitElm dragElm, menuElm, mouseElm, stopElm;
-		public bool didSwitch = false;
-		public int mousePost = -1;
-		public CircuitElm plotXElm, plotYElm;
-		public int draggingPost;
+		public CircuitElm dragElm, stopElm;
 		public SwitchElm heldSwitchElm;
+
 		public double[][] circuitMatrix; 
 		public double[] circuitRightSide; 
 		public double[] origRightSide;
@@ -55,23 +58,21 @@ namespace Circuts {
 		public int scopeCount;
 		public Scope[] scopes;
 		public int[] scopeColCount;
-		public Type[] dumpTypes, shortcuts;
-		public static String muString = "u";
-		public static String ohmString = "ohm";
 
 		public string[] info;
 
-		public class FindPathInfo {
+		private class FindPathInfo {
 			CirSim root;
 			
 			public static int INDUCT = 1;
 			public static int VOLTAGE = 2;
 			public static int SHORT = 3;
 			public static int CAP_V = 4;
-			public bool[] used;
-			public int dest;
-			public CircuitElm firstElm;
-			public int type;
+
+			bool[] used;
+			int dest;
+			CircuitElm firstElm;
+			int type;
 			
 			public FindPathInfo(CirSim r,int t, CircuitElm e, int d) {
 				root = r;
@@ -202,16 +203,9 @@ namespace Circuts {
 
 		public void updateCircuit() {
 
-			CircuitElm realMouseElm;
-
 			if (analyzeFlag) {
 				analyzeCircuit();
 				analyzeFlag = false;
-			}
-
-			realMouseElm = mouseElm;
-			if (mouseElm == null) {
-				mouseElm = stopElm;
 			}
 
 			if (!stoppedCheck) {
@@ -278,22 +272,8 @@ namespace Circuts {
 			} else {
 
 				info = new String[10];
-				if (mouseElm != null) {
-					if (mousePost == -1) {
-						mouseElm.getInfo(info);
-					} else {
-						info[0] = "V = " + CircuitElm.getUnitText(mouseElm.getPostVoltage(mousePost), "V");
-						// //shownodes for (i = 0; i != mouseElm.getPostCount();
-						// i++) info[0] += " " + mouseElm.nodes[i]; if
-						// (mouseElm.getVoltageSourceCount() > 0) info[0] += ";" +
-						// (mouseElm.getVoltageSource()+nodeList.Count);
-					}
+				info[0] = "t = " + CircuitElm.getUnitText(t, "s");
 
-				} else {
-
-					info[0] = "t = " + CircuitElm.getUnitText(t, "s");
-
-				}
 				if (hintType != -1) {
 					for (i = 0; info[i] != null; i++) {
 						;
@@ -315,7 +295,6 @@ namespace Circuts {
 				
 			}
 
-			mouseElm = realMouseElm;
 			frames++;
 
 			if (!stoppedCheck && circuitMatrix != null) {
@@ -332,7 +311,7 @@ namespace Circuts {
 			lastFrameTime = lastTime;
 		}
 
-		public String getHint() {
+		private String getHint() {
 			CircuitElm c1 = getElm(hintItem1);
 			CircuitElm c2 = getElm(hintItem2);
 			if (c1 == null || c2 == null) {
@@ -396,7 +375,7 @@ namespace Circuts {
 			return null;
 		}
 
-		public void toggleSwitch(int n) {
+		/*public void toggleSwitch(int n) {
 			int i;
 			for (i = 0; i != elmList.Count; i++) {
 				CircuitElm ce = getElm(i);
@@ -411,7 +390,20 @@ namespace Circuts {
 			}
 		}
 
-		void needAnalyze() {
+		public bool doSwitch(int x, int y) {
+			if (mouseElm == null || !(mouseElm is SwitchElm)) {
+				return false;
+			}
+			SwitchElm se = (SwitchElm) mouseElm;
+			se.toggle();
+			if (se.momentary) {
+				heldSwitchElm = se;
+			}
+			needAnalyze();
+			return true;
+		}*/
+
+		public void needAnalyze() {
 			analyzeFlag = true;
 		}
 
@@ -432,7 +424,7 @@ namespace Circuts {
 			return elmList[n];
 		}
 
-		public void analyzeCircuit() {
+		private void analyzeCircuit() {
 
 			if (elmList.Count == 0) {
 				return;
@@ -794,6 +786,7 @@ namespace Circuts {
 					elt.mapCol = -1;
 				}
 			}
+
 			for (i = 0; i != matrixSize; i++) {
 				RowInfo elt = circuitRowInfo[i];
 				if (elt.type == RowInfo.ROW_EQUAL) {
@@ -1018,14 +1011,14 @@ namespace Circuts {
 			if (speedBar == 0) {
 				return 0;
 			}
-			// return (Math.exp((speedBar.getValue()-1)/24.) + .5);
+			// return (Math.exp((speedBar.getValue()-1)/24.) + 0.5);
 			return 0.1 * Math.Exp((speedBar - 61) / 24.0);
 		}
 
 		public bool converged;
 		public int subIterations;
 
-		public void runCircuit() {
+		private void runCircuit() {
 			if (circuitMatrix == null || elmList.Count == 0) {
 				circuitMatrix = null;
 				return;
@@ -1098,8 +1091,7 @@ namespace Circuts {
 							return;
 						}
 					}
-					lu_solve(circuitMatrix, circuitMatrixSize, circuitPermute,
-							circuitRightSide);
+					lu_solve(circuitMatrix, circuitMatrixSize, circuitPermute, circuitRightSide);
 
 					for (j = 0; j != circuitMatrixFullSize; j++) {
 						RowInfo ri = circuitRowInfo[j];
@@ -1144,8 +1136,7 @@ namespace Circuts {
 				}
 				tm = watch.ElapsedMilliseconds;
 				lit = tm;
-				if (iter * 1000 >= steprate * (tm - lastIterTime)
-						|| (tm - lastFrameTime > 500)) {
+				if (iter * 1000 >= steprate * (tm - lastIterTime) || (tm - lastFrameTime > 500)) {
 					break;
 				}
 			}
@@ -1153,29 +1144,8 @@ namespace Circuts {
 			// System.out.println((System.currentTimeMillis()-lastFrameTime)/(double)iter);
 		}
 
-		public int min(int a, int b) {
-			return (a < b) ? a : b;
-		}
-
-		public int max(int a, int b) {
-			return (a > b) ? a : b;
-		}
-
 		public int snapGrid(int x) {
 			return (x + gridRound) & gridMask;
-		}
-
-		public bool doSwitch(int x, int y) {
-			if (mouseElm == null || !(mouseElm is SwitchElm)) {
-				return false;
-			}
-			SwitchElm se = (SwitchElm) mouseElm;
-			se.toggle();
-			if (se.momentary) {
-				heldSwitchElm = se;
-			}
-			needAnalyze();
-			return true;
 		}
 
 		public int locateElm(CircuitElm elm) {
