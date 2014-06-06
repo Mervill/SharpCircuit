@@ -23,26 +23,24 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 8;
-			sizeY = 8;
 			pins = new Pin[16];
-			pins[0] = new Pin(0, SIDE_W, "", this);
-			pins[1] = new Pin(1, SIDE_W, "", this);
-			pins[2] = new Pin(2, SIDE_W, "", this);
-			pins[3] = new Pin(3, SIDE_W, "", this);
-			pins[4] = new Pin(4, SIDE_W, "", this);
-			pins[5] = new Pin(5, SIDE_W, "", this);
-			pins[6] = new Pin(6, SIDE_W, "", this);
-			pins[7] = new Pin(7, SIDE_W, "", this);
+			pins[0] = new Pin("R0");
+			pins[1] = new Pin("R1");
+			pins[2] = new Pin("R2");
+			pins[3] = new Pin("R3");
+			pins[4] = new Pin("R4");
+			pins[5] = new Pin("R5");
+			pins[6] = new Pin("R6");
+			pins[7] = new Pin("R7");
 
-			pins[8] = new Pin(0, SIDE_S, "", this);
-			pins[9] = new Pin(1, SIDE_S, "", this);
-			pins[10] = new Pin(2, SIDE_S, "", this);
-			pins[11] = new Pin(3, SIDE_S, "", this);
-			pins[12] = new Pin(4, SIDE_S, "", this);
-			pins[13] = new Pin(5, SIDE_S, "", this);
-			pins[14] = new Pin(6, SIDE_S, "", this);
-			pins[15] = new Pin(7, SIDE_S, "", this);
+			pins[8] = new Pin("C0");
+			pins[9] = new Pin("C1");
+			pins[10] = new Pin("C2");
+			pins[11] = new Pin("C3");
+			pins[12] = new Pin("C4");
+			pins[13] = new Pin("C5");
+			pins[14] = new Pin("C6");
+			pins[15] = new Pin("C7");
 		}
 
 		/*public override void draw(Graphics g) {

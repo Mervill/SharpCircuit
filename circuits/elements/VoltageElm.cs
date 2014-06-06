@@ -77,10 +77,10 @@ namespace Circuits {
 
 		public int circleSize = 17;
 
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
+//		}
 
 		/*public void draw(Graphics g) {
 			setBbox(x, y, x2, y2);

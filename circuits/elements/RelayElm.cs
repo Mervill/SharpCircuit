@@ -16,16 +16,14 @@ namespace Circuits {
 		public double inductance;
 		public Inductor ind;
 		public double r_on, r_off, onCurrent;
-		public Point[] coilPosts, coilLeads;
-		public Point[][] swposts, swpoles;
-		public Point[] ptSwitch;
-		public Point[] lines;
+		public Point[] coilPosts; 
+
+		public Point[][] swposts;
 		public double coilCurrent, coilCurCount;
 		public double[] switchCurrent, switchCurCount;
 		public double d_position, coilR;
 		public int i_position;
 		public int poleCount;
-		public int openhs;
 		public int nSwitch0 = 0;
 		public int nSwitch1 = 1;
 		public int nSwitch2 = 2;
@@ -35,11 +33,11 @@ namespace Circuits {
 		public RelayElm(int xx, int yy,CirSim s) : base(xx,yy, s) {
 
 			ind = new Inductor(sim);
-			inductance = .2;
+			inductance = 0.2;
 			ind.setup(inductance, 0, Inductor.FLAG_BACK_EULER);
 			noDiagonal = true;
-			onCurrent = .02;
-			r_on = .05;
+			onCurrent = 0.02;
+			r_on = 0.05;
 			r_off = 1e6;
 			coilR = 20;
 			coilCurrent = coilCurCount = 0;
@@ -117,48 +115,48 @@ namespace Circuits {
 			adjustBbox(swpoles[poleCount - 1][0], swposts[poleCount - 1][1]); // XXX
 		}*/
 
-		public override void setPoints() {
-			base.setPoints();
-			setupPoles();
-			allocNodes();
-			openhs = -dsign * 16;
-
-			// switch
-			calcLeads(32);
-			swposts = new Point[poleCount][]; // 3;
-			swpoles = new Point[poleCount][]; // 3;
-			int i, j;
-			for (i = 0; i != poleCount; i++) {
-				for (j = 0; j != 3; j++) {
-					swposts[i][j] = new Point();
-					swpoles[i][j] = new Point();
-				}
-				interpPoint(lead1, lead2, swpoles[i][0], 0, -openhs * 3 * i);
-				interpPoint(lead1, lead2, swpoles[i][1], 1, -openhs * 3 * i
-						- openhs);
-				interpPoint(lead1, lead2, swpoles[i][2], 1, -openhs * 3 * i
-						+ openhs);
-				interpPoint(point1, point2, swposts[i][0], 0, -openhs * 3 * i);
-				interpPoint(point1, point2, swposts[i][1], 1, -openhs * 3 * i
-						- openhs);
-				interpPoint(point1, point2, swposts[i][2], 1, -openhs * 3 * i
-						+ openhs);
-			}
-
-			// coil
-			coilPosts = newPointArray(2);
-			coilLeads = newPointArray(2);
-			ptSwitch = newPointArray(poleCount);
-
-			int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
-			interpPoint(point1, point2, coilPosts[0], x, openhs * 2);
-			interpPoint(point1, point2, coilPosts[1], x, openhs * 3);
-			interpPoint(point1, point2, coilLeads[0], .5, openhs * 2);
-			interpPoint(point1, point2, coilLeads[1], .5, openhs * 3);
-
-			// lines
-			lines = newPointArray(poleCount * 2);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			setupPoles();
+//			allocNodes();
+//			openhs = -dsign * 16;
+//
+//			// switch
+//			calcLeads(32);
+//			swposts = new Point[poleCount][]; // 3;
+//			swpoles = new Point[poleCount][]; // 3;
+//			int i, j;
+//			for (i = 0; i != poleCount; i++) {
+//				for (j = 0; j != 3; j++) {
+//					swposts[i][j] = new Point();
+//					swpoles[i][j] = new Point();
+//				}
+//				interpPoint(lead1, lead2, swpoles[i][0], 0, -openhs * 3 * i);
+//				interpPoint(lead1, lead2, swpoles[i][1], 1, -openhs * 3 * i
+//						- openhs);
+//				interpPoint(lead1, lead2, swpoles[i][2], 1, -openhs * 3 * i
+//						+ openhs);
+//				interpPoint(point1, point2, swposts[i][0], 0, -openhs * 3 * i);
+//				interpPoint(point1, point2, swposts[i][1], 1, -openhs * 3 * i
+//						- openhs);
+//				interpPoint(point1, point2, swposts[i][2], 1, -openhs * 3 * i
+//						+ openhs);
+//			}
+//
+//			// coil
+//			coilPosts = newPointArray(2);
+//			coilLeads = newPointArray(2);
+//			ptSwitch = newPointArray(poleCount);
+//
+//			int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
+//			interpPoint(point1, point2, coilPosts[0], x, openhs * 2);
+//			interpPoint(point1, point2, coilPosts[1], x, openhs * 3);
+//			interpPoint(point1, point2, coilLeads[0], .5, openhs * 2);
+//			interpPoint(point1, point2, coilLeads[1], .5, openhs * 3);
+//
+//			// lines
+//			lines = newPointArray(poleCount * 2);
+//		}
 
 		public override Point getPost(int n) {
 			if (n < 3 * poleCount) {
@@ -184,8 +182,6 @@ namespace Circuits {
 				switchCurrent[i] = switchCurCount[i] = 0;
 			}
 		}
-
-		public double a1, a2, a3, a4;
 
 		public override void stamp() {
 			// inductor from coil post 1 to internal node
@@ -220,8 +216,7 @@ namespace Circuits {
 				i_position = 1;
 			} else {
 				i_position = 2;
-				// System.out.println("ind " + this + " " + current + " " +
-				// voltdiff);
+				// System.out.println("ind " + this + " " + current + " " + voltdiff);
 			}
 		}
 
@@ -235,10 +230,8 @@ namespace Circuits {
 			ind.doStep(voltdiff);
 			int p;
 			for (p = 0; p != poleCount * 3; p += 3) {
-				sim.stampResistor(nodes[nSwitch0 + p], nodes[nSwitch1 + p],
-						i_position == 0 ? r_on : r_off);
-				sim.stampResistor(nodes[nSwitch0 + p], nodes[nSwitch2 + p],
-						i_position == 1 ? r_on : r_off);
+				sim.stampResistor(nodes[nSwitch0 + p], nodes[nSwitch1 + p],i_position == 0 ? r_on : r_off);
+				sim.stampResistor(nodes[nSwitch0 + p], nodes[nSwitch2 + p],i_position == 1 ? r_on : r_off);
 			}
 		}
 
@@ -253,9 +246,7 @@ namespace Circuits {
 				if (i_position == 2) {
 					switchCurrent[p] = 0;
 				} else {
-					switchCurrent[p] = (volts[nSwitch0 + p * 3] - volts[nSwitch1
-							+ p * 3 + i_position])
-							/ r_on;
+					switchCurrent[p] = (volts[nSwitch0 + p * 3] - volts[nSwitch1 + p * 3 + i_position]) / r_on;
 				}
 			}
 		}
@@ -266,12 +257,10 @@ namespace Circuits {
 			int i;
 			int ln = 1;
 			for (i = 0; i != poleCount; i++) {
-				arr[ln++] = "I" + (i + 1) + " = "
-						+ getCurrentDText(switchCurrent[i]);
+				arr[ln++] = "I" + (i + 1) + " = " + getCurrentDText(switchCurrent[i]);
 			}
 			arr[ln++] = "coil I = " + getCurrentDText(coilCurrent);
-			arr[ln++] = "coil Vd = "
-					+ getVoltageDText(volts[nCoil1] - volts[nCoil2]);
+			arr[ln++] = "coil Vd = " + getVoltageDText(volts[nCoil1] - volts[nCoil2]);
 		}
 
 		public override bool getConnection(int n1, int n2) {

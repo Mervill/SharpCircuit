@@ -11,18 +11,16 @@ namespace Circuits {
 			
 		}
 
-		public Point center;
-
-		public override void setPoints() {
-			base.setPoints();
-			// swap points so that we subtract higher from lower
-			if (point2.y < point1.y) {
-				Point x = point1;
-				point1 = point2;
-				point2 = x;
-			}
-			center = interpPoint(point1, point2, .5);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			// swap points so that we subtract higher from lower
+//			if (point2.y < point1.y) {
+//				Point x = point1;
+//				point1 = point2;
+//				point2 = x;
+//			}
+//			center = interpPoint(point1, point2, .5);
+//		}
 
 		/*public override void draw(Graphics g) {
 			int hs = 8;

@@ -21,14 +21,12 @@ namespace Circuits {
 			posCount = 2;
 		}
 
-		public Point ps;
-
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			ps = new Point();
-			ps2 = new Point();
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			ps = new Point();
+//			ps2 = new Point();
+//		}
 
 		/*public override void draw(Graphics g) {
 			int openhs = 16;

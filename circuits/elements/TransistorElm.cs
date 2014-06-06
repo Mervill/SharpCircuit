@@ -80,7 +80,7 @@ namespace Circuits {
 		}*/
 
 		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? coll[0] : emit[0];
+			return (n == 0) ? point1 : (n == 1) ? coll : emit;
 		}
 
 		public override int getPostCount() {
@@ -91,30 +91,31 @@ namespace Circuits {
 			return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
 		}
 
-		public Point[] rect, coll, emit;
+		public Point coll;
+		public Point emit;
 		public Point @base;
 
-		public override void setPoints() {
-			base.setPoints();
-			int hs = 16;
-			if ((flags & FLAG_FLIP) != 0) {
-				dsign = -dsign;
-			}
-			int hs2 = hs * dsign * pnp;
-			// calc collector, emitter posts
-			coll = newPointArray(2);
-			emit = newPointArray(2);
-			interpPoint2(point1, point2, coll[0], emit[0], 1, hs2);
-			// calc rectangle edges
-			rect = newPointArray(4);
-			interpPoint2(point1, point2, rect[0], rect[1], 1 - 16 / dn, hs);
-			interpPoint2(point1, point2, rect[2], rect[3], 1 - 13 / dn, hs);
-			// calc points where collector/emitter leads contact rectangle
-			interpPoint2(point1, point2, coll[1], emit[1], 1 - 13 / dn, 6 * dsign * pnp);
-			// calc point where base lead contacts rectangle
-			@base = new Point();
-			interpPoint(point1, point2, @base, 1 - 16 / dn);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int hs = 16;
+//			if ((flags & FLAG_FLIP) != 0) {
+//				dsign = -dsign;
+//			}
+//			int hs2 = hs * dsign * pnp;
+//			// calc collector, emitter posts
+//			coll = newPointArray(2);
+//			emit = newPointArray(2);
+//			interpPoint2(point1, point2, coll[0], emit[0], 1, hs2);
+//			// calc rectangle edges
+//			rect = newPointArray(4);
+//			interpPoint2(point1, point2, rect[0], rect[1], 1 - 16 / dn, hs);
+//			interpPoint2(point1, point2, rect[2], rect[3], 1 - 13 / dn, hs);
+//			// calc points where collector/emitter leads contact rectangle
+//			interpPoint2(point1, point2, coll[1], emit[1], 1 - 13 / dn, 6 * dsign * pnp);
+//			// calc point where base lead contacts rectangle
+//			@base = new Point();
+//			interpPoint(point1, point2, @base, 1 - 16 / dn);
+//		}
 
 		public static double leakage = 1e-13; // 1e-6;
 		public static double vt = 0.025;

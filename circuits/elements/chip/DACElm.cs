@@ -19,16 +19,14 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = bits > 2 ? bits : 2;
 			pins = new Pin[getPostCount()];
 			int i;
 			for (i = 0; i != bits; i++) {
-				pins[i] = new Pin(bits - 1 - i, SIDE_W, "D" + i, this);
+				pins[i] = new Pin("D" + i);
 			}
-			pins[bits] = new Pin(0, SIDE_E, "O", this);
+			pins[bits] = new Pin("O");
 			pins[bits].output = true;
-			pins[bits + 1] = new Pin(sizeY - 1, SIDE_E, "V+", this);
+			pins[bits + 1] = new Pin("V+");
 			allocNodes();
 		}
 

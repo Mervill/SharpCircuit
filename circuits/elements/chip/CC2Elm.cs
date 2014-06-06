@@ -20,13 +20,11 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = 3;
 			pins = new Pin[3];
-			pins[0] = new Pin(0, SIDE_W, "X", this);
+			pins[0] = new Pin("X");
 			pins[0].output = true;
-			pins[1] = new Pin(2, SIDE_W, "Y", this);
-			pins[2] = new Pin(1, SIDE_E, "Z", this);
+			pins[1] = new Pin("Y");
+			pins[2] = new Pin("Z");
 		}
 
 		public override void getInfo(String[] arr) {

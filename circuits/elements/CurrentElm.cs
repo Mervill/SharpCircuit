@@ -16,15 +16,15 @@ namespace Circuits {
 		//Point ashaft1, ashaft2;
 		//Point center;
 
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(26);
-			//ashaft1 = interpPoint(lead1, lead2, 0.25);
-			//ashaft2 = interpPoint(lead1, lead2, 0.6);
-			//center = interpPoint(lead1, lead2, 0.5);
-			//Point p2 = interpPoint(lead1, lead2, 0.75);
-			//arrow = calcArrow(center, p2, 4, 4);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(26);
+//			//ashaft1 = interpPoint(lead1, lead2, 0.25);
+//			//ashaft2 = interpPoint(lead1, lead2, 0.6);
+//			//center = interpPoint(lead1, lead2, 0.5);
+//			//Point p2 = interpPoint(lead1, lead2, 0.75);
+//			//arrow = calcArrow(center, p2, 4, 4);
+//		}
 
 		/*public override void draw(Graphics g) {
 			int cr = 12;

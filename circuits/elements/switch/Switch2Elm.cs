@@ -5,8 +5,11 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class Switch2Elm : SwitchElm {
-		public int link;
+
 		public static int FLAG_CENTER_OFF = 1;
+
+		public int link;
+		public Point[] swposts;
 
 		public Switch2Elm(int xx, int yy,CirSim s) : base(xx, yy,s) {
 			noDiagonal = true;
@@ -16,19 +19,16 @@ namespace Circuits {
 			noDiagonal = true;
 		}
 
-		public int openhs = 16;
-		public Point[] swposts, swpoles;
-
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			swposts = newPointArray(2);
-			swpoles = newPointArray(3);
-			interpPoint2(lead1, lead2, swpoles[0], swpoles[1], 1, openhs);
-			swpoles[2] = lead2;
-			interpPoint2(point1, point2, swposts[0], swposts[1], 1, openhs);
-			posCount = hasCenterOff() ? 3 : 2;
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			swposts = newPointArray(2);
+//			swpoles = newPointArray(3);
+//			interpPoint2(lead1, lead2, swpoles[0], swpoles[1], 1, openhs);
+//			swpoles[2] = lead2;
+//			interpPoint2(point1, point2, swposts[0], swposts[1], 1, openhs);
+//			posCount = hasCenterOff() ? 3 : 2;
+//		}
 
 		/*public override void draw(Graphics g) {
 			setBbox(point1, point2, openhs);

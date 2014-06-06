@@ -15,17 +15,15 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = 4;
 			pins = new Pin[6];
-			pins[0] = new Pin(0, SIDE_W, "Vi", this);
-			pins[1] = new Pin(3, SIDE_W, "Vo", this);
+			pins[0] = new Pin("Vi");
+			pins[1] = new Pin("Vo");
 			pins[1].output = true;
-			pins[2] = new Pin(0, SIDE_E, "C", this);
-			pins[3] = new Pin(1, SIDE_E, "C", this);
-			pins[4] = new Pin(2, SIDE_E, "R1", this);
+			pins[2] = new Pin("C");
+			pins[3] = new Pin("C");
+			pins[4] = new Pin("R1");
 			pins[4].output = true;
-			pins[5] = new Pin(3, SIDE_E, "R2", this);
+			pins[5] = new Pin("R2");
 			pins[5].output = true;
 		}
 

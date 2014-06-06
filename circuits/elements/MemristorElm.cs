@@ -16,14 +16,12 @@ namespace Circuits {
 			resistance = 100;
 		}
 
-		public Point ps3, ps4;
-
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			ps3 = new Point();
-			ps4 = new Point();
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			ps3 = new Point();
+//			ps4 = new Point();
+//		}
 
 		/*public override void draw(Graphics g) {
 			int segments = 6;

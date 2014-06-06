@@ -77,48 +77,42 @@ namespace Circuits {
 			}
 		}*/
 
-		public int[] rectPointsX, rectPointsY;
 		public int[] clockPointsX, clockPointsY;
 		public Pin[] pins;
-		public int sizeX, sizeY;
 		public bool lastClock;
 
-		public override void setPoints() {
-			if (x2 - x > sizeX * cspc2 && this == sim.dragElm) {
-				setSize(2);
-			}
-			int x0 = x + cspc2;
-			int y0 = y;
-			int xr = x0 - cspc;
-			int yr = y0 - cspc;
-			int xs = sizeX * cspc2;
-			int ys = sizeY * cspc2;
-			rectPointsX = new int[] { xr, xr + xs, xr + xs, xr };
-			rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
-			//setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
-			int i;
-			for (i = 0; i != getPostCount(); i++) {
-				Pin p = pins[i];
-				switch (p.side) {
-				case 0:
-					p.setPoint(x0, y0, 1, 0, 0, -1, 0, 0);
-					break;
-				case 1:
-					p.setPoint(x0, y0, 1, 0, 0, 1, 0, ys - cspc2);
-					break;
-				case 2:
-					p.setPoint(x0, y0, 0, 1, -1, 0, 0, 0);
-					break;
-				case 3:
-					p.setPoint(x0, y0, 0, 1, 1, 0, xs - cspc2, 0);
-					break;
-				}
-			}
-		}
-
-		public override Point getPost(int n) {
-			return pins[n].post;
-		}
+//		public override void setPoints() {
+//			if (x2 - x > sizeX * cspc2 && this == sim.dragElm) {
+//				setSize(2);
+//			}
+//			int x0 = x + cspc2;
+//			int y0 = y;
+//			int xr = x0 - cspc;
+//			int yr = y0 - cspc;
+//			int xs = sizeX * cspc2;
+//			int ys = sizeY * cspc2;
+//			rectPointsX = new int[] { xr, xr + xs, xr + xs, xr };
+//			rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
+//			//setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
+//			int i;
+//			for (i = 0; i != getPostCount(); i++) {
+//				Pin p = pins[i];
+//				switch (p.side) {
+//				case 0:
+//					p.setPoint(x0, y0, 1, 0, 0, -1, 0, 0);
+//					break;
+//				case 1:
+//					p.setPoint(x0, y0, 1, 0, 0, 1, 0, ys - cspc2);
+//					break;
+//				case 2:
+//					p.setPoint(x0, y0, 0, 1, -1, 0, 0, 0);
+//					break;
+//				case 3:
+//					p.setPoint(x0, y0, 0, 1, 1, 0, xs - cspc2, 0);
+//					break;
+//				}
+//			}
+//		}
 
 		public override void setVoltageSource(int j, int vs) {
 			int i;
@@ -165,7 +159,6 @@ namespace Circuits {
 			int i;
 			for (i = 0; i != getPostCount(); i++) {
 				pins[i].value = false;
-				pins[i].curcount = 0;
 				volts[i] = 0;
 			}
 			lastClock = false;
@@ -181,7 +174,7 @@ namespace Circuits {
 				} else {
 					arr[a] = "";
 				}
-				String t = p.text;
+				String t = "";
 				if (p.lineOver) {
 					t += '\'';
 				}
@@ -249,29 +242,19 @@ namespace Circuits {
 			}
 		}*/
 
-		public int SIDE_N = 0;
-		public int SIDE_S = 1;
-		public int SIDE_W = 2;
-		public int SIDE_E = 3;
-
 		public class Pin {
 
-			public Pin(int p, int s, String t,ChipElm element) {
-				pos = p;
-				side = s;
-				text = t;
-				elm = element;
+			public Pin(String nm) {
+				name = nm;
 			}
+
+			public string name;
+
+			public int voltSource;
+			public bool lineOver, clock, output, value;
+			public double current;
 			
-			public ChipElm elm;
-			public Point post, stub;
-			public Point textloc;
-			public int pos, side, voltSource, bubbleX, bubbleY;
-			public String text;
-			public bool lineOver, bubble, clock, output, value, state;
-			public double curcount, current;
-			
-			public void setPoint(int px, int py, int dx, int dy, int dax, int day, int sx, int sy) {
+			/*public void setPoint(int px, int py, int dx, int dy, int dax, int day, int sx, int sy) {
 				if ((elm.flags & elm.FLAG_FLIP_X) != 0) {
 					dx = -dx;
 					dax = -dax;
@@ -303,7 +286,7 @@ namespace Circuits {
 					elm.clockPointsX[2] = xa + dax * elm.cspc + dx * elm.cspc / 2;
 					elm.clockPointsY[2] = ya + day * elm.cspc + dy * elm.cspc / 2;
 				}
-			}
+			}*/
 		}
 
 	}

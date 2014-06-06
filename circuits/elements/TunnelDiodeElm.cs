@@ -16,20 +16,16 @@ namespace Circuits {
 
 		public void setup() { }
 
-		public int hs = 8;
-		//public Polygon poly;
-		public Point[] cathode;
-
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(16);
-			cathode = newPointArray(4);
-			Point[] pa = newPointArray(2);
-			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
-			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-			interpPoint2(lead1, lead2, cathode[2], cathode[3], .8, hs);
-			//poly = createPolygon(pa[0], pa[1], lead2);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(16);
+//			cathode = newPointArray(4);
+//			Point[] pa = newPointArray(2);
+//			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
+//			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
+//			interpPoint2(lead1, lead2, cathode[2], cathode[3], .8, hs);
+//			//poly = createPolygon(pa[0], pa[1], lead2);
+//		}
 
 		/*public override void draw(Graphics g) {
 			setBbox(point1, point2, hs);

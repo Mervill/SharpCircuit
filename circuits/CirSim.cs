@@ -482,10 +482,18 @@ namespace Circuits {
 					Point pt = ce.getPost(j);
 					int k;
 					for (k = 0; k != nodeList.Count; k++) {
+
+						//CircuitElm elm = getElm(k);
+						//if(pt == null)
+						//	continue;
+
+						//if(pt.linked == elm)
+						//	break;
+
 						CircuitNode cn = getCircuitNode(k);
-						if (pt.x == cn.x && pt.y == cn.y) {
+						if (pt.x == cn.x && pt.y == cn.y)
 							break;
-						}
+
 					}
 					if (k == nodeList.Count) {
 						CircuitNode cn = new CircuitNode();

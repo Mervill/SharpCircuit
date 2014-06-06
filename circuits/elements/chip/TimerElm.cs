@@ -27,18 +27,16 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 3;
-			sizeY = 5;
 			pins = new Pin[7];
-			pins[N_DIS] = new Pin(1, SIDE_W, "dis", this);
-			pins[N_TRIG] = new Pin(3, SIDE_W, "tr", this);
+			pins[N_DIS] = new Pin("dis");
+			pins[N_TRIG] = new Pin("tr");
 			pins[N_TRIG].lineOver = true;
-			pins[N_THRES] = new Pin(4, SIDE_W, "th", this);
-			pins[N_VIN] = new Pin(1, SIDE_N, "Vin", this);
-			pins[N_CTL] = new Pin(1, SIDE_S, "ctl", this);
-			pins[N_OUT] = new Pin(2, SIDE_E, "out", this);
-			pins[N_OUT].output = pins[N_OUT].state = true;
-			pins[N_RST] = new Pin(1, SIDE_E, "rst", this);
+			pins[N_THRES] = new Pin("th");
+			pins[N_VIN] = new Pin("Vin");
+			pins[N_CTL] = new Pin("ctl");
+			pins[N_OUT] = new Pin("out");
+			pins[N_OUT].output = true;
+			pins[N_RST] = new Pin("rst");
 		}
 
 		public override bool nonLinear() {

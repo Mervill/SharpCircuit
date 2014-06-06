@@ -8,27 +8,26 @@ namespace Circuits {
 		
 		public static double voltageRange = 5;
 		public static double currentMult, powerMult;
-		public static Point ps1, ps2;
-		public static CirSim sim;
+
+		protected CirSim sim;
 
 		public static double pi = 3.14159265358979323846;
 
 		public int[] nodes;
 		public int x, y, x2, y2, flags, voltSource;
-		public int dx, dy, dsign;
-		public double dn, dpx1, dpy1;
-		public Point point1, point2, lead1, lead2;
+		public Point point1;
+		public Point point2;
 		public double[] volts;
 		public double current, curcount;
 		public bool noDiagonal;
-		public bool selected;
 
 		public CircuitElm(int xx, int yy, CirSim s) {
-			x = x2 = xx;
-			y = y2 = yy;
+			point1 = new Point(xx,yy);
+			point2 = new Point(xx,yy + 1);
+
 			flags = getDefaultFlags();
 			allocNodes();
-			setPoints();
+			//setPoints();
 			sim = s;
 		}
 
@@ -58,12 +57,12 @@ namespace Circuits {
 		}
 
 		public virtual void doStep() { }
-		//public virtual void delete() { }
 		public virtual void startIteration() { }
 		public virtual void doAdjust() { }
 		public virtual void setupAdjust() { }
 		public virtual void getInfo(String[] arr) { }
 		public virtual void calculateCurrent() { }
+		public virtual void stamp() { }
 
 		public virtual double getPostVoltage(int x) {
 			return volts[x];
@@ -74,7 +73,7 @@ namespace Circuits {
 			calculateCurrent();
 		}
 
-		public virtual void setPoints() {
+		/*public virtual void setPoints() {
 			dx = x2 - x;
 			dy = y2 - y;
 			dn = Math.Sqrt(dx * dx + dy * dy);
@@ -93,47 +92,7 @@ namespace Circuits {
 			}
 			lead1 = interpPoint(point1, point2, (dn - len) / (2 * dn));
 			lead2 = interpPoint(point1, point2, (dn + len) / (2 * dn));
-		}
-
-		public virtual void move(int dx, int dy) {
-			x += dx;
-			y += dy;
-			x2 += dx;
-			y2 += dy;
-			setPoints();
-		}
-
-		// determine if moving this element by (dx,dy) will put it on top of another element
-		public bool allowMove(int dx, int dy) {
-			int nx = x + dx;
-			int ny = y + dy;
-			int nx2 = x2 + dx;
-			int ny2 = y2 + dy;
-			int i;
-			for (i = 0; i != sim.elmList.Count; i++) {
-				CircuitElm ce = sim.getElm(i);
-				if (ce.x == nx && ce.y == ny && ce.x2 == nx2 && ce.y2 == ny2) {
-					return false;
-				}
-				if (ce.x == nx2 && ce.y == ny2 && ce.x2 == nx && ce.y2 == ny) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		public void movePoint(int n, int dx, int dy) {
-			if (n == 0) {
-				x += dx;
-				y += dy;
-			} else {
-				x2 += dx;
-				y2 += dy;
-			}
-			setPoints();
-		}
-
-		public virtual void stamp() { }
+		}*/
 
 		public virtual int getVoltageSourceCount() {
 			return 0;
@@ -221,42 +180,22 @@ namespace Circuits {
 			return 3;
 		}
 
+		#region API
+
+		public void Attach(CircuitElm other){
+			for(int i = 0;i < getPostCount();i++){
+				Point pt = getPost(i);
+				if(pt == null){
+					pt = new Point(other);
+					return;
+				}
+			}
+			throw new Exception("Attach failed, no open node!");
+		}
+
+		#endregion
+
 		#region Static methods
-		protected static Point interpPoint(Point a, Point b, double f) {
-			Point p = new Point();
-			interpPoint(a, b, p, f);
-			return p;
-		}
-		
-		protected static void interpPoint(Point a, Point b, Point c, double f) {
-			// double q = (a.x*(1-f)+b.x*f+.48); System.out.println(q + " " + (int) q);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + .48);
-		}
-		
-		protected static void interpPoint(Point a, Point b, Point c, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-		}
-		
-		protected static Point interpPoint(Point a, Point b, double f, double g) {
-			Point p = new Point();
-			interpPoint(a, b, p, f, g);
-			return p;
-		}
-		
-		protected static void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
-			int gx = b.y - a.y;
-			int gy = a.x - b.x;
-			g /= Math.Sqrt(gx * gx + gy * gy);
-			c.x = (int) Math.Floor(a.x * (1 - f) + b.x * f + g * gx + .48);
-			c.y = (int) Math.Floor(a.y * (1 - f) + b.y * f + g * gy + .48);
-			d.x = (int) Math.Floor(a.x * (1 - f) + b.x * f - g * gx + .48);
-			d.y = (int) Math.Floor(a.y * (1 - f) + b.y * f - g * gy + .48);
-		}
 
 		public static String getVoltageDText(double v) {
 			return getUnitText(Math.Abs(v), "V");

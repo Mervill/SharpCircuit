@@ -9,7 +9,7 @@ namespace Circuits {
 		public int FLAG_NUMERIC = 2;
 		public int FLAG_PULLDOWN = 4;
 		public double threshold;
-		public String value;
+		//public String value;
 
 		public LogicOutputElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
 			threshold = 2.5;
@@ -31,10 +31,10 @@ namespace Circuits {
 			return (flags & FLAG_PULLDOWN) != 0;
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			lead1 = interpPoint(point1, point2, 1 - 12 / dn);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			lead1 = interpPoint(point1, point2, 1 - 12 / dn);
+//		}
 
 		/*public override void draw(Graphics g) {
 			Font f = new Font("SansSerif", Font.BOLD, 20);
@@ -74,9 +74,9 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			arr[0] = "logic output";
 			arr[1] = (volts[0] < threshold) ? "low" : "high";
-			if (isNumeric()) {
-				arr[1] = value;
-			}
+			//if (isNumeric()) {
+			//	arr[1] = value;
+			//}
 			arr[2] = "V = " + getVoltageText(volts[0]);
 		}
 

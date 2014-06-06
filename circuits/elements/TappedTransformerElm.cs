@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class TappedTransformerElm : CircuitElm {
 		public double inductance, ratio;
-		public Point[] ptEnds, ptCoil, ptCore;
+		public Point[] ptEnds;
 		new public double[] current, curcount;
 
 		public TappedTransformerElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
@@ -60,31 +60,31 @@ namespace Circuits {
 			setBbox(ptEnds[0], ptEnds[4], 0);
 		}*/
 
-		public override void setPoints() {
-			base.setPoints();
-			int hs = 32;
-			ptEnds = newPointArray(5);
-			ptCoil = newPointArray(5);
-			ptCore = newPointArray(4);
-			ptEnds[0] = point1;
-			ptEnds[2] = point2;
-			interpPoint(point1, point2, ptEnds[1], 0, -hs * 2);
-			interpPoint(point1, point2, ptEnds[3], 1, -hs);
-			interpPoint(point1, point2, ptEnds[4], 1, -hs * 2);
-			double ce = .5 - 12 / dn;
-			double cd = .5 - 2 / dn;
-			int i;
-			interpPoint(ptEnds[0], ptEnds[2], ptCoil[0], ce);
-			interpPoint(ptEnds[0], ptEnds[2], ptCoil[1], ce, -hs * 2);
-			interpPoint(ptEnds[0], ptEnds[2], ptCoil[2], 1 - ce);
-			interpPoint(ptEnds[0], ptEnds[2], ptCoil[3], 1 - ce, -hs);
-			interpPoint(ptEnds[0], ptEnds[2], ptCoil[4], 1 - ce, -hs * 2);
-			for (i = 0; i != 2; i++) {
-				int b = -hs * i * 2;
-				interpPoint(ptEnds[0], ptEnds[2], ptCore[i], cd, b);
-				interpPoint(ptEnds[0], ptEnds[2], ptCore[i + 2], 1 - cd, b);
-			}
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int hs = 32;
+//			ptEnds = newPointArray(5);
+//			ptCoil = newPointArray(5);
+//			ptCore = newPointArray(4);
+//			ptEnds[0] = point1;
+//			ptEnds[2] = point2;
+//			interpPoint(point1, point2, ptEnds[1], 0, -hs * 2);
+//			interpPoint(point1, point2, ptEnds[3], 1, -hs);
+//			interpPoint(point1, point2, ptEnds[4], 1, -hs * 2);
+//			double ce = .5 - 12 / dn;
+//			double cd = .5 - 2 / dn;
+//			int i;
+//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[0], ce);
+//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[1], ce, -hs * 2);
+//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[2], 1 - ce);
+//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[3], 1 - ce, -hs);
+//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[4], 1 - ce, -hs * 2);
+//			for (i = 0; i != 2; i++) {
+//				int b = -hs * i * 2;
+//				interpPoint(ptEnds[0], ptEnds[2], ptCore[i], cd, b);
+//				interpPoint(ptEnds[0], ptEnds[2], ptCore[i + 2], 1 - cd, b);
+//			}
+//		}
 
 		public override Point getPost(int n) {
 			return ptEnds[n];

@@ -26,13 +26,11 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = 2;
 			pins = new Pin[getPostCount()];
 
-			pins[0] = new Pin(0, SIDE_W, "",this);
+			pins[0] = new Pin("");
 			pins[0].clock = true;
-			pins[1] = new Pin(1, SIDE_E, "Q",this);
+			pins[1] = new Pin("Q");
 			pins[1].output = true;
 		}
 

@@ -17,31 +17,25 @@ namespace Circuits {
 			coolTime = .4;
 		}
 
-		public Point[] bulbLead, filament;
-		public Point bulb;
-		public int bulbR;
-
 		public override void reset() {
 			base.reset();
 			temp = roomTemp;
 		}
 
-		public int filament_len = 24;
-
-		public override void setPoints() {
-			base.setPoints();
-			int llen = 16;
-			calcLeads(llen);
-			bulbLead = newPointArray(2);
-			filament = newPointArray(2);
-			bulbR = 20;
-			filament[0] = interpPoint(lead1, lead2, 0, filament_len);
-			filament[1] = interpPoint(lead1, lead2, 1, filament_len);
-			double br = filament_len - Math.Sqrt(bulbR * bulbR - llen * llen);
-			bulbLead[0] = interpPoint(lead1, lead2, 0, br);
-			bulbLead[1] = interpPoint(lead1, lead2, 1, br);
-			bulb = interpPoint(filament[0], filament[1], .5);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int llen = 16;
+//			calcLeads(llen);
+//			bulbLead = newPointArray(2);
+//			filament = newPointArray(2);
+//			bulbR = 20;
+//			filament[0] = interpPoint(lead1, lead2, 0, filament_len);
+//			filament[1] = interpPoint(lead1, lead2, 1, filament_len);
+//			double br = filament_len - Math.Sqrt(bulbR * bulbR - llen * llen);
+//			bulbLead[0] = interpPoint(lead1, lead2, 0, br);
+//			bulbLead[1] = interpPoint(lead1, lead2, 1, br);
+//			bulb = interpPoint(filament[0], filament[1], .5);
+//		}
 
 		/*public override void draw(Graphics g) {
 			double v1 = volts[0];

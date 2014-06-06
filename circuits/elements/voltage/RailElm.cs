@@ -16,10 +16,10 @@ namespace Circuits {
 			return 1;
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
+//		}
 
 		/*public override void draw(Graphics g) {
 			setBbox(point1, point2, circleSize);

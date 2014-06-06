@@ -21,21 +21,18 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = bits > 2 ? bits : 2;
 			pins = new Pin[getPostCount()];
-			pins[0] = new Pin(0, SIDE_W, "",this);
+			pins[0] = new Pin("");
 			pins[0].clock = true;
-			pins[1] = new Pin(sizeY - 1, SIDE_W, "R",this);
-			pins[1].bubble = invertreset;
+			pins[1] = new Pin("R");
 			int i;
 			for (i = 0; i != bits; i++) {
 				int ii = i + 2;
-				pins[ii] = new Pin(i, SIDE_E, "Q" + (bits - i - 1),this);
-				pins[ii].output = pins[ii].state = true;
+				pins[ii] = new Pin("Q" + (bits - i - 1));
+				pins[ii].output = true;
 			}
 			if (hasEnable()) {
-				pins[bits + 2] = new Pin(sizeY - 2, SIDE_W, "En",this);
+				pins[bits + 2] = new Pin("En");
 			}
 			allocNodes();
 		}

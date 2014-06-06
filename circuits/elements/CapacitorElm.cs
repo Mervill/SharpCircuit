@@ -7,7 +7,6 @@ namespace Circuits {
 	public class CapacitorElm : CircuitElm {
 		public double capacitance;
 		public double compResistance, voltdiff;
-		public Point[] plate1, plate2;
 		public static int FLAG_BACK_EULER = 2;
 
 		public CapacitorElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
@@ -29,18 +28,18 @@ namespace Circuits {
 			voltdiff = 1e-3;
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			double f = (dn / 2 - 4) / dn;
-			// calc leads
-			lead1 = interpPoint(point1, point2, f);
-			lead2 = interpPoint(point1, point2, 1 - f);
-			// calc plates
-			plate1 = newPointArray(2);
-			plate2 = newPointArray(2);
-			interpPoint2(point1, point2, plate1[0], plate1[1], f, 12);
-			interpPoint2(point1, point2, plate2[0], plate2[1], 1 - f, 12);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			double f = (dn / 2 - 4) / dn;
+//			// calc leads
+//			lead1 = interpPoint(point1, point2, f);
+//			lead2 = interpPoint(point1, point2, 1 - f);
+//			// calc plates
+//			plate1 = newPointArray(2);
+//			plate2 = newPointArray(2);
+//			interpPoint2(point1, point2, plate1[0], plate1[1], f, 12);
+//			interpPoint2(point1, point2, plate2[0], plate2[1], 1 - f, 12);
+//		}
 
 		/*public override void draw(Graphics g) {
 			int hs = 12;

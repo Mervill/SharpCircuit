@@ -31,39 +31,35 @@ namespace Circuits {
 			drawDots(g, lead2, point2, curcount);
 		}*/
 
-		//public Polygon gatePoly;
-		//public Polygon symbolPoly;
-		public Point pcircle;
-
-		public override void setPoints() {
-			base.setPoints();
-			int hs = 16;
-			int ww = 16;
-			if (ww > dn / 2) {
-				ww = (int) (dn / 2);
-			}
-			lead1 = interpPoint(point1, point2, .5 - ww / dn);
-			lead2 = interpPoint(point1, point2, .5 + (ww + 2) / dn);
-			pcircle = interpPoint(point1, point2, .5 + (ww - 2) / dn);
-			Point[] triPoints = newPointArray(3);
-			Point[] symPoints = newPointArray(6);
-			Point dummy = new Point(0, 0);
-			interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs);
-			triPoints[2] = interpPoint(point1, point2, .5 + (ww - 5) / dn);
-
-			interpPoint2(lead1, lead2, symPoints[5], symPoints[4], 0.2, hs / 4);// 0
-																				// 5
-																				// 1
-			interpPoint2(lead1, lead2, symPoints[1], symPoints[2], 0.35, hs / 4);// 4
-																					// 2
-																					// 3
-			interpPoint2(lead1, lead2, symPoints[0], dummy, 0.1, hs / 4);
-			interpPoint2(lead1, lead2, dummy, symPoints[3], 0.45, hs / 4);
-
-			//gatePoly = createPolygon(triPoints);
-			//symbolPoly = createPolygon(symPoints);
-			//setBbox(point1, point2, hs);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int hs = 16;
+//			int ww = 16;
+//			if (ww > dn / 2) {
+//				ww = (int) (dn / 2);
+//			}
+//			lead1 = interpPoint(point1, point2, .5 - ww / dn);
+//			lead2 = interpPoint(point1, point2, .5 + (ww + 2) / dn);
+//			pcircle = interpPoint(point1, point2, .5 + (ww - 2) / dn);
+//			Point[] triPoints = newPointArray(3);
+//			Point[] symPoints = newPointArray(6);
+//			Point dummy = new Point(0, 0);
+//			interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs);
+//			triPoints[2] = interpPoint(point1, point2, .5 + (ww - 5) / dn);
+//
+//			interpPoint2(lead1, lead2, symPoints[5], symPoints[4], 0.2, hs / 4);// 0
+//																				// 5
+//																				// 1
+//			interpPoint2(lead1, lead2, symPoints[1], symPoints[2], 0.35, hs / 4);// 4
+//																					// 2
+//																					// 3
+//			interpPoint2(lead1, lead2, symPoints[0], dummy, 0.1, hs / 4);
+//			interpPoint2(lead1, lead2, dummy, symPoints[3], 0.45, hs / 4);
+//
+//			//gatePoly = createPolygon(triPoints);
+//			//symbolPoly = createPolygon(symPoints);
+//			//setBbox(point1, point2, hs);
+//		}
 
 		public override int getVoltageSourceCount() {
 			return 1;
@@ -125,9 +121,6 @@ namespace Circuits {
 			}
 			return null;
 		}*/
-
-		public double dlt;
-		public double dut;
 
 		/*public void setEditValue(int n, EditInfo ei) {
 			if (n == 0) {

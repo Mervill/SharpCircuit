@@ -19,17 +19,14 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = 2;
 			pins = new Pin[getPostCount()];
 
-			pins[0] = new Pin(0, SIDE_E, "S", this);
+			pins[0] = new Pin("S");
 			pins[0].output = true;
-			pins[1] = new Pin(1, SIDE_E, "C", this);
+			pins[1] = new Pin("C");
 			pins[1].output = true;
-			pins[2] = new Pin(0, SIDE_W, "A", this);
-			pins[3] = new Pin(1, SIDE_W, "B", this);
-
+			pins[2] = new Pin("A");
+			pins[3] = new Pin("B");
 		}
 
 		public override int getPostCount() {

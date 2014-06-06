@@ -83,10 +83,10 @@ namespace Circuits {
 					+ circleSize);
 		}*/
 
-		public override void setPoints() {
-			base.setPoints();
-			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
+//		}
 
 		public override double getVoltageDiff() {
 			return volts[0];

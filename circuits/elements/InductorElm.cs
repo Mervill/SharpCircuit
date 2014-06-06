@@ -14,10 +14,10 @@ namespace Circuits {
 			ind.setup(inductance, current, flags);
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//		}
 
 		/*public override void draw(Graphics g) {
 			double v1 = volts[0];

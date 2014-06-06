@@ -100,7 +100,7 @@ namespace Circuits {
 		}*/
 
 		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? src[0] : drn[0];
+			return (n == 0) ? point1 : (n == 1) ? src : drn;
 		}
 
 		public override double getCurrent() {
@@ -115,41 +115,39 @@ namespace Circuits {
 			return 3;
 		}
 
-		public int pcircler;
-		public Point[] src, drn, gate;
-		public Point pcircle;
-		//public Polygon arrowPoly;
+		public Point src;
+		public Point drn;
 
-		public override void setPoints() {
-			base.setPoints();
-
-			// find the coordinates of the various points we need to draw
-			// the MOSFET.
-			int hs2 = hs * dsign;
-			src = newPointArray(3);
-			drn = newPointArray(3);
-			interpPoint2(point1, point2, src[0], drn[0], 1, -hs2);
-			interpPoint2(point1, point2, src[1], drn[1], 1 - 22 / dn, -hs2);
-			interpPoint2(point1, point2, src[2], drn[2], 1 - 22 / dn, -hs2 * 4 / 3);
-
-			gate = newPointArray(3);
-			interpPoint2(point1, point2, gate[0], gate[2], 1 - 28 / dn, hs2 / 2); // was
-																					// 1-20/dn
-			interpPoint(gate[0], gate[2], gate[1], .5);
-
-			if (!drawDigital()) {
-				if (pnp == 1) {
-					//arrowPoly = calcArrow(src[1], src[0], 10, 4);
-				} else {
-					//arrowPoly = calcArrow(drn[0], drn[1], 12, 5);
-				}
-			} else if (pnp == -1) {
-				interpPoint(point1, point2, gate[1], 1 - 36 / dn);
-				int dist = (dsign < 0) ? 32 : 31;
-				pcircle = interpPoint(point1, point2, 1 - dist / dn);
-				pcircler = 3;
-			}
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//
+//			// find the coordinates of the various points we need to draw
+//			// the MOSFET.
+//			int hs2 = hs * dsign;
+//			src = newPointArray(3);
+//			drn = newPointArray(3);
+//			interpPoint2(point1, point2, src[0], drn[0], 1, -hs2);
+//			interpPoint2(point1, point2, src[1], drn[1], 1 - 22 / dn, -hs2);
+//			interpPoint2(point1, point2, src[2], drn[2], 1 - 22 / dn, -hs2 * 4 / 3);
+//
+//			gate = newPointArray(3);
+//			interpPoint2(point1, point2, gate[0], gate[2], 1 - 28 / dn, hs2 / 2); // was
+//																					// 1-20/dn
+//			interpPoint(gate[0], gate[2], gate[1], .5);
+//
+//			if (!drawDigital()) {
+//				if (pnp == 1) {
+//					//arrowPoly = calcArrow(src[1], src[0], 10, 4);
+//				} else {
+//					//arrowPoly = calcArrow(drn[0], drn[1], 12, 5);
+//				}
+//			} else if (pnp == -1) {
+//				interpPoint(point1, point2, gate[1], 1 - 36 / dn);
+//				int dist = (dsign < 0) ? 32 : 31;
+//				pcircle = interpPoint(point1, point2, 1 - dist / dn);
+//				pcircler = 3;
+//			}
+//		}
 
 		public double lastv1, lastv2;
 		public double ids;

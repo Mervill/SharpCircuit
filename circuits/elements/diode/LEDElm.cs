@@ -5,24 +5,27 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class LEDElm : DiodeElm {
-		public double colorR, colorG, colorB;
 
 		public LEDElm(int xx, int yy, CirSim s) : base(xx, yy,s) {
 			fwdrop = 2.1024259;
 			setup();
-			colorR = 1;
-			colorG = colorB = 0;
 		}
 
-		public Point ledLead1, ledLead2, ledCenter;
-
-		public override void setPoints() {
-			base.setPoints();
-			int cr = 12;
-			ledLead1 = interpPoint(point1, point2, .5 - cr / dn);
-			ledLead2 = interpPoint(point1, point2, .5 + cr / dn);
-			ledCenter = interpPoint(point1, point2, .5);
+		/*
+		double w = 255 * current / .01;
+		if (w > 255) {
+			w = 255;
 		}
+		Color cc = new Color((int) (colorR * w), (int) (colorG * w),(int) (colorB * w));
+		*/
+
+//		public override void setPoints() {
+//			base.setPoints();
+//			int cr = 12;
+//			ledLead1 = interpPoint(point1, point2, .5 - cr / dn);
+//			ledLead2 = interpPoint(point1, point2, .5 + cr / dn);
+//			ledCenter = interpPoint(point1, point2, .5);
+//		}
 
 		/*public override void draw(Graphics g) {
 			if (needsHighlight() || this == sim.dragElm) {
@@ -42,8 +45,7 @@ namespace Circuits {
 			if (w > 255) {
 				w = 255;
 			}
-			Color cc = new Color((int) (colorR * w), (int) (colorG * w),
-					(int) (colorB * w));
+			Color cc = new Color((int) (colorR * w), (int) (colorG * w),(int) (colorB * w));
 			g.setColor(cc);
 			g.fillOval(ledCenter.x - cr, ledCenter.y - cr, cr * 2, cr * 2);
 			setBbox(point1, point2, cr);

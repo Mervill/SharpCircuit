@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public abstract class GateElm : CircuitElm {
+
 		public int FLAG_SMALL = 1;
 		public int inputCount = 2;
 		public bool lastOutput;
@@ -29,38 +30,37 @@ namespace Circuits {
 			flags = (s == 1) ? FLAG_SMALL : 0;
 		}
 
-		public Point[] inPosts, inGates;
-		public int ww;
+		public Point[] inPosts;
 
-		public override void setPoints() {
-			base.setPoints();
-			if (dn > 150 && this == sim.dragElm) {
-				setSize(2);
-			}
-			int hs = gheight;
-			int i;
-			ww = gwidth2; // was 24
-			if (ww > dn / 2) {
-				ww = (int) (dn / 2);
-			}
-			if (isInverting() && ww + 8 > dn / 2) {
-				ww = (int) (dn / 2 - 8);
-			}
-			calcLeads(ww * 2);
-			inPosts = new Point[inputCount];
-			inGates = new Point[inputCount];
-			allocNodes();
-			int i0 = -inputCount / 2;
-			for (i = 0; i != inputCount; i++, i0++) {
-				if (i0 == 0 && (inputCount & 1) == 0) {
-					i0++;
-				}
-				inPosts[i] = interpPoint(point1, point2, 0, hs * i0);
-				inGates[i] = interpPoint(lead1, lead2, 0, hs * i0);
-				volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
-			}
-			hs2 = gwidth * (inputCount / 2 + 1);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			if (dn > 150 && this == sim.dragElm) {
+//				setSize(2);
+//			}
+//			int hs = gheight;
+//			int i;
+//			ww = gwidth2; // was 24
+//			if (ww > dn / 2) {
+//				ww = (int) (dn / 2);
+//			}
+//			if (isInverting() && ww + 8 > dn / 2) {
+//				ww = (int) (dn / 2 - 8);
+//			}
+//			calcLeads(ww * 2);
+//			inPosts = new Point[inputCount];
+//			inGates = new Point[inputCount];
+//			allocNodes();
+//			int i0 = -inputCount / 2;
+//			for (i = 0; i != inputCount; i++, i0++) {
+//				if (i0 == 0 && (inputCount & 1) == 0) {
+//					i0++;
+//				}
+//				inPosts[i] = interpPoint(point1, point2, 0, hs * i0);
+//				inGates[i] = interpPoint(lead1, lead2, 0, hs * i0);
+//				volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
+//			}
+//			hs2 = gwidth * (inputCount / 2 + 1);
+//		}
 
 		/*public override void draw(Graphics g) {
 			int i;
@@ -84,9 +84,6 @@ namespace Circuits {
 			drawDots(g, lead2, point2, curcount);
 			drawPosts(g);
 		}*/
-
-		public Point pcircle;
-		public Point[] linePoints;
 
 		public override int getPostCount() {
 			return inputCount + 1;

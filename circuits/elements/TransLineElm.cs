@@ -25,7 +25,7 @@ namespace Circuits {
 			return 2;
 		}
 
-		public Point[] posts, inner;
+		public Point[] posts;
 
 		public override void reset() {
 			if (sim.timeStep == 0) {
@@ -43,24 +43,24 @@ namespace Circuits {
 			base.reset();
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			int ds = (dy == 0) ? sign(dx) : -sign(dy);
-			Point p3 = interpPoint(point1, point2, 0, -width * ds);
-			Point p4 = interpPoint(point1, point2, 1, -width * ds);
-			int sep = sim.gridSize / 2;
-			Point p5 = interpPoint(point1, point2, 0, -(width / 2 - sep) * ds);
-			Point p6 = interpPoint(point1, point2, 1, -(width / 2 - sep) * ds);
-			Point p7 = interpPoint(point1, point2, 0, -(width / 2 + sep) * ds);
-			Point p8 = interpPoint(point1, point2, 1, -(width / 2 + sep) * ds);
-
-			// we number the posts like this because we want the lower-numbered
-			// points to be on the bottom, so that if some of them are unconnected
-			// (which is often true) then the bottom ones will get automatically
-			// attached to ground.
-			posts = new Point[] { p3, p4, point1, point2 };
-			inner = new Point[] { p7, p8, p5, p6 };
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int ds = (dy == 0) ? sign(dx) : -sign(dy);
+//			Point p3 = interpPoint(point1, point2, 0, -width * ds);
+//			Point p4 = interpPoint(point1, point2, 1, -width * ds);
+//			int sep = sim.gridSize / 2;
+//			Point p5 = interpPoint(point1, point2, 0, -(width / 2 - sep) * ds);
+//			Point p6 = interpPoint(point1, point2, 1, -(width / 2 - sep) * ds);
+//			Point p7 = interpPoint(point1, point2, 0, -(width / 2 + sep) * ds);
+//			Point p8 = interpPoint(point1, point2, 1, -(width / 2 + sep) * ds);
+//
+//			// we number the posts like this because we want the lower-numbered
+//			// points to be on the bottom, so that if some of them are unconnected
+//			// (which is often true) then the bottom ones will get automatically
+//			// attached to ground.
+//			posts = new Point[] { p3, p4, point1, point2 };
+//			inner = new Point[] { p7, p8, p5, p6 };
+//		}
 
 		/*void draw(Graphics g) {
 			setBbox(posts[0], posts[3], 0);

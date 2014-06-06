@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class TransformerElm : CircuitElm {
 		public double inductance, ratio, couplingCoef;
-		public Point[] ptEnds, ptCoil, ptCore;
+		public Point[] ptEnds;
 		new public double[] current, curcount;
 		public int width;
 		public static int FLAG_BACK_EULER = 2;
@@ -51,26 +51,26 @@ namespace Circuits {
 			setBbox(ptEnds[0], ptEnds[3], 0);
 		}*/
 		
-		override public void setPoints() {
-			base.setPoints();
-			point2.y = point1.y;
-			ptEnds = newPointArray(4);
-			ptCoil = newPointArray(4);
-			ptCore = newPointArray(4);
-			ptEnds[0] = point1;
-			ptEnds[1] = point2;
-			interpPoint(point1, point2, ptEnds[2], 0, -dsign * width);
-			interpPoint(point1, point2, ptEnds[3], 1, -dsign * width);
-			double ce = .5 - 12 / dn;
-			double cd = .5 - 2 / dn;
-			int i;
-			for (i = 0; i != 4; i += 2) {
-				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i], ce);
-				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i + 1], 1 - ce);
-				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i], cd);
-				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i + 1], 1 - cd);
-			}
-		}
+//		override public void setPoints() {
+//			base.setPoints();
+//			point2.y = point1.y;
+//			ptEnds = newPointArray(4);
+//			ptCoil = newPointArray(4);
+//			ptCore = newPointArray(4);
+//			ptEnds[0] = point1;
+//			ptEnds[1] = point2;
+//			interpPoint(point1, point2, ptEnds[2], 0, -dsign * width);
+//			interpPoint(point1, point2, ptEnds[3], 1, -dsign * width);
+//			double ce = .5 - 12 / dn;
+//			double cd = .5 - 2 / dn;
+//			int i;
+//			for (i = 0; i != 4; i += 2) {
+//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i], ce);
+//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i + 1], 1 - ce);
+//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i], cd);
+//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i + 1], 1 - cd);
+//			}
+//		}
 
 		override public Point getPost(int n) {
 			return ptEnds[n];

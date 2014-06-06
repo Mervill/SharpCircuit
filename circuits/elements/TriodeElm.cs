@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class TriodeElm : CircuitElm {
 		public double mu, kg1;
-		public double curcountp, curcountc, curcountg, currentp, currentg, currentc;
+		public double currentp, currentg, currentc;
 		public double gridCurrentR = 6000;
 
 		public TriodeElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
@@ -28,38 +28,38 @@ namespace Circuits {
 			curcount = 0;
 		}
 
-		public Point[] plate, grid, cath; 
-		public Point midgrid, midcath;
-		public int circler;
+		public Point plate;
+		public Point grid; 
+		public Point cath; 
 
-		public override void setPoints() {
-			base.setPoints();
-			plate = newPointArray(4);
-			grid = newPointArray(8);
-			cath = newPointArray(4);
-			grid[0] = point1;
-			int nearw = 8;
-			interpPoint(point1, point2, plate[1], 1, nearw);
-			int farw = 32;
-			interpPoint(point1, point2, plate[0], 1, farw);
-			int platew = 18;
-			interpPoint2(point2, plate[1], plate[2], plate[3], 1, platew);
-
-			circler = 24;
-			interpPoint(point1, point2, grid[1], (dn - circler) / dn, 0);
-			int i;
-			for (i = 0; i != 3; i++) {
-				interpPoint(grid[1], point2, grid[2 + i * 2], (i * 3 + 1) / 4.5, 0);
-				interpPoint(grid[1], point2, grid[3 + i * 2], (i * 3 + 2) / 4.5, 0);
-			}
-			midgrid = point2;
-
-			int cathw = 16;
-			midcath = interpPoint(point1, point2, 1, -nearw);
-			interpPoint2(point2, plate[1], cath[1], cath[2], -1, cathw);
-			interpPoint(point2, plate[1], cath[3], -1.2, -cathw);
-			interpPoint(point2, plate[1], cath[0], -farw / (double) nearw, cathw);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			plate = newPointArray(4);
+//			grid = newPointArray(8);
+//			cath = newPointArray(4);
+//			grid[0] = point1;
+//			int nearw = 8;
+//			interpPoint(point1, point2, plate[1], 1, nearw);
+//			int farw = 32;
+//			interpPoint(point1, point2, plate[0], 1, farw);
+//			int platew = 18;
+//			interpPoint2(point2, plate[1], plate[2], plate[3], 1, platew);
+//
+//			circler = 24;
+//			interpPoint(point1, point2, grid[1], (dn - circler) / dn, 0);
+//			int i;
+//			for (i = 0; i != 3; i++) {
+//				interpPoint(grid[1], point2, grid[2 + i * 2], (i * 3 + 1) / 4.5, 0);
+//				interpPoint(grid[1], point2, grid[3 + i * 2], (i * 3 + 2) / 4.5, 0);
+//			}
+//			midgrid = point2;
+//
+//			int cathw = 16;
+//			midcath = interpPoint(point1, point2, 1, -nearw);
+//			interpPoint2(point2, plate[1], cath[1], cath[2], -1, cathw);
+//			interpPoint(point2, plate[1], cath[3], -1.2, -cathw);
+//			interpPoint(point2, plate[1], cath[0], -farw / (double) nearw, cathw);
+//		}
 
 		/*public override void draw(Graphics g) {
 			g.setColor(Color.gray);
@@ -97,7 +97,7 @@ namespace Circuits {
 		}*/
 
 		public override Point getPost(int n) {
-			return (n == 0) ? plate[0] : (n == 1) ? grid[0] : cath[0];
+			return (n == 0) ? plate : (n == 1) ? grid : cath;
 		}
 
 		public override int getPostCount() {

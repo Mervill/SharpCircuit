@@ -45,49 +45,46 @@ namespace Circuits {
 		public override void reset() {
 			volts[anode] = volts[cnode] = volts[gnode] = 0;
 			diode.reset();
-			lastvag = lastvac = curcount_a = curcount_c = curcount_g = 0;
+			lastvag = lastvac = 0;
 		}
 
-		public double ia, ic, ig, curcount_a, curcount_c, curcount_g;
+		public double ia, ic, ig;
 		public double lastvac, lastvag;
 		public double cresistance, triggerI, holdingI;
 
-		public int hs = 8;
-		//public Polygon poly;
-		public Point[] cathode, gate;
+		public Point gate;
 
-		public override void setPoints() {
-			base.setPoints();
-			int dir = 0;
-			if (abs(dx) > abs(dy)) {
-				dir = -sign(dx) * sign(dy);
-				point2.y = point1.y;
-			} else {
-				dir = sign(dy) * sign(dx);
-				point2.x = point1.x;
-			}
-			if (dir == 0) {
-				dir = 1;
-			}
-			calcLeads(16);
-			cathode = newPointArray(2);
-			Point[] pa = newPointArray(2);
-			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
-			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-
-			gate = newPointArray(2);
-			double leadlen = (dn - 16) / 2;
-			int gatelen = sim.gridSize;
-			gatelen += (int)leadlen % sim.gridSize;
-			if (leadlen < gatelen) {
-				x2 = x;
-				y2 = y;
-				return;
-			}
-			interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
-			interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.gridSize * 2
-					* dir);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			int dir = 0;
+//			if (abs(dx) > abs(dy)) {
+//				dir = -sign(dx) * sign(dy);
+//				point2.y = point1.y;
+//			} else {
+//				dir = sign(dy) * sign(dx);
+//				point2.x = point1.x;
+//			}
+//			if (dir == 0) {
+//				dir = 1;
+//			}
+//			calcLeads(16);
+//			cathode = newPointArray(2);
+//			Point[] pa = newPointArray(2);
+//			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
+//			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
+//
+//			gate = newPointArray(2);
+//			double leadlen = (dn - 16) / 2;
+//			int gatelen = sim.gridSize;
+//			gatelen += (int)leadlen % sim.gridSize;
+//			if (leadlen < gatelen) {
+//				x2 = x;
+//				y2 = y;
+//				return;
+//			}
+//			interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
+//			interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.gridSize * 2 * dir);
+//		}
 
 		/*public override void draw(Graphics g) {
 			setBbox(point1, point2, hs);
@@ -123,7 +120,7 @@ namespace Circuits {
 		}*/
 
 		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
+			return (n == 0) ? point1 : (n == 1) ? point2 : gate;
 		}
 
 		public override int getPostCount() {
@@ -135,8 +132,7 @@ namespace Circuits {
 		}
 
 		public override double getPower() {
-			return (volts[anode] - volts[gnode]) * ia
-					+ (volts[cnode] - volts[gnode]) * ic;
+			return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
 		}
 
 		public double aresistance;

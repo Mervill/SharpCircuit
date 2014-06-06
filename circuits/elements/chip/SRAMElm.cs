@@ -24,28 +24,26 @@ namespace Circuits {
 										// twice as much data as I'd need in C
 
 		public override void setupPins() {
-			sizeX = 4;
-			sizeY = 9;
 			pins = new Pin[19];
-			pins[0] = new Pin(0, SIDE_W, "A7",this);
-			pins[1] = new Pin(1, SIDE_W, "A6",this);
-			pins[2] = new Pin(2, SIDE_W, "A5",this);
-			pins[3] = new Pin(3, SIDE_W, "A4",this);
-			pins[4] = new Pin(4, SIDE_W, "A3",this);
-			pins[5] = new Pin(5, SIDE_W, "A2",this);
-			pins[6] = new Pin(6, SIDE_W, "A1",this);
-			pins[7] = new Pin(7, SIDE_W, "A0",this);
-			pins[8] = new Pin(8, SIDE_W, "R",this);
-			pins[9] = new Pin(8, SIDE_E, "W",this);
+			pins[0] = new Pin("A7");
+			pins[1] = new Pin("A6");
+			pins[2] = new Pin("A5");
+			pins[3] = new Pin("A4");
+			pins[4] = new Pin("A3");
+			pins[5] = new Pin("A2");
+			pins[6] = new Pin("A1");
+			pins[7] = new Pin("A0");
+			pins[8] = new Pin("R");
+			pins[9] = new Pin("W");
 
-			pins[10] = new Pin(0, SIDE_E, "D7",this);
-			pins[11] = new Pin(1, SIDE_E, "D6",this);
-			pins[12] = new Pin(2, SIDE_E, "D5",this);
-			pins[13] = new Pin(3, SIDE_E, "D4",this);
-			pins[14] = new Pin(4, SIDE_E, "D3",this);
-			pins[15] = new Pin(5, SIDE_E, "D2",this);
-			pins[16] = new Pin(6, SIDE_E, "D1",this);
-			pins[17] = new Pin(7, SIDE_E, "D0",this);
+			pins[10] = new Pin("D7");
+			pins[11] = new Pin("D6");
+			pins[12] = new Pin("D5");
+			pins[13] = new Pin("D4");
+			pins[14] = new Pin("D3");
+			pins[15] = new Pin("D2");
+			pins[16] = new Pin("D1");
+			pins[17] = new Pin("D0");
 			pins[10].output = true;
 			pins[11].output = true;
 			pins[12].output = true;

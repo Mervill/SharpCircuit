@@ -100,33 +100,27 @@ public class Example {
 		sim = new CirSim();
 		
 		List<CircuitElm> elements = new List<CircuitElm>();
-		
-		elements.Add(ACSource = new ACVoltageElm(5,5,sim){
-			x2 = 5,
-			y2 = 10
-		});
-		
-		elements.Add(Resistor = new ResistorElm(5,5,sim){
-			x2 = 10,
-			y2 = 5,
-			resistance = 180
-		});
 
-		elements.Add(Inductor = new InductorElm(10,5,sim){
-			x2 = 10,
-			y2 = 10
+		// Give these two elements absolute positions.
+		elements.Add(ACSource = new ACVoltageElm(50,50,sim));
+		elements.Add(Inductor = new InductorElm(60,50,sim));
+
+		// Wire these elements relative to the above elements.
+		elements.Add(Resistor = new ResistorElm(0,0,sim){
+			point1 = ACSource.point1,
+			point2 = Inductor.point1,
+			resistance = 100
 		});
 		
-		elements.Add(wire = new WireElm(10,10,sim){
-			x2 = 5,
-			y2 = 10
+		elements.Add(wire = new WireElm(0,0,sim){
+			point1 = Inductor.point2,
+			point2 = ACSource.point2
 		});
 		
 		foreach(CircuitElm elm in elements){
-			elm.setPoints();
 			sim.elmList.Add(elm);
 		}
-
+		
 		sim.analyzeFlag = true;
 		sim.stoppedCheck = false;
 	}
@@ -135,107 +129,6 @@ public class Example {
 		sim.updateCircuit();
 		if(sim.stoppedCheck){
 			Console.WriteLine(sim.stopMessage);
-		}
-	}
-}
-```
-
-```csharp
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-using Circuits;
-
-public class Example {
-	
-	//
-	// Trivial example of Ohm's law. Two resistors are
-	// connected to a single-terminal voltage source and
-	// then to ground. The current in scope2 should be
-	// 10 times larger then then current in scope1.
-	//
-	// You can use element.getVoltageText() to get 
-	// a nicely formatted current output.
-	//
-	
-	CirSim sim;
-	
-	VarRailElm 		VoltageSource;
-	ResistorElm 	ResistorA;
-	ResistorElm 	ResistorB;
-	
-	Wire scope1;
-	Wire scope2;
-	
-	void Init(){
-		
-		sim = new CirSim();
-		
-		List<CircuitElm> elements = new List<CircuitElm>();
-		
-		elements.Add(VoltageSource = new VarRailElm(0,5,sim){
-			x2 = 0,
-			y2 = 0,
-			slider = 100
-		});
-		
-		elements.Add(new WireElm(0,5,sim){
-			x2 = 0,
-			y2 = 10
-		});
-		
-		elements.Add(ResistorA = new ResistorElm(0,10,sim){
-			x2 = 0,
-			y2 = 15,
-			resistance = 100
-		});
-		
-		elements.Add(scope1 = new WireElm(0,15,sim){
-			x2 = 0,
-			y2 = 20
-		});
-		
-		elements.Add(new GroundElm(0,20,sim){
-			x2 = 0,
-			y2 = 25
-		});
-
-		wires.Add(new WireElm(0,5,sim){
-			x2 = 5,
-			y2 = 10
-		});
-
-		elements.Add(ResistorB = new ResistorElm(5,10,sim){
-			x2 = 5,
-			y2 = 15,
-			resistorB.resistance  = 1000
-		});
-		
-		elements.Add(scope2 = new WireElm(5,15,sim){
-			x2 = 5,
-			y2 = 20
-		});
-		
-		elements.Add(new GroundElm(5,20,sim){
-			x2 = 5,
-			y2 = 25
-		});
-		
-		foreach(CircuitElm elm in elements){
-			elm.setPoints();
-			sim.elmList.Add(elm);
-		}
-
-		sim.analyzeFlag = true;
-		sim.stoppedCheck = false;
-	}
-
-	void Tick(){
-		sim.updateCircuit();
-		if(sim.stoppedCheck){
-			Debug.LogWarning(sim.stopMessage);
 		}
 	}
 }

@@ -9,8 +9,14 @@ namespace Circuits {
 		public int x{ get; set; }
 		public int y{ get; set; }
 
+		public CircuitElm linked;
+
 		public Point(){
 			
+		}
+
+		public Point(CircuitElm other){
+			linked = other;
 		}
 
 		public Point(Point other){

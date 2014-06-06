@@ -22,14 +22,12 @@ namespace Circuits {
 			return true;
 		}
 
-		public Point ps3, ps4;
-
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			ps3 = new Point();
-			ps4 = new Point();
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			ps3 = new Point();
+//			ps4 = new Point();
+//		}
 
 		/*public override void draw(Graphics g) {
 			setBbox(point1, point2, 6);

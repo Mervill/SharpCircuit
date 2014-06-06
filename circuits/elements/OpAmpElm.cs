@@ -5,8 +5,8 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class OpAmpElm : CircuitElm {
-		public int opsize, opheight, opwidth, opaddtext;
-		public double maxOut, minOut, gain, gbw;
+
+		public double maxOut, minOut, gain;
 		//public bool reset;
 		public int FLAG_SWAP = 1;
 		public int FLAG_SMALL = 2;
@@ -16,7 +16,6 @@ namespace Circuits {
 			noDiagonal = true;
 			maxOut = 15;
 			minOut = -15;
-			gbw = 1e6;
 			setSize(sim.smallGridCheckItem ? 1 : 2);
 			setGain();
 		}
@@ -54,49 +53,45 @@ namespace Circuits {
 			return volts[2] * current;
 		}
 
-		public Point[] in1p, in2p, textp;
-		//public Polygon triangle;
-		//public Font plusFont;
+		public Point in1p;
+		public Point in2p;
 
 		void setSize(int s) {
-			opsize = s;
-			opheight = 8 * s;
-			opwidth = 13 * s;
 			flags = (flags & ~FLAG_SMALL) | ((s == 1) ? FLAG_SMALL : 0);
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			if (dn > 150 && this == sim.dragElm) {
-				setSize(2);
-			}
-			int ww = opwidth;
-			if (ww > dn / 2) {
-				ww = (int) (dn / 2);
-			}
-			calcLeads(ww * 2);
-			int hs = opheight * dsign;
-			if ((flags & FLAG_SWAP) != 0) {
-				hs = -hs;
-			}
-			in1p = newPointArray(2);
-			in2p = newPointArray(2);
-			textp = newPointArray(2);
-			interpPoint2(point1, point2, in1p[0], in2p[0], 0, hs);
-			interpPoint2(lead1, lead2, in1p[1], in2p[1], 0, hs);
-			interpPoint2(lead1, lead2, textp[0], textp[1], .2, hs);
-			Point[] tris = newPointArray(2);
-			interpPoint2(lead1, lead2, tris[0], tris[1], 0, hs * 2);
-			//triangle = createPolygon(tris[0], tris[1], lead2);
-			//plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			if (dn > 150 && this == sim.dragElm) {
+//				setSize(2);
+//			}
+//			int ww = opwidth;
+//			if (ww > dn / 2) {
+//				ww = (int) (dn / 2);
+//			}
+//			calcLeads(ww * 2);
+//			int hs = opheight * dsign;
+//			if ((flags & FLAG_SWAP) != 0) {
+//				hs = -hs;
+//			}
+//			in1p = newPointArray(2);
+//			in2p = newPointArray(2);
+//			textp = newPointArray(2);
+//			interpPoint2(point1, point2, in1p[0], in2p[0], 0, hs);
+//			interpPoint2(lead1, lead2, in1p[1], in2p[1], 0, hs);
+//			interpPoint2(lead1, lead2, textp[0], textp[1], .2, hs);
+//			Point[] tris = newPointArray(2);
+//			interpPoint2(lead1, lead2, tris[0], tris[1], 0, hs * 2);
+//			//triangle = createPolygon(tris[0], tris[1], lead2);
+//			//plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
+//		}
 
 		public override int getPostCount() {
 			return 3;
 		}
 
 		public override Point getPost(int n) {
-			return (n == 0) ? in1p[0] : (n == 1) ? in2p[0] : point2;
+			return (n == 0) ? in1p : (n == 1) ? in2p : point2;
 		}
 
 		public override int getVoltageSourceCount() {

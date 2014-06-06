@@ -5,7 +5,6 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class OutputElm : CircuitElm {
-		public int FLAG_VALUE = 1;
 
 		public OutputElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
 
@@ -15,10 +14,10 @@ namespace Circuits {
 			return 1;
 		}
 
-		public override void setPoints() {
-			base.setPoints();
-			lead1 = new Point();
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			lead1 = new Point();
+//		}
 
 		/*public override void draw(Graphics g) {
 			boolean selected = (needsHighlight() || sim.plotYElm == this);

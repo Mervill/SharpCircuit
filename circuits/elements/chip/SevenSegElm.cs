@@ -18,16 +18,14 @@ namespace Circuits {
 
 		public override void setupPins() {
 			//darkred = new Color(30, 0, 0);
-			sizeX = 4;
-			sizeY = 4;
 			pins = new Pin[7];
-			pins[0] = new Pin(0, SIDE_W, "a", this);
-			pins[1] = new Pin(1, SIDE_W, "b", this);
-			pins[2] = new Pin(2, SIDE_W, "c", this);
-			pins[3] = new Pin(3, SIDE_W, "d", this);
-			pins[4] = new Pin(1, SIDE_S, "e", this);
-			pins[5] = new Pin(2, SIDE_S, "f", this);
-			pins[6] = new Pin(3, SIDE_S, "g", this);
+			pins[0] = new Pin("a");
+			pins[1] = new Pin("b");
+			pins[2] = new Pin("c");
+			pins[3] = new Pin("d");
+			pins[4] = new Pin("e");
+			pins[5] = new Pin("f");
+			pins[6] = new Pin("g");
 		}
 
 		/*void draw(Graphics g) {

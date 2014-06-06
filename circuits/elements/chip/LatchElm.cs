@@ -21,18 +21,16 @@ namespace Circuits {
 		public int loadPin;
 
 		public override void setupPins() {
-			sizeX = 2;
-			sizeY = bits + 1;
 			pins = new Pin[getPostCount()];
 			int i;
 			for (i = 0; i != bits; i++) {
-				pins[i] = new Pin(bits - 1 - i, SIDE_W, "I" + i, this);
+				pins[i] = new Pin("I"+i);
 			}
 			for (i = 0; i != bits; i++) {
-				pins[i + bits] = new Pin(bits - 1 - i, SIDE_E, "O", this);
+				pins[i + bits] = new Pin("O"+i);
 				pins[i + bits].output = true;
 			}
-			pins[loadPin = bits * 2] = new Pin(bits, SIDE_W, "Ld", this);
+			pins[loadPin = bits * 2] = new Pin("Ld");
 			allocNodes();
 		}
 

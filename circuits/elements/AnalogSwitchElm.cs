@@ -14,16 +14,16 @@ namespace Circuits {
 		}
 
 		public bool open;
-		public Point ps, point3, lead3;
+		public Point point3;
 
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			ps = new Point();
-			int openhs = 16;
-			point3 = interpPoint(point1, point2, .5, -openhs);
-			lead3 = interpPoint(point1, point2, .5, -openhs / 2);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			ps = new Point();
+//			int openhs = 16;
+//			point3 = interpPoint(point1, point2, .5, -openhs);
+//			lead3 = interpPoint(point1, point2, .5, -openhs / 2);
+//		}
 
 		/*public override void draw(Graphics g) {
 			int openhs = 16;

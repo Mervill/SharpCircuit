@@ -16,28 +16,28 @@ namespace Circuits {
 		}
 
 		public bool open;
-		public Point ps, point3, point4, lead3;
-		//public Polygon gatePoly;
+		public Point point3;
+		public Point point4;
 
-		public override void setPoints() {
-			base.setPoints();
-			calcLeads(32);
-			ps = new Point();
-			int hs = 16;
-
-			int ww = 16;
-			if (ww > dn / 2) {
-				ww = (int) (dn / 2);
-			}
-			//Point[] triPoints = newPointArray(3);
-			//interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs + 2);
-			//triPoints[2] = interpPoint(point1, point2, .5 + (ww - 2) / dn);
-			//gatePoly = createPolygon(triPoints);
-
-			point3 = interpPoint(point1, point2, .5, -hs);
-			point4 = interpPoint(point1, point2, .5, 0);
-			lead3 = interpPoint(point1, point2, .5, -hs / 2);
-		}
+//		public override void setPoints() {
+//			base.setPoints();
+//			calcLeads(32);
+//			ps = new Point();
+//			int hs = 16;
+//
+//			int ww = 16;
+//			if (ww > dn / 2) {
+//				ww = (int) (dn / 2);
+//			}
+//			//Point[] triPoints = newPointArray(3);
+//			//interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs + 2);
+//			//triPoints[2] = interpPoint(point1, point2, .5 + (ww - 2) / dn);
+//			//gatePoly = createPolygon(triPoints);
+//
+//			point3 = interpPoint(point1, point2, .5, -hs);
+//			point4 = interpPoint(point1, point2, .5, 0);
+//			lead3 = interpPoint(point1, point2, .5, -hs / 2);
+//		}
 
 		/*public override void drawPosts(Graphics g) {
 			int i;
