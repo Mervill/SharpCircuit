@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public abstract class CircuitElm {
 		
-		public static double voltageRange = 5;
+		public static double voltageRange = 5.0;
 		public static double currentMult, powerMult;
 
 		protected CirSim sim;
@@ -23,7 +23,7 @@ namespace Circuits {
 
 		public CircuitElm(int xx, int yy, CirSim s) {
 			point1 = new Point(xx,yy);
-			point2 = new Point(xx,yy + 1);
+			point2 = new Point(xx,yy + 10);
 
 			flags = getDefaultFlags();
 			allocNodes();
