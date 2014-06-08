@@ -10,7 +10,9 @@ namespace Circuits {
 	}
 
 	public class CircuitNode {
-		public int x, y;
+
+		public Weld weld = new Weld();
+
 		public List<CircuitNodeLink> links;
 		public bool @internal;
 		
@@ -18,4 +20,9 @@ namespace Circuits {
 			links = new List<CircuitNodeLink>();
 		}
 	}
+
+	public class Weld {
+
+	}
+
 }

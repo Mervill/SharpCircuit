@@ -22,8 +22,8 @@ namespace Circuits {
 		public bool noDiagonal;
 
 		public CircuitElm(int xx, int yy, CirSim s) {
-			point1 = new Point(xx,yy);
-			point2 = new Point(xx,yy + 10);
+			point1 = new Point();
+			point2 = new Point();
 
 			flags = getDefaultFlags();
 			allocNodes();
@@ -180,21 +180,6 @@ namespace Circuits {
 			return 3;
 		}
 
-		#region API
-
-		public void Attach(CircuitElm other){
-			for(int i = 0;i < getPostCount();i++){
-				Point pt = getPost(i);
-				if(pt == null){
-					pt = new Point(other);
-					return;
-				}
-			}
-			throw new Exception("Attach failed, no open node!");
-		}
-
-		#endregion
-
 		#region Static methods
 
 		public static String getVoltageDText(double v) {
@@ -285,12 +270,6 @@ namespace Circuits {
 		
 		public static int max(int a, int b) {
 			return (a > b) ? a : b;
-		}
-		
-		public static double distance(Point p1, Point p2) {
-			double x = p1.x - p2.x;
-			double y = p1.y - p2.y;
-			return Math.Sqrt(x * x + y * y);
 		}
 		#endregion
 	}

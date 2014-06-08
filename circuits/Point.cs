@@ -6,27 +6,21 @@ namespace Circuits {
 
 	public class Point {
 
-		public int x{ get; set; }
-		public int y{ get; set; }
-
-		public CircuitElm linked;
+		public Weld weld;
 
 		public Point(){
 			
 		}
 
-		public Point(CircuitElm other){
-			linked = other;
+		public void Soder(Point other){
+			if(weld == null)
+				weld = new Weld();
+
+			other.weld = weld;
 		}
 
-		public Point(Point other){
-			x = other.x;
-			y = other.y;
-		}
-
-		public Point(int xvalue,int yvalue){
-			x = xvalue;
-			y = yvalue;
+		public bool SoderedTo(Point other){
+			return weld == this.weld;
 		}
 
 	}

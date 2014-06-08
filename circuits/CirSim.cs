@@ -431,7 +431,7 @@ namespace Circuits {
 
 			stopMessage = null;
 			stopElm = null;
-			int i, j;
+			int i, post_index;
 			int vscount = 0;
 			nodeList = new List<CircuitNode>();
 			bool gotGround = false;
@@ -459,13 +459,14 @@ namespace Circuits {
 			if (!gotGround && volt != null && !gotRail) {
 				CircuitNode cn = new CircuitNode();
 				Point pt = volt.getPost(0);
-				cn.x = pt.x;
-				cn.y = pt.y;
+				//cn.x = pt.x;
+				//cn.y = pt.y;
+				cn.weld = pt.weld;
 				nodeList.Add(cn);
 			} else {
 				// otherwise allocate extra node for ground
 				CircuitNode cn = new CircuitNode();
-				cn.x = cn.y = -1;
+				//cn.x = cn.y = -1;
 				nodeList.Add(cn);
 			}
 			// System.out.println("ac2");
@@ -475,15 +476,15 @@ namespace Circuits {
 			// allocate nodes and voltage sources
 			for (i = 0; i != elmList.Count; i++) {
 				CircuitElm current_elm = getElm(i);
-				int posts = current_elm.getPostCount();
+				int num_posts = current_elm.getPostCount();
 
 				// allocate a node for each post and match posts to nodes
-				for (j = 0; j != posts; j++) {
+				for (post_index = 0; post_index != num_posts; post_index++) {
 
-					Point current_post = current_elm.getPost(j);
+					Point current_post = current_elm.getPost(post_index);
 
-					int k;
-					for (k = 0; k != nodeList.Count; k++) {
+					int node_index;
+					for (node_index = 0; node_index != nodeList.Count; node_index++) {
 
 						//CircuitElm elm = getElm(k);
 						//if(pt == null)
@@ -492,62 +493,64 @@ namespace Circuits {
 						//if(pt.linked == elm)
 						//	break;
 
-						CircuitNode node = getCircuitNode(k);
-						if (current_post.x == node.x && current_post.y == node.y)
+						CircuitNode node = getCircuitNode(node_index);
+						//if (current_post.x == node.x && current_post.y == node.y)
+						//	break;
+
+						if(current_post.weld == node.weld)
 							break;
 
 					}
 
-					if (k == nodeList.Count) {
+					if (node_index == nodeList.Count) {
 						// No node at this location, create a
 						// new node and link the elm/pos to it.
 
 						CircuitNode newNode = new CircuitNode();
-						newNode.x = current_post.x;
-						newNode.y = current_post.y;
+						newNode.weld = current_post.weld;
 
 						CircuitNodeLink newLink = new CircuitNodeLink();
 						newLink.elm = current_elm;	// Assign the element to this link
-						newLink.num = j;			// Post on the element this link represents.
+						newLink.num = post_index;	// Post on the element this link represents.
 
-						newNode.links.Add(newLink); 			// Add the link to the new node.
-						current_elm.setNode(j, nodeList.Count); // Set the node index to the last element.
-						nodeList.Add(newNode); 					// Add the new node to the node list.
+						newNode.links.Add(newLink); 						// Add the link to the new node.
+						current_elm.setNode(post_index, nodeList.Count); 	// Set the node index to the last element.
+						nodeList.Add(newNode); 								// Add the new node to the node list.
 					} else {
 						// If a node is found at the current post's location,
 						// link the elm/post to the node.
 
-						CircuitNodeLink cnl = new CircuitNodeLink();
-						cnl.elm = current_elm; 	// Assign the element to this link
-						cnl.num = j; 			// Post on the element this link represents.
+						CircuitNodeLink newLink = new CircuitNodeLink();
+						newLink.elm = current_elm; 	// Assign the element to this link
+						newLink.num = post_index; 	// Post on the element this link represents.
 
 						// Find the node in question and add the new link.
-						getCircuitNode(k).links.Add(cnl);
+						getCircuitNode(node_index).links.Add(newLink);
 
-						current_elm.setNode(j, k); // Associate the Post with the circut node.
+						current_elm.setNode(post_index, node_index); // Associate the Post with the circut node.
 
 						// if it's the ground node, make sure the node voltage is 0,
 						// cause it may not get set later
-						if (k == 0)
-							current_elm.setNodeVoltage(j, 0);
+						if (node_index == 0)
+							current_elm.setNodeVoltage(post_index, 0);
 						
 					}
 				}
 
-				int inodes = current_elm.getInternalNodeCount();
-				for (j = 0; j != inodes; j++) {
-					CircuitNode cn = new CircuitNode();
-					cn.x = cn.y = -1;
-					cn.@internal = true;
+				int internal_nodes = current_elm.getInternalNodeCount();
+				for (post_index = 0; post_index != internal_nodes; post_index++) {
+					CircuitNode newNode = new CircuitNode();
+					//newNode.x = newNode.y = -1;
+					newNode.@internal = true;
 
-					CircuitNodeLink cnl = new CircuitNodeLink();
-					cnl.elm = current_elm;	// Assign the element to this link
-					cnl.num = j + posts;	// Post on the element this link represents.
+					CircuitNodeLink newLink = new CircuitNodeLink();
+					newLink.elm = current_elm;				// Assign the element to this link
+					newLink.num = post_index + num_posts;	// Post on the element this link represents.
 
-					cn.links.Add(cnl); // Add the link to the new node.
+					newNode.links.Add(newLink); // Add the link to the new node.
 
-					current_elm.setNode(cnl.num, nodeList.Count);	// Associate the Post with the circut node.
-					nodeList.Add(cn); 						// Add the new node to the node list.
+					current_elm.setNode(newLink.num, nodeList.Count);	// Associate the Post with the circut node.
+					nodeList.Add(newNode); 								// Add the new node to the node list.
 				}
 
 				int ivs = current_elm.getVoltageSourceCount();
@@ -569,9 +572,9 @@ namespace Circuits {
 					circuitNonLinear = true;
 				
 				int ivs = ce.getVoltageSourceCount();
-				for (j = 0; j != ivs; j++) {
+				for (post_index = 0; post_index != ivs; post_index++) {
 					voltageSources[vscount] = ce;
-					ce.setVoltageSource(j, vscount++);
+					ce.setVoltageSource(post_index, vscount++);
 				}
 			}
 
@@ -614,20 +617,20 @@ namespace Circuits {
 					CircuitElm ce = getElm(i);
 					// loop through all ce's nodes to see if they are connected
 					// to other nodes not in closure
-					for (j = 0; j < ce.getPostCount(); j++) {
-						if (!closure[ce.getNode(j)]) {
-							if (ce.hasGroundConnection(j))
-								closure[ce.getNode(j)] = changed = true;
+					for (post_index = 0; post_index < ce.getPostCount(); post_index++) {
+						if (!closure[ce.getNode(post_index)]) {
+							if (ce.hasGroundConnection(post_index))
+								closure[ce.getNode(post_index)] = changed = true;
 							
 							continue;
 						}
 						int k;
 						for (k = 0; k != ce.getPostCount(); k++) {
-							if (j == k)
+							if (post_index == k)
 								continue;
 							
 							int kn = ce.getNode(k);
-							if (ce.getConnection(j, k) && !closure[kn]) {
+							if (ce.getConnection(post_index, k) && !closure[kn]) {
 								closure[kn] = true;
 								changed = true;
 							}
@@ -716,24 +719,24 @@ namespace Circuits {
 				double rsadd = 0;
 
 				// look for rows that can be removed
-				for (j = 0; j != matrixSize; j++) {
-					double q = circuitMatrix[i][j];
-					if (circuitRowInfo[j].type == RowInfo.ROW_CONST) {
+				for (post_index = 0; post_index != matrixSize; post_index++) {
+					double q = circuitMatrix[i][post_index];
+					if (circuitRowInfo[post_index].type == RowInfo.ROW_CONST) {
 						// keep a running total of const values that have been
 						// removed already
-						rsadd -= circuitRowInfo[j].value * q;
+						rsadd -= circuitRowInfo[post_index].value * q;
 						continue;
 					}
 					if (q == 0) {
 						continue;
 					}
 					if (qp == -1) {
-						qp = j;
+						qp = post_index;
 						qv = q;
 						continue;
 					}
 					if (qm == -1 && q == -qv) {
-						qm = j;
+						qm = post_index;
 						continue;
 					}
 					break;
@@ -745,7 +748,7 @@ namespace Circuits {
 				 * circuitRowInfo[qm].lsChanges) { System.out.println("lschanges");
 				 * continue; }
 				 */
-				if (j == matrixSize) {
+				if (post_index == matrixSize) {
 					if (qp == -1) {
 						stop("Matrix error", null);
 						return;
@@ -814,7 +817,7 @@ namespace Circuits {
 				if (elt.type == RowInfo.ROW_EQUAL) {
 					RowInfo e2 = null;
 					// resolve chains of equality; 100 max steps to avoid loops
-					for (j = 0; j != 100; j++) {
+					for (post_index = 0; post_index != 100; post_index++) {
 						e2 = circuitRowInfo[elt.nodeEq];
 						if (e2.type != RowInfo.ROW_EQUAL) {
 							break;
@@ -875,12 +878,12 @@ namespace Circuits {
 				newrs[ii] = circuitRightSide[i];
 				rri.mapRow = ii;
 				// System.out.println("Row " + i + " maps to " + ii);
-				for (j = 0; j != matrixSize; j++) {
-					RowInfo ri = circuitRowInfo[j];
+				for (post_index = 0; post_index != matrixSize; post_index++) {
+					RowInfo ri = circuitRowInfo[post_index];
 					if (ri.type == RowInfo.ROW_CONST) {
-						newrs[ii] -= ri.value * circuitMatrix[i][j];
+						newrs[ii] -= ri.value * circuitMatrix[i][post_index];
 					} else {
-						newmatx[ii][ri.mapCol] += circuitMatrix[i][j];
+						newmatx[ii][ri.mapCol] += circuitMatrix[i][post_index];
 					}
 				}
 				ii++;
@@ -897,8 +900,8 @@ namespace Circuits {
 				origRightSide[i] = circuitRightSide[i];
 			
 			for (i = 0; i != matrixSize; i++)
-				for (j = 0; j != matrixSize; j++)
-					origMatrix[i][j] = circuitMatrix[i][j];
+				for (post_index = 0; post_index != matrixSize; post_index++)
+					origMatrix[i][post_index] = circuitMatrix[i][post_index];
 
 			circuitNeedsMap = true;
 
@@ -1189,32 +1192,6 @@ namespace Circuits {
 			}
 			lastIterTime = lit;
 			// System.out.println((System.currentTimeMillis()-lastFrameTime)/(double)iter);
-		}
-
-		public int snapGrid(int x) {
-			return (x + gridRound) & gridMask;
-		}
-
-		public int locateElm(CircuitElm elm) {
-			int i;
-			for (i = 0; i != elmList.Count; i++) {
-				if (elm == elmList[i]) {
-					return i;
-				}
-			}
-			return -1;
-		}
-
-		public int distanceSq(int x1, int y1, int x2, int y2) {
-			x2 -= x1;
-			y2 -= y1;
-			return x2 * x2 + y2 * y2;
-		}
-
-		public void setGrid() {
-			gridSize = (smallGridCheckItem) ? 8 : 16;
-			gridMask = ~(gridSize - 1);
-			gridRound = gridSize / 2 - 1;
 		}
 
 		// factors a matrix into upper and lower triangular matrices by
