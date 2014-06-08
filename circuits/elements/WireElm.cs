@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class WireElm : CircuitElm {
+	public class WireElm : CircuitElement {
 
 		public static int FLAG_SHOWCURRENT = 1;
 		public static int FLAG_SHOWVOLTAGE = 2;

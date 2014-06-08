@@ -60,7 +60,7 @@ namespace Circuits {
 			pins[1].value = v2;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 

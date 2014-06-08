@@ -48,7 +48,7 @@ namespace Circuits {
 			drawChip(g);
 		}*/
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 

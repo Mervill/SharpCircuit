@@ -25,7 +25,7 @@ namespace Circuits {
 //			ctlPoint = interpPoint(point1, point2, .5, openhs);
 //		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 4;
 		}
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class PhotoResistorElm : CircuitElm {
+	public class PhotoResistorElm : CircuitElement {
 		public double minresistance, maxresistance;
 		public double resistance;
 

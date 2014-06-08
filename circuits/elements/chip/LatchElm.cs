@@ -21,7 +21,7 @@ namespace Circuits {
 		public int loadPin;
 
 		public override void setupPins() {
-			pins = new Pin[getPostCount()];
+			pins = new Pin[getLeadCount()];
 			int i;
 			for (i = 0; i != bits; i++) {
 				pins[i] = new Pin("I"+i);
@@ -50,7 +50,7 @@ namespace Circuits {
 			return bits;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return bits * 2 + 1;
 		}
 

@@ -11,7 +11,7 @@ namespace Circuits {
 	// 3, 2 = diode
 	// 2, 1 = 50 ohm resistor
 
-	public class SCRElm : CircuitElm {
+	public class SCRElm : CircuitElement {
 		int anode = 0;
 		int cnode = 1;
 		int gnode = 2;
@@ -48,7 +48,7 @@ namespace Circuits {
 		public double lastvac, lastvag;
 		public double cresistance, triggerI, holdingI;
 
-		public Point gate;
+		public ElementLead gate;
 
 //		public override void setPoints() {
 //			base.setPoints();
@@ -116,11 +116,11 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? point2 : gate;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? point1 : gate;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 

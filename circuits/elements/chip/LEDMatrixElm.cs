@@ -110,7 +110,7 @@ namespace Circuits {
 			}
 		}*/
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 16;
 		}
 

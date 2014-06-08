@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class LogicOutputElm : CircuitElm {
+	public class LogicOutputElm : CircuitElement {
 		public int FLAG_TERNARY = 1;
 		public int FLAG_NUMERIC = 2;
 		public int FLAG_PULLDOWN = 4;
@@ -15,7 +15,7 @@ namespace Circuits {
 			threshold = 2.5;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 1;
 		}
 

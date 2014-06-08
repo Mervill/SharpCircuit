@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TappedTransformerElm : CircuitElm {
+	public class TappedTransformerElm : CircuitElement {
 		public double inductance, ratio;
-		public Point[] ptEnds;
+		public ElementLead[] ptEnds;
 		new public double[] current, curcount;
 
 		public TappedTransformerElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
@@ -86,11 +86,11 @@ namespace Circuits {
 //			}
 //		}
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			return ptEnds[n];
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 5;
 		}
 

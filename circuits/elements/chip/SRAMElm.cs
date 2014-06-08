@@ -54,7 +54,7 @@ namespace Circuits {
 			pins[17].output = true;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 18;
 		}
 
@@ -162,7 +162,7 @@ namespace Circuits {
 
 		public override void doStep() {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (p.output && pins[9].value) {
 					p.value = volts[i] > 2.5;
@@ -172,7 +172,7 @@ namespace Circuits {
 				}
 			}
 			execute();
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (p.output && !pins[9].value) {
 					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5

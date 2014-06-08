@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class PotElm : CircuitElm {
+	public class PotElm : CircuitElement {
 		public double position, maxResistance, resistance1, resistance2;
 		public double current1, current2, current3;
 
@@ -16,15 +16,15 @@ namespace Circuits {
 
 		public void setup() { }
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? point2 : post3;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? point1 : post3;
 		}
 
-		public Point post3;
+		public ElementLead post3;
 
 //		public override void setPoints() {
 //			base.setPoints();

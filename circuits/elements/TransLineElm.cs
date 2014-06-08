@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TransLineElm : CircuitElm {
+	public class TransLineElm : CircuitElement {
 		double delay, imped;
 		double[] voltageL, voltageR;
 		int lenSteps, ptr, width;
@@ -17,7 +17,7 @@ namespace Circuits {
 			reset();
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 4;
 		}
 
@@ -25,7 +25,7 @@ namespace Circuits {
 			return 2;
 		}
 
-		public Point[] posts;
+		public ElementLead[] posts;
 
 		public override void reset() {
 			if (sim.timeStep == 0) {
@@ -160,7 +160,7 @@ namespace Circuits {
 			}
 		}
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			return posts[n];
 		}
 

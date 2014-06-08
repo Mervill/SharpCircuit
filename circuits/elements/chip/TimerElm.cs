@@ -92,7 +92,7 @@ namespace Circuits {
 			sim.updateVoltageSource(0, nodes[N_OUT], pins[N_OUT].voltSource,@out ? volts[N_VIN] : 0);
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return hasReset() ? 7 : 6;
 		}
 

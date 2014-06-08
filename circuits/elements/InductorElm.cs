@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class InductorElm : CircuitElm {
+	public class InductorElm : CircuitElement {
 		public Inductor ind;
 		public double inductance;
 

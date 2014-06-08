@@ -26,7 +26,7 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			pins = new Pin[getPostCount()];
+			pins = new Pin[getLeadCount()];
 
 			pins[0] = new Pin("");
 			pins[0].clock = true;
@@ -34,7 +34,7 @@ namespace Circuits {
 			pins[1].output = true;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 2;
 		}
 

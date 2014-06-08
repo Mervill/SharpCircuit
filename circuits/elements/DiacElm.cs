@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class DiacElm : CircuitElm {
+	public class DiacElm : CircuitElement {
 		public double onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 

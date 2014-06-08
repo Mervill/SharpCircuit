@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class MosfetElm : CircuitElm {
+	public class MosfetElm : CircuitElement {
 		int pnp;
 		int FLAG_PNP = 1;
 		int FLAG_SHOWVT = 2;
@@ -99,8 +99,8 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? src : drn;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? src : drn;
 		}
 
 		public override double getCurrent() {
@@ -111,12 +111,12 @@ namespace Circuits {
 			return ids * (volts[2] - volts[1]);
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 
-		public Point src;
-		public Point drn;
+		public ElementLead src;
+		public ElementLead drn;
 
 //		public override void setPoints() {
 //			base.setPoints();

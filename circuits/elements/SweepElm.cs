@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class SweepElm : CircuitElm {
+	public class SweepElm : CircuitElement {
 		public double maxV, maxF, minF, sweepTime, frequency;
 		public int FLAG_LOG = 1;
 		public int FLAG_BIDIR = 2;
@@ -18,7 +18,7 @@ namespace Circuits {
 			reset();
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 1;
 		}
 

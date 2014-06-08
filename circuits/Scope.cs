@@ -23,7 +23,7 @@ namespace Circuits {
 		public int value, ivalue;
 		public String text;
 		public bool showI, showV, showMax, showMin, showFreq, lockScale;
-		public CircuitElm elm, xElm, yElm;
+		public CircuitElement elm, xElm, yElm;
 		public double[] pixels;
 		public int draw_ox, draw_oy;
 		public float[] dpixels;
@@ -91,7 +91,7 @@ namespace Circuits {
 			}
 		}
 
-		public void setElm(CircuitElm ce) {
+		public void setElm(CircuitElement ce) {
 			elm = ce;
 			reset();
 		}

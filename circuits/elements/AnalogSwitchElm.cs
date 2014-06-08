@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class AnalogSwitchElm : CircuitElm {
+	public class AnalogSwitchElm : CircuitElement {
 		public int FLAG_INVERT = 1;
 		public double resistance, r_on, r_off;
 
@@ -14,7 +14,7 @@ namespace Circuits {
 		}
 
 		public bool open;
-		public Point point3;
+		public ElementLead point3;
 
 //		public override void setPoints() {
 //			base.setPoints();
@@ -68,12 +68,12 @@ namespace Circuits {
 			sim.stampResistor(nodes[0], nodes[1], resistance);
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? point2 : point3;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? point1 : point3;
 		}
 
 		public override void getInfo(String[] arr) {

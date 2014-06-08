@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class InverterElm : CircuitElm {
+	public class InverterElm : CircuitElement {
 		public double slewRate; // V/ns
 
 		public InverterElm(int xx, int yy, CirSim s) : base(xx, yy, s) {

@@ -6,7 +6,7 @@ namespace Circuits {
 
 	// contributed by Edward Calver
 
-	public class TriStateElm : CircuitElm {
+	public class TriStateElm : CircuitElement {
 		
 		public double resistance, r_on, r_off;
 
@@ -16,8 +16,8 @@ namespace Circuits {
 		}
 
 		public bool open;
-		public Point point3;
-		public Point point4;
+		public ElementLead point3;
+		public ElementLead point4;
 
 //		public override void setPoints() {
 //			base.setPoints();
@@ -83,7 +83,7 @@ namespace Circuits {
 			sim.updateVoltageSource(0, nodes[3], voltSource, volts[0] > 2.5 ? 5 : 0);
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 4;
 		}
 
@@ -91,11 +91,11 @@ namespace Circuits {
 			return 1;
 		}
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			if (point4 == null) {
 				//System.out.print("Hello\n");
 			}
-			return (n == 0) ? point1 : (n == 1) ? point2 : (n == 2) ? point3 : point4;
+			return (n == 0) ? point0 : (n == 1) ? point1 : (n == 2) ? point3 : point4;
 		}
 
 		public override void getInfo(String[] arr) {

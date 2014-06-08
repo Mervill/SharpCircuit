@@ -6,7 +6,7 @@ namespace Circuits {
 
 	// contributed by Edward Calver
 
-	public class InvertingSchmittElm : CircuitElm {
+	public class InvertingSchmittElm : CircuitElement {
 		public double slewRate; // V/ns
 		public double lowerTrigger;
 		public double upperTrigger;

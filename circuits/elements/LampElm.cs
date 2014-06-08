@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class LampElm : CircuitElm {
+	public class LampElm : CircuitElement {
 		public double resistance;
 		public double roomTemp = 300;
 		public double temp, nom_pow, nom_v, warmTime, coolTime;

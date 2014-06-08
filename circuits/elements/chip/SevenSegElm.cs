@@ -54,7 +54,7 @@ namespace Circuits {
 					.getState() ? Color.white : darkred);
 		}*/
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 7;
 		}
 

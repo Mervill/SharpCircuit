@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TransformerElm : CircuitElm {
+	public class TransformerElm : CircuitElement {
 		public double inductance, ratio, couplingCoef;
-		public Point[] ptEnds;
+		public ElementLead[] ptEnds;
 		new public double[] current, curcount;
 		public int width;
 		public static int FLAG_BACK_EULER = 2;
@@ -72,11 +72,11 @@ namespace Circuits {
 //			}
 //		}
 
-		override public Point getPost(int n) {
+		override public ElementLead getLead(int n) {
 			return ptEnds[n];
 		}
 
-		override public int getPostCount() {
+		override public int getLeadCount() {
 			return 4;
 		}
 

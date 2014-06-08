@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public abstract class GateElm : CircuitElm {
+	public abstract class GateElm : CircuitElement {
 
 		public int FLAG_SMALL = 1;
 		public int inputCount = 2;
@@ -30,7 +30,7 @@ namespace Circuits {
 			flags = (s == 1) ? FLAG_SMALL : 0;
 		}
 
-		public Point[] inPosts;
+		public ElementLead[] inPosts;
 
 //		public override void setPoints() {
 //			base.setPoints();
@@ -85,13 +85,13 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return inputCount + 1;
 		}
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			if (n == inputCount) {
-				return point2;
+				return point1;
 			}
 			return inPosts[n];
 		}

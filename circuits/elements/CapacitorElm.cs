@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class CapacitorElm : CircuitElm {
+	public class CapacitorElm : CircuitElement {
 		public double capacitance;
 		public double compResistance, voltdiff;
 		public static int FLAG_BACK_EULER = 2;

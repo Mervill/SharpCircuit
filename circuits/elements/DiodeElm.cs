@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class DiodeElm : CircuitElm {
+	public class DiodeElm : CircuitElement {
 		public Diode diode;
 		public double defaultdrop = 0.805904783;
 		public double fwdrop, zvoltage;

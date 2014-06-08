@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 	
-	public abstract class ChipElm : CircuitElm {
+	public abstract class ChipElm : CircuitElement {
 		public int csize, cspc, cspc2;
 		public int bits;
 		public int FLAG_SMALL = 1;
@@ -43,7 +43,7 @@ namespace Circuits {
 			Font f = new Font("SansSerif", 0, 10 * csize);
 			g.setFont(f);
 			FontMetrics fm = g.getFontMetrics();
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				setVoltageColor(g, volts[i]);
 				Point a = p.post;
@@ -72,7 +72,7 @@ namespace Circuits {
 			if (clockPointsX != null) {
 				g.drawPolyline(clockPointsX, clockPointsY, 3);
 			}
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				drawPost(g, pins[i].post.x, pins[i].post.y, nodes[i]);
 			}
 		}*/
@@ -95,7 +95,7 @@ namespace Circuits {
 //			rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
 //			//setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
 //			int i;
-//			for (i = 0; i != getPostCount(); i++) {
+//			for (i = 0; i != getLeadCount(); i++) {
 //				Pin p = pins[i];
 //				switch (p.side) {
 //				case 0:
@@ -116,7 +116,7 @@ namespace Circuits {
 
 		public override void setVoltageSource(int j, int vs) {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (p.output && j-- == 0) {
 					p.voltSource = vs;
@@ -128,7 +128,7 @@ namespace Circuits {
 
 		public override void stamp() {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (p.output) {
 					sim.stampVoltageSource(0, nodes[i], p.voltSource);
@@ -140,14 +140,14 @@ namespace Circuits {
 
 		public override void doStep() {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (!p.output) {
 					p.value = volts[i] > 2.5;
 				}
 			}
 			execute();
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (p.output) {
 					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
@@ -157,7 +157,7 @@ namespace Circuits {
 
 		public override void reset() {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				pins[i].value = false;
 				volts[i] = 0;
 			}
@@ -167,7 +167,7 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			arr[0] = getChipName();
 			int i, a = 1;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if (arr[a] != null) {
 					arr[a] += "; ";
@@ -190,7 +190,7 @@ namespace Circuits {
 
 		public override void setCurrent(int x, double c) {
 			int i;
-			for (i = 0; i != getPostCount(); i++) {
+			for (i = 0; i != getLeadCount(); i++) {
 				if (pins[i].output && pins[i].voltSource == x) {
 					pins[i].current = c;
 				}

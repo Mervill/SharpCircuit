@@ -38,7 +38,7 @@ namespace Circuits {
 		}
 
 		public override void setupPins() {
-			pins = new Pin[getPostCount()];
+			pins = new Pin[getLeadCount()];
 
 			pins[7] = new Pin("I3");
 			pins[8] = new Pin("I2");
@@ -61,7 +61,7 @@ namespace Circuits {
 			pins[6].output = true;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 11;
 		}
 

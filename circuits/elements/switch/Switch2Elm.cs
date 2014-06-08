@@ -9,7 +9,7 @@ namespace Circuits {
 		public static int FLAG_CENTER_OFF = 1;
 
 		public int link;
-		public Point[] swposts;
+		public ElementLead[] swposts;
 
 		public Switch2Elm(int xx, int yy,CirSim s) : base(xx, yy,s) {
 			noDiagonal = true;
@@ -59,11 +59,11 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : swposts[n - 1];
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : swposts[n - 1];
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 

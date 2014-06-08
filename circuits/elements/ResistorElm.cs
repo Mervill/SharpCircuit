@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class ResistorElm : CircuitElm {
+	public class ResistorElm : CircuitElement {
 		public double resistance;
 
 		public ResistorElm(int xx, int yy,CirSim s) : base(xx, yy, s) {

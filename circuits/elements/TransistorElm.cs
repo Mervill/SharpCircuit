@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TransistorElm : CircuitElm {
+	public class TransistorElm : CircuitElement {
 		public int pnp;
 		public double beta;
 		public double fgain;
@@ -79,11 +79,11 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? coll : emit;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? coll : emit;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 
@@ -91,9 +91,9 @@ namespace Circuits {
 			return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
 		}
 
-		public Point coll;
-		public Point emit;
-		public Point @base;
+		public ElementLead coll;
+		public ElementLead emit;
+		public ElementLead @base;
 
 //		public override void setPoints() {
 //			base.setPoints();

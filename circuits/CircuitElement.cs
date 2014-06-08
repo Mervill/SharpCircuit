@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public abstract class CircuitElm {
+	public abstract class CircuitElement {
 		
 		public static double voltageRange = 5.0;
 		public static double currentMult, powerMult;
@@ -15,15 +15,15 @@ namespace Circuits {
 
 		public int[] nodes;
 		public int x, y, x2, y2, flags, voltSource;
-		public Point point1;
-		public Point point2;
+		public ElementLead point0;
+		public ElementLead point1;
 		public double[] volts;
 		public double current, curcount;
 		public bool noDiagonal;
 
-		public CircuitElm(int xx, int yy, CirSim s) {
-			point1 = new Point();
-			point2 = new Point();
+		public CircuitElement(int xx, int yy, CirSim s) {
+			point0 = new ElementLead(this,0);
+			point1 = new ElementLead(this,1);
 
 			flags = getDefaultFlags();
 			allocNodes();
@@ -36,13 +36,13 @@ namespace Circuits {
 		}
 
 		public virtual void allocNodes() {
-			nodes = new int[getPostCount() + getInternalNodeCount()];
-			volts = new double[getPostCount() + getInternalNodeCount()];
+			nodes = new int[getLeadCount() + getInternalNodeCount()];
+			volts = new double[getLeadCount() + getInternalNodeCount()];
 		}
 
 		public virtual void reset() {
 			int i;
-			for (i = 0; i != getPostCount() + getInternalNodeCount(); i++) {
+			for (i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {
 				volts[i] = 0;
 			}
 			curcount = 0;
@@ -64,7 +64,7 @@ namespace Circuits {
 		public virtual void calculateCurrent() { }
 		public virtual void stamp() { }
 
-		public virtual double getPostVoltage(int x) {
+		public virtual double getLeadVoltage(int x) {
 			return volts[x];
 		}
 
@@ -118,7 +118,7 @@ namespace Circuits {
 			return volts[0] - volts[1];
 		}
 
-		public virtual int getPostCount() {
+		public virtual int getLeadCount() {
 			return 2;
 		}
 
@@ -126,8 +126,8 @@ namespace Circuits {
 			return nodes[n];
 		}
 
-		public virtual Point getPost(int n) {
-			return (n == 0) ? point1 : (n == 1) ? point2 : null;
+		public virtual ElementLead getLead(int n) {
+			return (n == 0) ? point0 : (n == 1) ? point1 : null;
 		}
 
 		public virtual double getPower() {
@@ -159,17 +159,17 @@ namespace Circuits {
 		}
 
 		public virtual bool canViewInScope() {
-			return getPostCount() <= 2;
+			return getLeadCount() <= 2;
 		}
 
 		public virtual bool comparePair(int x1, int x2, int y1, int y2) {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
 		}
 
-		public Point[] newPointArray(int n) {
-			Point[] a = new Point[n];
+		public ElementLead[] newPointArray(int n) {
+			ElementLead[] a = new ElementLead[n];
 			while (n > 0) {
-				a[--n] = new Point();
+				a[--n] = new ElementLead(this,n);
 			}
 			return a;
 		}

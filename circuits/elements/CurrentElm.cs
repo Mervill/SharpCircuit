@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class CurrentElm : CircuitElm {
+	public class CurrentElm : CircuitElement {
 		
 		public double currentValue;
 

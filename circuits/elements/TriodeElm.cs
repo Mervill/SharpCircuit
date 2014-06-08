@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TriodeElm : CircuitElm {
+	public class TriodeElm : CircuitElement {
 		public double mu, kg1;
 		public double currentp, currentg, currentc;
 		public double gridCurrentR = 6000;
@@ -28,9 +28,9 @@ namespace Circuits {
 			curcount = 0;
 		}
 
-		public Point plate;
-		public Point grid; 
-		public Point cath; 
+		public ElementLead plate;
+		public ElementLead grid; 
+		public ElementLead cath; 
 
 //		public override void setPoints() {
 //			base.setPoints();
@@ -96,11 +96,11 @@ namespace Circuits {
 			drawPosts(g);
 		}*/
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			return (n == 0) ? plate : (n == 1) ? grid : cath;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class ThermistorElm : CircuitElm {
+	public class ThermistorElm : CircuitElement {
 		public double minresistance, maxresistance;
 		public double resistance;
 		public double slider;

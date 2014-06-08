@@ -6,7 +6,7 @@ namespace Circuits {
 
 	// contributed by Edward Calver
 
-	public class FMElm : CircuitElm {
+	public class FMElm : CircuitElement {
 		static int FLAG_COS = 2;
 		double carrierfreq, signalfreq, maxVoltage, freqTimeZero, deviation;
 		double lasttime = 0;
@@ -30,7 +30,7 @@ namespace Circuits {
 			curcount = 0;
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 1;
 		}
 

@@ -41,8 +41,8 @@ namespace Circuits {
 		public String stopMessage;
 		public double timeStep = 5.0E-6;
 
-		public List<CircuitElm> elmList = new List<CircuitElm>();
-		public CircuitElm dragElm, stopElm;
+		public List<CircuitElement> elmList = new List<CircuitElement>();
+		public CircuitElement dragElm, stopElm;
 		public SwitchElm heldSwitchElm;
 
 		public double[][] circuitMatrix; 
@@ -71,10 +71,10 @@ namespace Circuits {
 
 			bool[] used;
 			int dest;
-			CircuitElm firstElm;
+			CircuitElement firstElm;
 			int type;
 			
-			public FindPathInfo(CirSim r,int t, CircuitElm e, int d) {
+			public FindPathInfo(CirSim r,int t, CircuitElement e, int d) {
 				root = r;
 				dest = d;
 				type = t;
@@ -100,7 +100,7 @@ namespace Circuits {
 				used[n1] = true;
 				int i;
 				for (i = 0; i != root.elmList.Count; i++) {
-					CircuitElm ce = root.getElm(i);
+					CircuitElement ce = root.getElm(i);
 					if (ce == firstElm) {
 						continue;
 					}
@@ -126,7 +126,7 @@ namespace Circuits {
 						// look for posts which have a ground connection;
 						// our path can go through ground
 						int z;
-						for (z = 0; z != ce.getPostCount(); z++) {
+						for (z = 0; z != ce.getLeadCount(); z++) {
 							if (ce.hasGroundConnection(z)
 							    && findPath(ce.getNode(z), depth)) {
 								used[n1] = false;
@@ -135,13 +135,13 @@ namespace Circuits {
 						}
 					}
 					int j;
-					for (j = 0; j != ce.getPostCount(); j++) {
+					for (j = 0; j != ce.getLeadCount(); j++) {
 						// System.out.println(ce + " " + ce.getNode(j));
 						if (ce.getNode(j) == n1) {
 							break;
 						}
 					}
-					if (j == ce.getPostCount()) {
+					if (j == ce.getLeadCount()) {
 						continue;
 					}
 					if (ce.hasGroundConnection(j) && findPath(0, depth)) {
@@ -162,7 +162,7 @@ namespace Circuits {
 						}
 					}
 					int k;
-					for (k = 0; k != ce.getPostCount(); k++) {
+					for (k = 0; k != ce.getLeadCount(); k++) {
 						if (j == k) {
 							continue;
 						}
@@ -222,9 +222,9 @@ namespace Circuits {
 					int inc = (int) (sysTime - lastTime);
 					double c = currentBar;
 					c = Math.Exp(c / 3.5 - 14.2);
-					CircuitElm.currentMult = 1.7 * inc * c;
+					CircuitElement.currentMult = 1.7 * inc * c;
 					if (!conventionCheckItem) {
-						CircuitElm.currentMult = -CircuitElm.currentMult;
+						CircuitElement.currentMult = -CircuitElement.currentMult;
 					}
 				}
 				if (sysTime - secTime >= 1000) {
@@ -239,7 +239,7 @@ namespace Circuits {
 				lastTime = 0;
 			}
 
-			CircuitElm.powerMult = Math.Exp(powerBar / 4.762 - 7);
+			CircuitElement.powerMult = Math.Exp(powerBar / 4.762 - 7);
 
 			int i = 0;
 			int badnodes = 0;
@@ -251,10 +251,10 @@ namespace Circuits {
 					CircuitNode cn = getCircuitNode(i);
 					if (!cn.@internal && cn.links.Count == 1) {
 						int bb = 0, j;
-						CircuitNodeLink cnl = cn.links[0];
+						ElementLead cnl = cn.links[0];
 						for (j = 0; j != elmList.Count; j++) { // TODO: (hausen) see if this change does not break stuff
-							CircuitElm ce = getElm(j);
-							if (cnl.elm != ce) { //&& getElm(j).boundingBox.contains(cn.x, cn.y) // && (getElm(j).x == cn.x && getElm(j).y == cn.y)
+							CircuitElement ce = getElm(j);
+							if (cnl.element != ce) { //&& getElm(j).boundingBox.contains(cn.x, cn.y) // && (getElm(j).x == cn.x && getElm(j).y == cn.y)
 								bb++;
 							}
 						}
@@ -271,7 +271,7 @@ namespace Circuits {
 			} else {
 
 				info = new String[10];
-				info[0] = "t = " + CircuitElm.getUnitText(t, "s");
+				info[0] = "t = " + CircuitElement.getUnitText(t, "s");
 
 				if (hintType != -1) {
 					for (i = 0; info[i] != null; i++) {
@@ -311,8 +311,8 @@ namespace Circuits {
 		}
 
 		private String getHint() {
-			CircuitElm c1 = getElm(hintItem1);
-			CircuitElm c2 = getElm(hintItem2);
+			CircuitElement c1 = getElm(hintItem1);
+			CircuitElement c2 = getElm(hintItem2);
 			if (c1 == null || c2 == null) {
 				return null;
 			}
@@ -325,7 +325,7 @@ namespace Circuits {
 				}
 				InductorElm ie = (InductorElm) c1;
 				CapacitorElm ce = (CapacitorElm) c2;
-				return "res.f = " + CircuitElm.getUnitText(1 / (2 * pi * Math.Sqrt(ie.inductance* ce.capacitance)), "Hz");
+				return "res.f = " + CircuitElement.getUnitText(1 / (2 * pi * Math.Sqrt(ie.inductance* ce.capacitance)), "Hz");
 			}
 			if (hintType == HINT_RC) {
 				if (!(c1 is ResistorElm)) {
@@ -336,7 +336,7 @@ namespace Circuits {
 				}
 				ResistorElm re = (ResistorElm) c1;
 				CapacitorElm ce = (CapacitorElm) c2;
-				return "RC = " + CircuitElm.getUnitText(re.resistance * ce.capacitance,"s");
+				return "RC = " + CircuitElement.getUnitText(re.resistance * ce.capacitance,"s");
 			}
 			if (hintType == HINT_3DB_C) {
 				if (!(c1 is ResistorElm)) {
@@ -347,7 +347,7 @@ namespace Circuits {
 				}
 				ResistorElm re = (ResistorElm) c1;
 				CapacitorElm ce = (CapacitorElm) c2;
-				return "f.3db = " + CircuitElm.getUnitText(1 / (2 * pi * re.resistance * ce.capacitance),"Hz");
+				return "f.3db = " + CircuitElement.getUnitText(1 / (2 * pi * re.resistance * ce.capacitance),"Hz");
 			}
 			if (hintType == HINT_3DB_L) {
 				if (!(c1 is ResistorElm)) {
@@ -358,7 +358,7 @@ namespace Circuits {
 				}
 				ResistorElm re = (ResistorElm) c1;
 				InductorElm ie = (InductorElm) c2;
-				return "f.3db = "+ CircuitElm.getUnitText(re.resistance / (2 * pi * ie.inductance), "Hz");
+				return "f.3db = "+ CircuitElement.getUnitText(re.resistance / (2 * pi * ie.inductance), "Hz");
 			}
 			if (hintType == HINT_TWINT) {
 				if (!(c1 is ResistorElm)) {
@@ -369,7 +369,7 @@ namespace Circuits {
 				}
 				ResistorElm re = (ResistorElm) c1;
 				CapacitorElm ce = (CapacitorElm) c2;
-				return "fc = "+ CircuitElm.getUnitText(1 / (2 * pi * re.resistance * ce.capacitance),"Hz");
+				return "fc = "+ CircuitElement.getUnitText(1 / (2 * pi * re.resistance * ce.capacitance),"Hz");
 			}
 			return null;
 		}
@@ -407,7 +407,7 @@ namespace Circuits {
 		}
 
 		public List<CircuitNode> nodeList = new List<CircuitNode>();
-		public CircuitElm[] voltageSources;
+		public CircuitElement[] voltageSources;
 
 		public CircuitNode getCircuitNode(int n) {
 			if (n >= nodeList.Count) {
@@ -416,7 +416,7 @@ namespace Circuits {
 			return nodeList[n];
 		}
 
-		public CircuitElm getElm(int n) {
+		public CircuitElement getElm(int n) {
 			if (n >= elmList.Count) {
 				return null;
 			}
@@ -436,12 +436,12 @@ namespace Circuits {
 			nodeList = new List<CircuitNode>();
 			bool gotGround = false;
 			bool gotRail = false;
-			CircuitElm volt = null;
+			CircuitElement volt = null;
 
 			// System.out.println("ac1");
 			// look for voltage or ground element
 			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm ce = getElm(i);
+				CircuitElement ce = getElm(i);
 				if (ce is GroundElm) {
 					gotGround = true;
 					break;
@@ -458,10 +458,10 @@ namespace Circuits {
 			// if no ground, and no rails, then the voltage elm's first terminal is ground
 			if (!gotGround && volt != null && !gotRail) {
 				CircuitNode cn = new CircuitNode();
-				Point pt = volt.getPost(0);
+				ElementLead pt = volt.getLead(0);
 				//cn.x = pt.x;
 				//cn.y = pt.y;
-				cn.weld = pt.weld;
+				cn = pt.node;
 				nodeList.Add(cn);
 			} else {
 				// otherwise allocate extra node for ground
@@ -475,13 +475,13 @@ namespace Circuits {
 			#region linker
 			// allocate nodes and voltage sources
 			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm current_elm = getElm(i);
-				int num_posts = current_elm.getPostCount();
+				CircuitElement current_elm = getElm(i);
+				int num_posts = current_elm.getLeadCount();
 
 				// allocate a node for each post and match posts to nodes
 				for (post_index = 0; post_index != num_posts; post_index++) {
 
-					Point current_post = current_elm.getPost(post_index);
+					ElementLead current_lead = current_elm.getLead(post_index);
 
 					int node_index;
 					for (node_index = 0; node_index != nodeList.Count; node_index++) {
@@ -497,7 +497,7 @@ namespace Circuits {
 						//if (current_post.x == node.x && current_post.y == node.y)
 						//	break;
 
-						if(current_post.weld == node.weld)
+						if(current_lead.node == node)
 							break;
 
 					}
@@ -507,25 +507,21 @@ namespace Circuits {
 						// new node and link the elm/pos to it.
 
 						CircuitNode newNode = new CircuitNode();
-						newNode.weld = current_post.weld;
+						newNode = current_lead.node;
 
-						CircuitNodeLink newLink = new CircuitNodeLink();
-						newLink.elm = current_elm;	// Assign the element to this link
-						newLink.num = post_index;	// Post on the element this link represents.
+						ElementLead newLead = new ElementLead(current_elm,post_index);
 
-						newNode.links.Add(newLink); 						// Add the link to the new node.
+						newNode.links.Add(newLead); 						// Add the link to the new node.
 						current_elm.setNode(post_index, nodeList.Count); 	// Set the node index to the last element.
 						nodeList.Add(newNode); 								// Add the new node to the node list.
 					} else {
 						// If a node is found at the current post's location,
 						// link the elm/post to the node.
 
-						CircuitNodeLink newLink = new CircuitNodeLink();
-						newLink.elm = current_elm; 	// Assign the element to this link
-						newLink.num = post_index; 	// Post on the element this link represents.
+						ElementLead newLead = new ElementLead(current_elm,post_index);
 
 						// Find the node in question and add the new link.
-						getCircuitNode(node_index).links.Add(newLink);
+						getCircuitNode(node_index).links.Add(newLead);
 
 						current_elm.setNode(post_index, node_index); // Associate the Post with the circut node.
 
@@ -543,13 +539,11 @@ namespace Circuits {
 					//newNode.x = newNode.y = -1;
 					newNode.@internal = true;
 
-					CircuitNodeLink newLink = new CircuitNodeLink();
-					newLink.elm = current_elm;				// Assign the element to this link
-					newLink.num = post_index + num_posts;	// Post on the element this link represents.
+					ElementLead newLead = new ElementLead(current_elm,post_index + num_posts);
 
-					newNode.links.Add(newLink); // Add the link to the new node.
+					newNode.links.Add(newLead); // Add the link to the new node.
 
-					current_elm.setNode(newLink.num, nodeList.Count);	// Associate the Post with the circut node.
+					current_elm.setNode(newLead.index, nodeList.Count);	// Associate the Post with the circut node.
 					nodeList.Add(newNode); 								// Add the new node to the node list.
 				}
 
@@ -560,14 +554,14 @@ namespace Circuits {
 
 			#region cleanup
 
-			voltageSources = new CircuitElm[vscount];
+			voltageSources = new CircuitElement[vscount];
 			vscount = 0;
 			circuitNonLinear = false;
 			// System.out.println("ac3");
 
 			// determine if circuit is nonlinear
 			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm ce = getElm(i);
+				CircuitElement ce = getElm(i);
 				if (ce.nonLinear())
 					circuitNonLinear = true;
 				
@@ -602,7 +596,7 @@ namespace Circuits {
 
 			// stamp linear circuit elements
 			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm ce = getElm(i);
+				CircuitElement ce = getElm(i);
 				ce.stamp();
 			}
 			// System.out.println("ac4");
@@ -614,10 +608,10 @@ namespace Circuits {
 			while (changed) {
 				changed = false;
 				for (i = 0; i != elmList.Count; i++) {
-					CircuitElm ce = getElm(i);
+					CircuitElement ce = getElm(i);
 					// loop through all ce's nodes to see if they are connected
 					// to other nodes not in closure
-					for (post_index = 0; post_index < ce.getPostCount(); post_index++) {
+					for (post_index = 0; post_index < ce.getLeadCount(); post_index++) {
 						if (!closure[ce.getNode(post_index)]) {
 							if (ce.hasGroundConnection(post_index))
 								closure[ce.getNode(post_index)] = changed = true;
@@ -625,7 +619,7 @@ namespace Circuits {
 							continue;
 						}
 						int k;
-						for (k = 0; k != ce.getPostCount(); k++) {
+						for (k = 0; k != ce.getLeadCount(); k++) {
 							if (post_index == k)
 								continue;
 							
@@ -658,7 +652,7 @@ namespace Circuits {
 			#region special
 			// System.out.println("ac5");
 			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm ce = getElm(i);
+				CircuitElement ce = getElm(i);
 
 				// look for inductors with no current path
 				if (ce is InductorElm) {
@@ -680,7 +674,7 @@ namespace Circuits {
 				}
 
 				// look for voltage source loops
-				if ((ce is VoltageElm && ce.getPostCount() == 2) || ce is WireElm) {
+				if ((ce is VoltageElm && ce.getLeadCount() == 2) || ce is WireElm) {
 					FindPathInfo fpi = new FindPathInfo(this,FindPathInfo.VOLTAGE, ce,ce.getNode(1));
 					if (fpi.findPath(ce.getNode(0))) {
 						stop("Voltage source/wire loop with no resistance!", ce);
@@ -924,7 +918,7 @@ namespace Circuits {
 			#endregion
 		}
 
-		public void stop(String s, CircuitElm ce) {
+		public void stop(String s, CircuitElement ce) {
 			stopMessage = s;
 			circuitMatrix = null;
 			stopElm = ce;
@@ -1086,7 +1080,7 @@ namespace Circuits {
 			for (iter = 1;; iter++) {
 				int i, j, k, subiter;
 				for (i = 0; i != elmList.Count; i++) {
-					CircuitElm ce = getElm(i);
+					CircuitElement ce = getElm(i);
 					ce.startIteration();
 				}
 				steps++;
@@ -1105,7 +1099,7 @@ namespace Circuits {
 						}
 					}
 					for (i = 0; i != elmList.Count; i++) {
-						CircuitElm ce = getElm(i);
+						CircuitElement ce = getElm(i);
 						ce.doStep();
 					}
 					if (stopMessage != null) {
@@ -1160,8 +1154,8 @@ namespace Circuits {
 						if (j < nodeList.Count - 1) {
 							CircuitNode cn = getCircuitNode(j + 1);
 							for (k = 0; k != cn.links.Count; k++) {
-								CircuitNodeLink cnl = cn.links[k];
-								cnl.elm.setNodeVoltage(cnl.num, res);
+								ElementLead cnl = cn.links[k];
+								cnl.element.setNodeVoltage(cnl.index, res);
 							}
 						} else {
 							int ji = j - (nodeList.Count - 1);

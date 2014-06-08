@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class TunnelDiodeElm : CircuitElm {
+	public class TunnelDiodeElm : CircuitElement {
 	
 		public TunnelDiodeElm(int xx, int yy,CirSim s) : base(xx, yy,s) {
 			setup();

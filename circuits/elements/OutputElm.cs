@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class OutputElm : CircuitElm {
+	public class OutputElm : CircuitElement {
 
 		public OutputElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
 
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 1;
 		}
 

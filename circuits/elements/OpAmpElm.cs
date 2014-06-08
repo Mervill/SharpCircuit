@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class OpAmpElm : CircuitElm {
+	public class OpAmpElm : CircuitElement {
 
 		public double maxOut, minOut, gain;
 		//public bool reset;
@@ -53,8 +53,8 @@ namespace Circuits {
 			return volts[2] * current;
 		}
 
-		public Point in1p;
-		public Point in2p;
+		public ElementLead in1p;
+		public ElementLead in2p;
 
 		void setSize(int s) {
 			flags = (flags & ~FLAG_SMALL) | ((s == 1) ? FLAG_SMALL : 0);
@@ -86,12 +86,12 @@ namespace Circuits {
 //			//plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
 //		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 3;
 		}
 
-		public override Point getPost(int n) {
-			return (n == 0) ? in1p : (n == 1) ? in2p : point2;
+		public override ElementLead getLead(int n) {
+			return (n == 0) ? in1p : (n == 1) ? in2p : point1;
 		}
 
 		public override int getVoltageSourceCount() {

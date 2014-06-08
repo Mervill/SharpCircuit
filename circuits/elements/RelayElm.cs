@@ -12,13 +12,13 @@ namespace Circuits {
 	// 3n+1 = coil
 	// 3n+2 = end of coil resistor
 
-	public class RelayElm : CircuitElm {
+	public class RelayElm : CircuitElement {
 		public double inductance;
 		public Inductor ind;
 		public double r_on, r_off, onCurrent;
-		public Point[] coilPosts; 
+		public ElementLead[] coilPosts; 
 
-		public Point[][] swposts;
+		public ElementLead[][] swposts;
 		public double coilCurrent, coilCurCount;
 		public double[] switchCurrent, switchCurCount;
 		public double d_position, coilR;
@@ -158,14 +158,14 @@ namespace Circuits {
 //			lines = newPointArray(poleCount * 2);
 //		}
 
-		public override Point getPost(int n) {
+		public override ElementLead getLead(int n) {
 			if (n < 3 * poleCount) {
 				return swposts[n / 3][n % 3];
 			}
 			return coilPosts[n - 3 * poleCount];
 		}
 
-		public override int getPostCount() {
+		public override int getLeadCount() {
 			return 2 + poleCount * 3;
 		}
 

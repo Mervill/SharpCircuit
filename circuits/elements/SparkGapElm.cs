@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class SparkGapElm : CircuitElm {
+	public class SparkGapElm : CircuitElement {
 		public double resistance, onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 	
-	public class MemristorElm : CircuitElm {
+	public class MemristorElm : CircuitElement {
 		public double r_on, r_off, dopeWidth, totalWidth, mobility, resistance;
 
 		public MemristorElm(int xx, int yy, CirSim s) : base(xx, yy, s) {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class SwitchElm : CircuitElm {
+	public class SwitchElm : CircuitElement {
 		public bool momentary;
 		// position 0 == closed, position 1 == open
 		public int position, posCount;

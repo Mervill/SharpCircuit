@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class VoltageElm : CircuitElm {
+	public class VoltageElm : CircuitElement {
 		public static int FLAG_COS = 2;
 		public int waveform;
 		public static int WF_DC = 0;
