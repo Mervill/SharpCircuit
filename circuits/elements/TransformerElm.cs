@@ -6,70 +6,41 @@ namespace Circuits {
 
 	public class TransformerElm : CircuitElement {
 
-		public double inductance, ratio, couplingCoef;
+		public static readonly int FLAG_BACK_EULER = 2;
+
+		/// <summary>
+		/// Primary Inductance (H)
+		/// </summary>
+		public double Inductance{ get; set; }
+
+		/// <summary>
+		/// Ratio
+		/// </summary>
+		public double Ratio{ get; set; }
+
+		/// <summary>
+		/// Coupling Coefficient
+		/// </summary>
+		public double CouplingCoef{ get; set; }
+
 		public ElementLead[] ptEnds;
+
 		new public double[] current;
-		public int width;
-		public static int FLAG_BACK_EULER = 2;
+
+		private double a1, a2, a3, a4;
 
 		public TransformerElm( CirSim s) : base(s) {
-			inductance = 4;
-			ratio = 1;
-			width = 32;
-			couplingCoef = 0.999;
+			ptEnds = newLeadArray(getLeadCount());
+			Inductance = 4;
+			Ratio = 1;
+			CouplingCoef = 0.999;
 			current = new double[2];
+
 		}
 
 		public bool isTrapezoidal() {
 			return (flags & FLAG_BACK_EULER) == 0;
 		}
-
-		/*public void draw(Graphics g) {
-			int i;
-			for (i = 0; i != 4; i++) {
-				setVoltageColor(g, volts[i]);
-				drawThickLine(g, ptEnds[i], ptCoil[i]);
-			}
-			for (i = 0; i != 2; i++) {
-				setPowerColor(g, current[i] * (volts[i] - volts[i + 2]));
-				drawCoil(g, dsign * (i == 1 ? -6 : 6), ptCoil[i], ptCoil[i + 2],
-						volts[i], volts[i + 2]);
-			}
-			g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			for (i = 0; i != 2; i++) {
-				drawThickLine(g, ptCore[i], ptCore[i + 2]);
-				curcount[i] = updateDotCount(current[i], curcount[i]);
-			}
-			for (i = 0; i != 2; i++) {
-				drawDots(g, ptEnds[i], ptCoil[i], curcount[i]);
-				drawDots(g, ptCoil[i], ptCoil[i + 2], curcount[i]);
-				drawDots(g, ptEnds[i + 2], ptCoil[i + 2], -curcount[i]);
-			}
-
-			drawPosts(g);
-			setBbox(ptEnds[0], ptEnds[3], 0);
-		}*/
-		
-//		override public void setPoints() {
-//			base.setPoints();
-//			point2.y = point1.y;
-//			ptEnds = newPointArray(4);
-//			ptCoil = newPointArray(4);
-//			ptCore = newPointArray(4);
-//			ptEnds[0] = point1;
-//			ptEnds[1] = point2;
-//			interpPoint(point1, point2, ptEnds[2], 0, -dsign * width);
-//			interpPoint(point1, point2, ptEnds[3], 1, -dsign * width);
-//			double ce = .5 - 12 / dn;
-//			double cd = .5 - 2 / dn;
-//			int i;
-//			for (i = 0; i != 4; i += 2) {
-//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i], ce);
-//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCoil[i + 1], 1 - ce);
-//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i], cd);
-//				interpPoint(ptEnds[i], ptEnds[i + 1], ptCore[i + 1], 1 - cd);
-//			}
-//		}
 
 		override public ElementLead getLead(int n) {
 			return ptEnds[n];
@@ -82,8 +53,6 @@ namespace Circuits {
 		override public void reset() {
 			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
-
-		public double a1, a2, a3, a4;
 
 		override public void stamp() {
 			// equations for transformer:
@@ -113,9 +82,9 @@ namespace Circuits {
 			// dt instead of dt/2 for the resistor and VCCS.
 			//
 			// first winding goes from node 0 to 2, second is from 1 to 3
-			double l1 = inductance;
-			double l2 = inductance * ratio * ratio;
-			double m = couplingCoef * Math.Sqrt(l1 * l2);
+			double l1 = Inductance;
+			double l2 = Inductance * Ratio * Ratio;
+			double m = CouplingCoef * Math.Sqrt(l1 * l2);
 			// build inverted matrix
 			double deti = 1 / (l1 * l2 - m * m);
 			double ts = isTrapezoidal() ? sim.timeStep / 2 : sim.timeStep;
@@ -161,8 +130,8 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
-			arr[1] = "L = " + getUnitText(inductance, "H");
-			arr[2] = "Ratio = 1:" + ratio;
+			arr[1] = "L = " + getUnitText(Inductance, "H");
+			arr[2] = "Ratio = 1:" + Ratio;
 			arr[3] = "Vd1 = " + getVoltageText(volts[0] - volts[2]);
 			arr[4] = "Vd2 = " + getVoltageText(volts[1] - volts[3]);
 			arr[5] = "I1 = " + getCurrentText(current[0]);
@@ -179,44 +148,5 @@ namespace Circuits {
 			return false;
 		}
 
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
-			}
-			if (n == 1) {
-				return new EditInfo("Ratio", ratio, 1, 10).setDimensionless();
-			}
-			if (n == 2) {
-				return new EditInfo("Coupling Coefficient", couplingCoef, 0, 1)
-						.setDimensionless();
-			}
-			if (n == 3) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Trapezoidal Approximation",
-						isTrapezoidal());
-				return ei;
-			}
-			return null;
-		}
-		
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				inductance = ei.value;
-			}
-			if (n == 1) {
-				ratio = ei.value;
-			}
-			if (n == 2 && ei.value > 0 && ei.value < 1) {
-				couplingCoef = ei.value;
-			}
-			if (n == 3) {
-				if (ei.checkbox.getState()) {
-					flags &= ~Inductor.FLAG_BACK_EULER;
-				} else {
-					flags |= Inductor.FLAG_BACK_EULER;
-				}
-			}
-		}*/
 	}
 }

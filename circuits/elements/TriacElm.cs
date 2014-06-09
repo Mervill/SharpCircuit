@@ -1,12 +1,12 @@
-// stub implementation of TriacElm, based on SCRElm
-// FIXME need to add TriacElm to srclist
-// FIXME need to uncomment TriacElm line from CirSim.java
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Circuits {
+
+	// stub implementation of TriacElm, based on SCRElm
+	// FIXME need to add TriacElm to srclist
+	// FIXME need to uncomment TriacElm line from CirSim.java
 
 	// Silicon-Controlled Rectifier
 	// 3 nodes, 1 internal node
@@ -16,24 +16,39 @@ namespace Circuits {
 	// 2, 1 = 50 ohm resistor
 
 	public class TriacElm : CircuitElement {
-		public int anode = 0;
-		public int cnode = 1;
-		public int gnode = 2;
-		public int inode = 3;
-		public Diode diode;
 
-		public TriacElm( CirSim s) : base(s) {
-			setDefaults();
-			setup();
-		}
+		private static readonly int anode = 0;
+		private static readonly int cnode = 1;
+		private static readonly int gnode = 2;
+		private static readonly int inode = 3;
 
-		public void setDefaults() {
-			cresistance = 50;
-			holdingI = .0082;
-			triggerI = .01;
-		}
+		public Diode diode{ get; private set; }
 
-		public void setup() {
+		private double ia, ic, ig;
+		private double lastvac, lastvag;
+
+		/// <summary>
+		/// Gate-Cathode Resistance (ohms)
+		/// </summary>
+		public double CResistance{ get; set; }
+
+		/// <summary>
+		/// Trigger Current (A)
+		/// </summary>
+		public double TriggerI{ get; set; }
+
+		/// <summary>
+		/// Holding Current (A)
+		/// </summary>
+		public double HoldingI{ get; set; }
+		
+		public ElementLead gate;
+
+		public TriacElm(CirSim s) : base(s) {
+			gate = new ElementLead(this,2);
+			CResistance = 50;
+			HoldingI = 0.0082;
+			TriggerI = 0.01;
 			diode = new Diode(sim);
 			diode.setup(.8, 0);
 		}
@@ -48,79 +63,8 @@ namespace Circuits {
 			lastvag = lastvac = 0;
 		}
 
-		public double ia, ic, ig;
-		public double lastvac, lastvag;
-		public double cresistance, triggerI, holdingI;
-
-		public ElementLead gate;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int dir = 0;
-//			if (abs(dx) > abs(dy)) {
-//				dir = -sign(dx) * sign(dy);
-//				point2.y = point1.y;
-//			} else {
-//				dir = sign(dy) * sign(dx);
-//				point2.x = point1.x;
-//			}
-//			if (dir == 0) {
-//				dir = 1;
-//			}
-//			calcLeads(16);
-//			cathode = newPointArray(2);
-//			Point[] pa = newPointArray(2);
-//			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
-//			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-//
-//			gate = newPointArray(2);
-//			double leadlen = (dn - 16) / 2;
-//			int gatelen = sim.gridSize;
-//			gatelen += (int)leadlen % sim.gridSize;
-//			if (leadlen < gatelen) {
-//				x2 = x;
-//				y2 = y;
-//				return;
-//			}
-//			interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
-//			interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.gridSize * 2 * dir);
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, hs);
-			adjustBbox(gate[0], gate[1]);
-
-			double v1 = volts[anode];
-			double v2 = volts[cnode];
-
-			draw2Leads(g);
-
-			// draw arrow thingy
-			setPowerColor(g, true);
-			setVoltageColor(g, v1);
-			g.fillPolygon(poly);
-
-			// draw thing arrow is pointing to
-			setVoltageColor(g, v2);
-			drawThickLine(g, cathode[0], cathode[1]);
-
-			drawThickLine(g, lead2, gate[0]);
-			drawThickLine(g, gate[0], gate[1]);
-
-			curcount_a = updateDotCount(ia, curcount_a);
-			curcount_c = updateDotCount(ic, curcount_c);
-			curcount_g = updateDotCount(ig, curcount_g);
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead2, curcount_a);
-				drawDots(g, point2, lead2, curcount_c);
-				drawDots(g, gate[1], gate[0], curcount_g);
-				drawDots(g, gate[0], lead2, curcount_g + distance(gate[1], gate[0]));
-			}
-			drawPosts(g);
-		}*/
-
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? point1 : gate;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : gate;
 		}
 
 		public override int getLeadCount() {
@@ -142,7 +86,7 @@ namespace Circuits {
 			sim.stampNonLinear(nodes[cnode]);
 			sim.stampNonLinear(nodes[gnode]);
 			sim.stampNonLinear(nodes[inode]);
-			sim.stampResistor(nodes[gnode], nodes[cnode], cresistance);
+			sim.stampResistor(nodes[gnode], nodes[cnode], CResistance);
 			diode.stamp(nodes[inode], nodes[gnode]);
 		}
 
@@ -155,8 +99,8 @@ namespace Circuits {
 			lastvac = vac;
 			lastvag = vag;
 			diode.doStep(volts[inode] - volts[gnode]);
-			double icmult = 1 / triggerI;
-			double iamult = 1 / holdingI - icmult;
+			double icmult = 1 / TriggerI;
+			double iamult = 1 / HoldingI - icmult;
 			// System.out.println(icmult + " " + iamult);
 			aresistance = (-icmult * ic + ia * iamult > 1) ? .0105 : 10e5;
 			// System.out.println(vac + " " + vag + " " + sim.converged + " " + ic +
@@ -178,36 +122,10 @@ namespace Circuits {
 		}
 
 		public override void calculateCurrent() {
-			ic = (volts[cnode] - volts[gnode]) / cresistance;
+			ic = (volts[cnode] - volts[gnode]) / CResistance;
 			ia = (volts[anode] - volts[inode]) / aresistance;
 			ig = -ic - ia;
 		}
 
-		/*public override EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("Trigger Current (A)", triggerI, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Holding Current (A)", holdingI, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Gate-Cathode Resistance (ohms)", cresistance,
-						0, 0);
-			}
-			return null;
-		}
-
-		public override void setEditValue(int n, EditInfo ei) {
-			if (n == 0 && ei.value > 0) {
-				triggerI = ei.value;
-			}
-			if (n == 1 && ei.value > 0) {
-				holdingI = ei.value;
-			}
-			if (n == 2 && ei.value > 0) {
-				cresistance = ei.value;
-			}
-		}*/
 	}
 }

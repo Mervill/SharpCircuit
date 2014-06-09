@@ -5,13 +5,44 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TransistorElm : CircuitElement {
-		public int pnp;
-		public double beta;
-		public double fgain;
-		public double gmin;
+
+		private static readonly double leakage = 1E-13; // 1e-6;
+		private static readonly double vt = 0.025;
+		private static readonly double vdcoef = 1 / vt;
+		private static readonly double rgain = 0.5;
+
+		private int pnp;
+
+		/// <summary>
+		/// Beta/hFE
+		/// </summary>
+		public double Beta {
+			get{
+				return beta;
+			}
+			set{
+				beta = value;
+				setup();
+			}
+		}
+		private double beta;
+
+		private double fgain;
+		private double gmin;
+
+		private double ic, ie, ib;
+		private double vcrit;
+		private double lastvbc, lastvbe;
+
 		public int FLAG_FLIP = 1;
 
+		public ElementLead coll;
+		public ElementLead emit;
+
 		public TransistorElm( bool pnpflag,CirSim s) : base(s) {
+			coll = new ElementLead(this,1);
+			emit = new ElementLead(this,2);
+
 			pnp = (pnpflag) ? -1 : 1;
 			beta = 100;
 			setup();
@@ -28,58 +59,11 @@ namespace Circuits {
 
 		public override void reset() {
 			volts[0] = volts[1] = volts[2] = 0;
-			lastvbc = lastvbe = curcount_c = curcount_e = curcount_b = 0;
+			lastvbc = lastvbe = 0;
 		}
 
-		public double ic, ie, ib, curcount_c, curcount_e, curcount_b;
-		//public Polygon rectPoly, arrowPoly;
-
-		/*public void draw(Graphics g) {
-			setBbox(point1, point2, 16);
-			setPowerColor(g, true);
-			// draw collector
-			setVoltageColor(g, volts[1]);
-			drawThickLine(g, coll[0], coll[1]);
-			// draw emitter
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, emit[0], emit[1]);
-			// draw arrow
-			g.setColor(lightGrayColor);
-			g.fillPolygon(arrowPoly);
-			// draw base
-			setVoltageColor(g, volts[0]);
-			if (sim.powerCheckItem.getState()) {
-				g.setColor(Color.gray);
-			}
-			drawThickLine(g, point1, base);
-			// draw dots
-			curcount_b = updateDotCount(-ib, curcount_b);
-			drawDots(g, base, point1, curcount_b);
-			curcount_c = updateDotCount(-ic, curcount_c);
-			drawDots(g, coll[1], coll[0], curcount_c);
-			curcount_e = updateDotCount(-ie, curcount_e);
-			drawDots(g, emit[1], emit[0], curcount_e);
-			// draw base rectangle
-			setVoltageColor(g, volts[0]);
-			setPowerColor(g, true);
-			g.fillPolygon(rectPoly);
-
-			if ((needsHighlight() || sim.dragElm == this) && dy == 0) {
-				g.setColor(Color.white);
-				g.setFont(unitsFont);
-				int ds = sign(dx);
-				g.drawString("B", base.x - 10 * ds, base.y - 5);
-				g.drawString("C", coll[0].x - 3 + 9 * ds, coll[0].y + 4); // x+6 if
-																			// ds=1,
-																			// -12
-																			// if -1
-				g.drawString("E", emit[0].x - 3 + 9 * ds, emit[0].y + 4);
-			}
-			drawPosts(g);
-		}*/
-
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? coll : emit;
+			return (n == 0) ? lead0 : (n == 1) ? coll : emit;
 		}
 
 		public override int getLeadCount() {
@@ -89,39 +73,6 @@ namespace Circuits {
 		public override double getPower() {
 			return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
 		}
-
-		public ElementLead coll;
-		public ElementLead emit;
-		public ElementLead @base;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int hs = 16;
-//			if ((flags & FLAG_FLIP) != 0) {
-//				dsign = -dsign;
-//			}
-//			int hs2 = hs * dsign * pnp;
-//			// calc collector, emitter posts
-//			coll = newPointArray(2);
-//			emit = newPointArray(2);
-//			interpPoint2(point1, point2, coll[0], emit[0], 1, hs2);
-//			// calc rectangle edges
-//			rect = newPointArray(4);
-//			interpPoint2(point1, point2, rect[0], rect[1], 1 - 16 / dn, hs);
-//			interpPoint2(point1, point2, rect[2], rect[3], 1 - 13 / dn, hs);
-//			// calc points where collector/emitter leads contact rectangle
-//			interpPoint2(point1, point2, coll[1], emit[1], 1 - 13 / dn, 6 * dsign * pnp);
-//			// calc point where base lead contacts rectangle
-//			@base = new Point();
-//			interpPoint(point1, point2, @base, 1 - 16 / dn);
-//		}
-
-		public static double leakage = 1e-13; // 1e-6;
-		public static double vt = 0.025;
-		public static double vdcoef = 1 / vt;
-		public static double rgain = 0.5;
-		public double vcrit;
-		public double lastvbc, lastvbe;
 
 		public double limitStep(double vnew, double vold) {
 			double arg;
@@ -267,33 +218,6 @@ namespace Circuits {
 				return "V";
 			}
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Beta/hFE", beta, 10, 1000).setDimensionless();
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Swap E/C", (flags & FLAG_FLIP) != 0);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				beta = ei.value;
-				setup();
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_FLIP;
-				} else {
-					flags &= ~FLAG_FLIP;
-				}
-				setPoints();
-			}
-		}*/
 
 		/*public override bool canViewInScope() {
 			return true;

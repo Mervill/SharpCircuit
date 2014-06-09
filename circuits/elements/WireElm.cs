@@ -6,38 +6,12 @@ namespace Circuits {
 
 	public class WireElm : CircuitElement {
 
-		public static int FLAG_SHOWCURRENT = 1;
-		public static int FLAG_SHOWVOLTAGE = 2;
-
 		public WireElm(CirSim s) : base(s) {
 			
 		}
 
-		/*public override void draw(Graphics g) {
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, point2);
-			doDots(g);
-			setBbox(point1, point2, 3);
-			if (mustShowCurrent()) {
-				String s = getShortUnitText(Math.abs(getCurrent()), "A");
-				drawValues(g, s, 4);
-			} else if (mustShowVoltage()) {
-				String s = getShortUnitText(volts[0], "V");
-				drawValues(g, s, 4);
-			}
-			drawPosts(g);
-		}*/
-
 		public override void stamp() {
 			sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
-		}
-
-		public bool mustShowCurrent() {
-			return (flags & FLAG_SHOWCURRENT) != 0;
-		}
-
-		public bool mustShowVoltage() {
-			return (flags & FLAG_SHOWVOLTAGE) != 0;
 		}
 
 		public override int getVoltageSourceCount() {
@@ -61,37 +35,6 @@ namespace Circuits {
 		public override bool isWire() {
 			return true;
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Show Current", mustShowCurrent());
-				return ei;
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Show Voltage", mustShowVoltage());
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				if (ei.checkbox.getState()) {
-					flags = FLAG_SHOWCURRENT;
-				} else {
-					flags &= ~FLAG_SHOWCURRENT;
-				}
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags = FLAG_SHOWVOLTAGE;
-				} else {
-					flags &= ~FLAG_SHOWVOLTAGE;
-				}
-			}
-		}*/
 
 	}
 }

@@ -5,84 +5,32 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TappedTransformerElm : CircuitElement {
-		public double inductance, ratio;
+
+		/// <summary>
+		/// Primary Inductance (H)
+		/// </summary>
+		public double Inductance{ get; set; }
+
+		/// <summary>
+		/// Ratio
+		/// </summary>
+		public double Ratio{ get; set; }
+
 		public ElementLead[] ptEnds;
 		new public double[] current;
 
+		private double[] a;
+		private double[] curSourceValue, voltdiff;
+
 		public TappedTransformerElm(CirSim s) : base(s) {
-			inductance = 4;
-			ratio = 1;
+			ptEnds = newLeadArray(getLeadCount());
+			Inductance = 4;
+			Ratio = 1;
 			current = new double[4];
 			voltdiff = new double[3];
 			curSourceValue = new double[3];
 			a = new double[9];
 		}
-
-		/*public void draw(Graphics g) {
-			int i;
-			for (i = 0; i != 5; i++) {
-				setVoltageColor(g, volts[i]);
-				drawThickLine(g, ptEnds[i], ptCoil[i]);
-			}
-			for (i = 0; i != 4; i++) {
-				if (i == 1) {
-					continue;
-				}
-				setPowerColor(g, current[i] * (volts[i] - volts[i + 1]));
-				drawCoil(g, i > 1 ? -6 : 6, ptCoil[i], ptCoil[i + 1], volts[i],
-						volts[i + 1]);
-			}
-			g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			for (i = 0; i != 4; i += 2) {
-				drawThickLine(g, ptCore[i], ptCore[i + 1]);
-			}
-			// calc current of tap wire
-			current[3] = current[1] - current[2];
-			for (i = 0; i != 4; i++) {
-				curcount[i] = updateDotCount(current[i], curcount[i]);
-			}
-
-			// primary dots
-			drawDots(g, ptEnds[0], ptCoil[0], curcount[0]);
-			drawDots(g, ptCoil[0], ptCoil[1], curcount[0]);
-			drawDots(g, ptCoil[1], ptEnds[1], curcount[0]);
-
-			// secondary dots
-			drawDots(g, ptEnds[2], ptCoil[2], curcount[1]);
-			drawDots(g, ptCoil[2], ptCoil[3], curcount[1]);
-			drawDots(g, ptCoil[3], ptEnds[3], curcount[3]);
-			drawDots(g, ptCoil[3], ptCoil[4], curcount[2]);
-			drawDots(g, ptCoil[4], ptEnds[4], curcount[2]);
-
-			drawPosts(g);
-			setBbox(ptEnds[0], ptEnds[4], 0);
-		}*/
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int hs = 32;
-//			ptEnds = newPointArray(5);
-//			ptCoil = newPointArray(5);
-//			ptCore = newPointArray(4);
-//			ptEnds[0] = point1;
-//			ptEnds[2] = point2;
-//			interpPoint(point1, point2, ptEnds[1], 0, -hs * 2);
-//			interpPoint(point1, point2, ptEnds[3], 1, -hs);
-//			interpPoint(point1, point2, ptEnds[4], 1, -hs * 2);
-//			double ce = .5 - 12 / dn;
-//			double cd = .5 - 2 / dn;
-//			int i;
-//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[0], ce);
-//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[1], ce, -hs * 2);
-//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[2], 1 - ce);
-//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[3], 1 - ce, -hs);
-//			interpPoint(ptEnds[0], ptEnds[2], ptCoil[4], 1 - ce, -hs * 2);
-//			for (i = 0; i != 2; i++) {
-//				int b = -hs * i * 2;
-//				interpPoint(ptEnds[0], ptEnds[2], ptCore[i], cd, b);
-//				interpPoint(ptEnds[0], ptEnds[2], ptCore[i + 2], 1 - cd, b);
-//			}
-//		}
 
 		public override ElementLead getLead(int n) {
 			return ptEnds[n];
@@ -95,8 +43,6 @@ namespace Circuits {
 		public override void reset() {
 			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
-
-		public double[] a;
 
 		public override void stamp() {
 			// equations for transformer:
@@ -120,7 +66,7 @@ namespace Circuits {
 			// and similarly for i2
 			//
 			// first winding goes from node 0 to 1, second is from 2 to 3 to 4
-			double l1 = inductance;
+			double l1 = Inductance;
 			double cc = .99;
 			// double m1 = .999*Math.sqrt(l1*l2);
 			// mutual inductance between two halves of the second winding
@@ -130,10 +76,10 @@ namespace Circuits {
 			// load pre-inverted matrix
 			a[0] = (1 + cc) / (l1 * (1 + cc - 2 * cc * cc));
 			a[1] = a[2] = a[3] = a[6] = 2 * cc
-					/ ((2 * cc * cc - cc - 1) * inductance * ratio);
+					/ ((2 * cc * cc - cc - 1) * Inductance * Ratio);
 			a[4] = a[8] = -4 * (1 + cc)
-					/ ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
-			a[5] = a[7] = 4 * cc / ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
+					/ ((2 * cc * cc - cc - 1) * l1 * Ratio * Ratio);
+			a[5] = a[7] = 4 * cc / ((2 * cc * cc - cc - 1) * l1 * Ratio * Ratio);
 			int i;
 			for (i = 0; i != 9; i++) {
 				a[i] *= sim.timeStep / 2;
@@ -168,8 +114,6 @@ namespace Circuits {
 			}
 		}
 
-		double[] curSourceValue, voltdiff;
-
 		public override void doStep() {
 			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue[0]);
 			sim.stampCurrentSource(nodes[2], nodes[3], curSourceValue[1]);
@@ -191,8 +135,8 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
-			arr[1] = "L = " + getUnitText(inductance, "H");
-			arr[2] = "Ratio = " + ratio;
+			arr[1] = "L = " + getUnitText(Inductance, "H");
+			arr[2] = "Ratio = " + Ratio;
 			// arr[3] = "I1 = " + getCurrentText(current1);
 			arr[3] = "Vd1 = " + getVoltageText(volts[0] - volts[2]);
 			// arr[5] = "I2 = " + getCurrentText(current2);
@@ -215,23 +159,5 @@ namespace Circuits {
 			return false;
 		}
 
-		/*public public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
-			}
-			if (n == 1) {
-				return new EditInfo("Ratio", ratio, 1, 10).setDimensionless();
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				inductance = ei.value;
-			}
-			if (n == 1) {
-				ratio = ei.value;
-			}
-		}*/
 	}
 }

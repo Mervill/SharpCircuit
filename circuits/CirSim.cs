@@ -24,7 +24,7 @@ namespace Circuits {
 		public double currentSpeed = 55;
 		public double powerBrightness = 50;
 
-		public List<CircuitElement> elmList = new List<CircuitElement>();
+		public List<CircuitElement> elements = new List<CircuitElement>();
 		public int voltageSourceCount{ get; private set; }
 
 		private bool analyzeFlag;
@@ -98,7 +98,7 @@ namespace Circuits {
 
 				used[n1] = true;
 				int i;
-				for (i = 0; i != root.elmList.Count; i++){
+				for (i = 0; i != root.elements.Count; i++){
 					CircuitElement ce = root.getElm(i);
 					if(ce == firstElm)
 						continue;
@@ -249,7 +249,7 @@ namespace Circuits {
 					if (!cn.@internal && cn.links.Count == 1) {
 						int bb = 0, j;
 						ElementLead cnl = cn.links[0];
-						for (j = 0; j != elmList.Count; j++) { // TODO: (hausen) see if this change does not break stuff
+						for (j = 0; j != elements.Count; j++) { // TODO: (hausen) see if this change does not break stuff
 							CircuitElement ce = getElm(j);
 							if (cnl.element != ce) { //&& getElm(j).boundingBox.contains(cn.x, cn.y) // && (getElm(j).x == cn.x && getElm(j).y == cn.y)
 								bb++;
@@ -329,7 +329,7 @@ namespace Circuits {
 
 		private void analyzeCircuit() {
 
-			if (elmList.Count == 0)
+			if (elements.Count == 0)
 				return;
 
 			stopMessage = null;
@@ -342,7 +342,7 @@ namespace Circuits {
 			CircuitElement volt = null;
 
 			#region Look for Voltage or Ground element
-			for (i = 0; i != elmList.Count; i++) {
+			for (i = 0; i != elements.Count; i++) {
 				CircuitElement ce = getElm(i);
 				if (ce is GroundElm) {
 					gotGround = true;
@@ -374,7 +374,7 @@ namespace Circuits {
 			#endregion
 
 			#region Nodes and Voltage Sources
-			for (i = 0; i != elmList.Count; i++) {
+			for (i = 0; i != elements.Count; i++) {
 				CircuitElement current_elm = getElm(i);
 				int num_posts = current_elm.getLeadCount();
 
@@ -425,7 +425,7 @@ namespace Circuits {
 
 			// == Determine if circuit is nonlinear
 			circuitNonLinear = false;
-			for (i = 0; i != elmList.Count; i++) {
+			for (i = 0; i != elements.Count; i++) {
 				CircuitElement ce = getElm(i);
 				if (ce.nonLinear())
 					circuitNonLinear = true;
@@ -461,7 +461,7 @@ namespace Circuits {
 			#endregion
 
 			// Stamp linear circuit elements.
-			for (i = 0; i != elmList.Count; i++) {
+			for (i = 0; i != elements.Count; i++) {
 				CircuitElement ce = getElm(i);
 				ce.stamp();
 			}
@@ -472,7 +472,7 @@ namespace Circuits {
 			closure[0] = true;
 			while (changed) {
 				changed = false;
-				for (i = 0; i != elmList.Count; i++) {
+				for (i = 0; i != elements.Count; i++) {
 					CircuitElement ce = getElm(i);
 					// loop through all ce's nodes to see if they are connected
 					// to other nodes not in closure
@@ -504,7 +504,7 @@ namespace Circuits {
 				for (i = 0; i != nodeList.Count; i++) {
 					if (!closure[i] && !getCircuitNode(i).@internal) {
 						//System.out.println("node " + i + " unconnected");
-						stampResistor(0, i, 1e8);
+						stampResistor(0, i, 1E8);
 						closure[i] = true;
 						changed = true;
 						break;
@@ -515,7 +515,7 @@ namespace Circuits {
 			#endregion
 
 			#region Sanity checks
-			for (i = 0; i != elmList.Count; i++) {
+			for (i = 0; i != elements.Count; i++) {
 				CircuitElement ce = getElm(i);
 
 				// look for inductors with no current path
@@ -913,10 +913,10 @@ namespace Circuits {
 		}
 		
 		public CircuitElement getElm(int n) {
-			if (n >= elmList.Count) {
+			if (n >= elements.Count) {
 				return null;
 			}
-			return elmList[n];
+			return elements[n];
 		}
 
 		public double getIterCount() {
@@ -928,7 +928,7 @@ namespace Circuits {
 		}
 
 		private void runCircuit() {
-			if (circuitMatrix == null || elmList.Count == 0) {
+			if (circuitMatrix == null || elements.Count == 0) {
 				circuitMatrix = null;
 				return;
 			}
@@ -944,7 +944,7 @@ namespace Circuits {
 			}
 			for (iter = 1;; iter++) {
 				int i, j, k, subiter;
-				for (i = 0; i != elmList.Count; i++) {
+				for (i = 0; i != elements.Count; i++) {
 					CircuitElement ce = getElm(i);
 					ce.startIteration();
 				}
@@ -963,7 +963,7 @@ namespace Circuits {
 							}
 						}
 					}
-					for (i = 0; i != elmList.Count; i++) {
+					for (i = 0; i != elements.Count; i++) {
 						CircuitElement ce = getElm(i);
 						ce.doStep();
 					}

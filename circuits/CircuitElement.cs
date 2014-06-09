@@ -14,29 +14,37 @@ namespace Circuits {
 		public readonly static double pi = 3.14159265358979323846;
 
 		public int flags, voltSource;
-		public ElementLead point0;
-		public ElementLead point1;
+		public ElementLead lead0;
+		public ElementLead lead1;
 
 		protected int[] nodes;
 		protected double[] volts;
 		protected double current;
 
 		public CircuitElement(CirSim s) {
-			point0 = new ElementLead(this,0);
-			point1 = new ElementLead(this,1);
+			lead0 = new ElementLead(this,0);
+			lead1 = new ElementLead(this,1);
 
 			flags = getDefaultFlags();
 			allocNodes();
+
 			sim = s;
+			sim.elements.Add(this);
 		}
 
-		public virtual void doStep() { }
-		public virtual void startIteration() { }
-		public virtual void doAdjust() { }
-		public virtual void setupAdjust() { }
-		public virtual void getInfo(String[] arr) { }
-		public virtual void calculateCurrent() { }
-		public virtual void stamp() { }
+		public int getBasicInfo(String[] arr) {
+			arr[1] = "I = " + getCurrentDText(getCurrent());
+			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
+			return 3;
+		}
+
+		#region Virtual's
+
+		public virtual void doStep(){ }
+		public virtual void startIteration(){ }
+		public virtual void getInfo(String[] arr){ }
+		public virtual void calculateCurrent(){ }
+		public virtual void stamp(){ }
 
 		public virtual int getDefaultFlags() {
 			return 0;
@@ -104,7 +112,7 @@ namespace Circuits {
 		}
 
 		public virtual ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? point1 : null;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : null;
 		}
 
 		public virtual double getPower() {
@@ -143,11 +151,7 @@ namespace Circuits {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
 		}
 
-		public int getBasicInfo(String[] arr) {
-			arr[1] = "I = " + getCurrentDText(getCurrent());
-			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
-			return 3;
-		}
+		#endregion
 
 		public ElementLead[] newLeadArray(int n) {
 			ElementLead[] a = new ElementLead[n];
@@ -156,6 +160,39 @@ namespace Circuits {
 			}
 			return a;
 		}
+
+		#region Attach
+
+		// Attach [other] lead to the lead at the given index.
+		public CircuitElement Attach(int lead,ElementLead other){
+			getLead(lead).Connect(other);
+			return other.element;
+		}
+
+		/*// Attach [other] lead to first unconnected lead on this element
+		public CircuitElement AttachFirst(ElementLead other){
+			for(int i = 0;i < getLeadCount();i++){
+				ElementLead ld = getLead(i);
+				if(!ld.IsConnected()){
+					ld.Connect(other);
+					break;
+				}
+			}
+			return other.element;
+		}*/
+
+		// Attach the lead on [other] at [elm_lead] to the lead on this element at [lead].
+		public CircuitElement Attach(int lead,CircuitElement other,int elm_lead){
+			return(Attach(lead,other.getLead(elm_lead)));
+		}
+
+		public CircuitElement Next(CircuitElement other){
+			//getLead(getLeadCount() -1).Connect(other.getLead(0));
+			//return other;
+			return Attach(getLeadCount() - 1,other,0);
+		}
+
+		#endregion
 
 		#region Static methods
 

@@ -60,7 +60,7 @@ namespace Circuits {
 		}*/
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : swposts[n - 1];
+			return (n == 0) ? lead0 : swposts[n - 1];
 		}
 
 		public override int getLeadCount() {
@@ -88,8 +88,8 @@ namespace Circuits {
 			base.toggle();
 			if (link != 0) {
 				int i;
-				for (i = 0; i != sim.elmList.Count; i++) {
-					Object o = sim.elmList[i];
+				for (i = 0; i != sim.elements.Count; i++) {
+					Object o = sim.elements[i];
 					if (o is Switch2Elm) {
 						Switch2Elm s2 = (Switch2Elm) o;
 						if (s2.link == link) {

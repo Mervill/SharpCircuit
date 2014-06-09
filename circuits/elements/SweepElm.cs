@@ -5,9 +5,13 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class SweepElm : CircuitElement {
+
 		public double maxV, maxF, minF, sweepTime, frequency;
 		public int FLAG_LOG = 1;
 		public int FLAG_BIDIR = 2;
+		public double fadd, fmul, freqTime, savedTimeStep;
+		public int dir = 1;
+		public double v;
 
 		public SweepElm(CirSim s) : base(s) {
 			minF = 20;
@@ -22,64 +26,9 @@ namespace Circuits {
 			return 1;
 		}
 
-//		public override void setPoints() {
-//			base.setPoints();
-//			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
-//		}
-
-		/*void draw(Graphics g) {
-			setBbox(point1, point2, circleSize);
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, lead1);
-			g.setColor(needsHighlight() ? selectColor : Color.gray);
-			setPowerColor(g, false);
-			int xc = point2.x;
-			int yc = point2.y;
-			drawThickCircle(g, xc, yc, circleSize);
-			int wl = 8;
-			adjustBbox(xc - circleSize, yc - circleSize, xc + circleSize, yc
-					+ circleSize);
-			int i;
-			int xl = 10;
-			int ox = -1, oy = -1;
-			long tm = System.currentTimeMillis();
-			// double w = (this == mouseElm ? 3 : 2);
-			tm %= 2000;
-			if (tm > 1000) {
-				tm = 2000 - tm;
-			}
-			double w = 1 + tm * .002;
-			if (!sim.stoppedCheck.getState()) {
-				w = 1 + 2 * (frequency - minF) / (maxF - minF);
-			}
-			for (i = -xl; i <= xl; i++) {
-				int yy = yc + (int) (.95 * Math.sin(i * pi * w / xl) * wl);
-				if (ox != -1) {
-					drawThickLine(g, ox, oy, xc + i, yy);
-				}
-				ox = xc + i;
-				oy = yy;
-			}
-			if (sim.showValuesCheckItem.getState()) {
-				String s = getShortUnitText(frequency, "Hz");
-				if (dx == 0 || dy == 0) {
-					drawValues(g, s, circleSize);
-				}
-			}
-
-			drawPosts(g);
-			curcount = updateDotCount(-current, curcount);
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead1, curcount);
-			}
-		}*/
-
 		public override void stamp() {
 			sim.stampVoltageSource(0, nodes[0], voltSource);
 		}
-
-		public double fadd, fmul, freqTime, savedTimeStep;
-		public int dir = 1;
 
 		public void setParams() {
 			if (frequency < minF || frequency > maxF) {
@@ -103,8 +52,6 @@ namespace Circuits {
 			dir = 1;
 			setParams();
 		}
-
-		public double v;
 
 		public override void startIteration() {
 			// has timestep been changed?

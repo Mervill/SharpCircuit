@@ -89,7 +89,7 @@ namespace Circuits {
 
 		public override ElementLead getLead(int n) {
 			if (n == inputCount) {
-				return point1;
+				return lead1;
 			}
 			return inPosts[n];
 		}

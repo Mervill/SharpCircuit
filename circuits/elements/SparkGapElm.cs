@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class SparkGapElm : CircuitElement {
+
 		public double resistance, onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 
@@ -19,33 +20,6 @@ namespace Circuits {
 		public override bool nonLinear() {
 			return true;
 		}
-
-		//public Polygon arrow1, arrow2;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int dist = 16;
-//			int alen = 8;
-//			calcLeads(dist + alen);
-//			//Point p1 = interpPoint(point1, point2, (dn - alen) / (2 * dn));
-//			//arrow1 = calcArrow(point1, p1, alen, alen);
-//			//p1 = interpPoint(point1, point2, (dn + alen) / (2 * dn));
-//			//arrow2 = calcArrow(point2, p1, alen, alen);
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, 8);
-			draw2Leads(g);
-			setPowerColor(g, true);
-			setVoltageColor(g, volts[0]);
-			g.fillPolygon(arrow1);
-			setVoltageColor(g, volts[1]);
-			g.fillPolygon(arrow2);
-			if (state) {
-				doDots(g);
-			}
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
 			double vd = volts[0] - volts[1];

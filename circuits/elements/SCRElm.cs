@@ -12,26 +12,27 @@ namespace Circuits {
 	// 2, 1 = 50 ohm resistor
 
 	public class SCRElm : CircuitElement {
-		int anode = 0;
-		int cnode = 1;
-		int gnode = 2;
-		int inode = 3;
-		Diode diode;
 
-		public SCRElm( CirSim s) : base(s) {
-			setDefaults();
-			setup();
-		}
+		private static readonly int anode = 0;
+		private static readonly int cnode = 1;
+		private static readonly int gnode = 2;
+		private static readonly int inode = 3;
 
-		public void setDefaults() {
+		private Diode diode;
+		private double ia, ic, ig;
+		private double lastvac, lastvag;
+
+		public double cresistance, triggerI, holdingI;
+		
+		public ElementLead gate;
+
+		public SCRElm(CirSim s) : base(s) {
+			gate = new ElementLead(this,2);
+			diode = new Diode(sim);
+			diode.setup(0.8, 0);
 			cresistance = 50;
 			holdingI = 0.0082;
 			triggerI = 0.01;
-		}
-
-		public void setup() {
-			diode = new Diode(sim);
-			diode.setup(0.8, 0);
 		}
 
 		public override bool nonLinear() {
@@ -44,80 +45,8 @@ namespace Circuits {
 			lastvag = lastvac = 0;
 		}
 
-		public double ia, ic, ig;
-		public double lastvac, lastvag;
-		public double cresistance, triggerI, holdingI;
-
-		public ElementLead gate;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int dir = 0;
-//			if (abs(dx) > abs(dy)) {
-//				dir = -sign(dx) * sign(dy);
-//				point2.y = point1.y;
-//			} else {
-//				dir = sign(dy) * sign(dx);
-//				point2.x = point1.x;
-//			}
-//			if (dir == 0) {
-//				dir = 1;
-//			}
-//			calcLeads(16);
-//			cathode = newPointArray(2);
-//			Point[] pa = newPointArray(2);
-//			interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
-//			interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-//			//poly = createPolygon(pa[0], pa[1], lead2);
-//
-//			gate = newPointArray(2);
-//			double leadlen = (dn - 16) / 2;
-//			int gatelen = sim.gridSize;
-//			gatelen += (int)leadlen % sim.gridSize;
-//			if (leadlen < gatelen) {
-//				x2 = x;
-//				y2 = y;
-//				return;
-//			}
-//			interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
-//			interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.gridSize * 2 * dir);
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, hs);
-			adjustBbox(gate[0], gate[1]);
-
-			double v1 = volts[anode];
-			double v2 = volts[cnode];
-
-			draw2Leads(g);
-
-			// draw arrow thingy
-			setPowerColor(g, true);
-			setVoltageColor(g, v1);
-			g.fillPolygon(poly);
-
-			// draw thing arrow is pointing to
-			setVoltageColor(g, v2);
-			drawThickLine(g, cathode[0], cathode[1]);
-
-			drawThickLine(g, lead2, gate[0]);
-			drawThickLine(g, gate[0], gate[1]);
-
-			curcount_a = updateDotCount(ia, curcount_a);
-			curcount_c = updateDotCount(ic, curcount_c);
-			curcount_g = updateDotCount(ig, curcount_g);
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead2, curcount_a);
-				drawDots(g, point2, lead2, curcount_c);
-				drawDots(g, gate[1], gate[0], curcount_g);
-				drawDots(g, gate[0], lead2, curcount_g + distance(gate[1], gate[0]));
-			}
-			drawPosts(g);
-		}*/
-
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? point1 : gate;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : gate;
 		}
 
 		public override int getLeadCount() {

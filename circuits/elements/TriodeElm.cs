@@ -5,11 +5,21 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TriodeElm : CircuitElement {
-		public double mu, kg1;
+
+		private double mu, kg1;
+		private double gridCurrentR = 6000;
+
 		public double currentp, currentg, currentc;
-		public double gridCurrentR = 6000;
+
+		public ElementLead plate;
+		public ElementLead grid;
+		public ElementLead cath;
 
 		public TriodeElm( CirSim s) : base(s) {
+			plate = new ElementLead(this,0);
+			grid = new ElementLead(this,1);
+			cath = new ElementLead(this,2);
+
 			mu = 93;
 			kg1 = 680;
 		}
@@ -21,74 +31,6 @@ namespace Circuits {
 		public override void reset() {
 			volts[0] = volts[1] = volts[2] = 0;
 		}
-
-		public ElementLead plate;
-		public ElementLead grid; 
-		public ElementLead cath; 
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			plate = newPointArray(4);
-//			grid = newPointArray(8);
-//			cath = newPointArray(4);
-//			grid[0] = point1;
-//			int nearw = 8;
-//			interpPoint(point1, point2, plate[1], 1, nearw);
-//			int farw = 32;
-//			interpPoint(point1, point2, plate[0], 1, farw);
-//			int platew = 18;
-//			interpPoint2(point2, plate[1], plate[2], plate[3], 1, platew);
-//
-//			circler = 24;
-//			interpPoint(point1, point2, grid[1], (dn - circler) / dn, 0);
-//			int i;
-//			for (i = 0; i != 3; i++) {
-//				interpPoint(grid[1], point2, grid[2 + i * 2], (i * 3 + 1) / 4.5, 0);
-//				interpPoint(grid[1], point2, grid[3 + i * 2], (i * 3 + 2) / 4.5, 0);
-//			}
-//			midgrid = point2;
-//
-//			int cathw = 16;
-//			midcath = interpPoint(point1, point2, 1, -nearw);
-//			interpPoint2(point2, plate[1], cath[1], cath[2], -1, cathw);
-//			interpPoint(point2, plate[1], cath[3], -1.2, -cathw);
-//			interpPoint(point2, plate[1], cath[0], -farw / (double) nearw, cathw);
-//		}
-
-		/*public override void draw(Graphics g) {
-			g.setColor(Color.gray);
-			drawThickCircle(g, point2.x, point2.y, circler);
-			setBbox(point1, plate[0], 16);
-			adjustBbox(cath[0].x, cath[1].y, point2.x + circler, point2.y + circler);
-			setPowerColor(g, true);
-			// draw plate
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, plate[0], plate[1]);
-			drawThickLine(g, plate[2], plate[3]);
-			// draw grid
-			setVoltageColor(g, volts[1]);
-			int i;
-			for (i = 0; i != 8; i += 2) {
-				drawThickLine(g, grid[i], grid[i + 1]);
-			}
-			// draw cathode
-			setVoltageColor(g, volts[2]);
-			for (i = 0; i != 3; i++) {
-				drawThickLine(g, cath[i], cath[i + 1]);
-			}
-			// draw dots
-			curcountp = updateDotCount(currentp, curcountp);
-			curcountc = updateDotCount(currentc, curcountc);
-			curcountg = updateDotCount(currentg, curcountg);
-			if (sim.dragElm != this) {
-				drawDots(g, plate[0], midgrid, curcountp);
-				drawDots(g, midgrid, midcath, curcountc);
-				drawDots(g, midcath, cath[1], curcountc + 8);
-				drawDots(g, cath[1], cath[0], curcountc + 8);
-				drawDots(g, point1, midgrid, curcountg);
-			}
-			drawPosts(g);
-		}*/
 
 		public override ElementLead getLead(int n) {
 			return (n == 0) ? plate : (n == 1) ? grid : cath;
@@ -109,25 +51,24 @@ namespace Circuits {
 			vs[0] = volts[0];
 			vs[1] = volts[1];
 			vs[2] = volts[2];
-			if (vs[1] > lastv1 + .5) {
-				vs[1] = lastv1 + .5;
+			if (vs[1] > lastv1 + 0.5) {
+				vs[1] = lastv1 + 0.5;
 			}
-			if (vs[1] < lastv1 - .5) {
-				vs[1] = lastv1 - .5;
+			if (vs[1] < lastv1 - 0.5) {
+				vs[1] = lastv1 - 0.5;
 			}
-			if (vs[2] > lastv2 + .5) {
-				vs[2] = lastv2 + .5;
+			if (vs[2] > lastv2 + 0.5) {
+				vs[2] = lastv2 + 0.5;
 			}
-			if (vs[2] < lastv2 - .5) {
-				vs[2] = lastv2 - .5;
+			if (vs[2] < lastv2 - 0.5) {
+				vs[2] = lastv2 - 0.5;
 			}
 			int grid = 1;
 			int cath = 2;
 			int plate = 0;
 			double vgk = vs[grid] - vs[cath];
 			double vpk = vs[plate] - vs[cath];
-			if (Math.Abs(lastv0 - vs[0]) > .01 || Math.Abs(lastv1 - vs[1]) > .01
-					|| Math.Abs(lastv2 - vs[2]) > .01) {
+			if (Math.Abs(lastv0 - vs[0]) > 0.01 || Math.Abs(lastv1 - vs[1]) > 0.01 || Math.Abs(lastv2 - vs[2]) > 0.01) {
 				sim.converged = false;
 			}
 			lastv0 = vs[0];
@@ -145,7 +86,7 @@ namespace Circuits {
 			if (ival < 0) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
-				Gds = 1e-8;
+				Gds = 1E-8;
 				ids = vpk * Gds;
 			} else {
 				ids = Math.Pow(ival, 1.5) / kg1;
@@ -176,7 +117,7 @@ namespace Circuits {
 			sim.stampNonLinear(nodes[2]);
 		}
 
-		/*public override void getInfo(String arr[]) {
+		public override void getInfo(String[] arr) {
 			arr[0] = "triode";
 			double vbc = volts[0] - volts[1];
 			double vbe = volts[0] - volts[2];
@@ -189,6 +130,6 @@ namespace Circuits {
 		// grid not connected to other terminals
 		public override bool getConnection(int n1, int n2) {
 			return !(n1 == 1 || n2 == 1);
-		}*/
+		}
 	}
 }

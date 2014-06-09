@@ -73,7 +73,7 @@ namespace Circuits {
 		}
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? point1 : point3;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : point3;
 		}
 
 		public override void getInfo(String[] arr) {

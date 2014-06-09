@@ -1,7 +1,3 @@
-// stub PhotoResistorElm based on SparkGapElm
-// FIXME need to uncomment PhotoResistorElm line from CirSim.java
-// FIXME need to add PhotoResistorElm.java to srclist
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +5,11 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class PhotoResistorElm : CircuitElement {
+
+		// stub PhotoResistorElm based on SparkGapElm
+		// FIXME need to uncomment PhotoResistorElm line from CirSim.java
+		// FIXME need to add PhotoResistorElm.java to srclist
+
 		public double minresistance, maxresistance;
 		public double resistance;
 
@@ -20,22 +21,6 @@ namespace Circuits {
 		public override bool nonLinear() {
 			return true;
 		}
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			calcLeads(32);
-//			ps3 = new Point();
-//			ps4 = new Point();
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, 6);
-			draw2Leads(g);
-			// FIXME need to draw properly, see ResistorElm.java
-			setPowerColor(g, true);
-			doDots(g);
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
 			double vd = volts[0] - volts[1];

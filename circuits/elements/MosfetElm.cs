@@ -99,7 +99,7 @@ namespace Circuits {
 		}*/
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? point0 : (n == 1) ? src : drn;
+			return (n == 0) ? lead0 : (n == 1) ? src : drn;
 		}
 
 		public override double getCurrent() {

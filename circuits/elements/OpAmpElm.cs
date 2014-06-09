@@ -88,7 +88,7 @@ namespace Circuits {
 		}
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? in1p : (n == 1) ? in2p : point1;
+			return (n == 0) ? in1p : (n == 1) ? in2p : lead1;
 		}
 
 		public override int getVoltageSourceCount() {

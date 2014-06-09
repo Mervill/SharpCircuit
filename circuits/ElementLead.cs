@@ -16,32 +16,37 @@ namespace Circuits {
 			index = ndx;
 		}
 
-		public void Connect(ElementLead other){
+		public CircuitElement Connect(ElementLead other){
+
+			if(other.element == element)
+				throw new CircuitException("Can't attach a lead to it's own element!");
 
 			// Both sides are unconnected.
-			bool empty = (node == null) && (other.node == null);
+			bool empty = !IsConnected() && !other.IsConnected();
 			if(empty){
 				CircuitNode newNode = new CircuitNode();
 				newNode.Connect(this);
 				newNode.Connect(other);
-				return;
+				return other.element;
 			}
 
 			// One side is unconnected.
-			bool lhs = (node == null) && (other.node != null);
+			bool lhs = (!IsConnected()) && (other.IsConnected());
 			if(lhs){
-				CircuitNode left = (lhs) ? node : other.node;
-				ElementLead right = (!lhs) ? other : this;
+				CircuitNode left = (lhs) ? other.node : node;
+				ElementLead right = (!lhs) ? this : other;
 				left.Connect(right);
-				return;
+				return other.element;
 			}
 
 			// Swich connection of other node.
 			node.Connect(other);
+
+			return other.element;
 		}
 
 		public void Disconnect(){
-			if(node != null)
+			if(IsConnected())
 				node.Disconnect(this);
 		}
 
@@ -51,6 +56,10 @@ namespace Circuits {
 		
 		public bool ConnectedTo(CircuitNode other){
 			return node == other;
+		}
+
+		public bool IsConnected(){
+			return node != null;
 		}
 
 	}

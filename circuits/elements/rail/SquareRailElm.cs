@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class SquareRailElm : RailElm {
 		
-		public SquareRailElm( CirSim s) : base(WF_SQUARE, s) {
+		public SquareRailElm(CirSim s) : base(WaveformType.SQUARE, s) {
 			
 		}
 

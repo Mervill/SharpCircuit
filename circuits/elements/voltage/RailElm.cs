@@ -8,7 +8,7 @@ namespace Circuits {
 		
 		public  int FLAG_CLOCK = 1;
 
-		public RailElm( int wf, CirSim s) : base(wf, s) {
+		public RailElm(WaveformType wf, CirSim s) : base(wf, s) {
 
 		}
 
@@ -61,7 +61,7 @@ namespace Circuits {
 		}
 
 		public override void stamp() {
-			if (waveform == VoltageElm.WF_DC) {
+			if (waveform == WaveformType.DC) {
 				sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage());
 			} else {
 				sim.stampVoltageSource(0, nodes[0], voltSource);
@@ -69,7 +69,7 @@ namespace Circuits {
 		}
 
 		public override void doStep() {
-			if (waveform != VoltageElm.WF_DC) {
+			if (waveform != WaveformType.DC) {
 				sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
 			}
 		}

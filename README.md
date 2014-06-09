@@ -11,12 +11,12 @@ Licence: MIT/Boost C++
 
 ## ToDo
 
-- Access modifiers are a mess, determine what functions need to be public and what should be made protected or private.
-- Same thing goes for properties, look at the old option screen code for direction on what variables should be exposed as properties.
+- Pass on all elements, turning relevant fields into properties and and privatizing/protecting everything else.
 - Ensure nothing relies on static reference objects / singletons.
-- Finish removing all the vestigial rendering code so we can use it as a library.
-- The API is an absolute mess, improve usability! There needs to be an easy way to connect two elements.
-- Fix scope object and scope element.
+- Finish removing all the vestigial rendering code so we can use it as a library. (Almost!)
+- Add new serialization system (JSON).
+- Fix Scope.cs object and ScopeElm.cs
+- Remove the -Elm suffix from circuit elements?
 
 **API notes**
 
@@ -151,32 +151,21 @@ public class Example {
     
 	CirSim sim;
 	
-	ACVoltageElm 	ACSource;
-	ResistorElm 	Resistor;
-	InductorElm 	Diode;
-	WireElm 		wire;
+	ACVoltageElm ACSource;
 	
 	void Init(){
 		
 		sim = new CirSim();
 		
-		List<CircuitElm> elements = new List<CircuitElm>();
+		ACSource = new ACVoltageElm(sim);
 
-		elements.Add(ACSource = new ACVoltageElm(sim));
-		elements.Add(Resistor = new ResistorElm(sim){
-			resistance = 640
-		});
-		elements.Add(Diode = new DiodeElm(sim));
-		elements.Add(wire = new WireElm(sim));
-
-		ACSource.point1.Connect(Diode.point0);
-		Diode.point1.Connect(Resistor.point0);
-		Resistor.point1.Connect(wire.point0);
-		wire.point1.Connect(ACSource.point0);
-		
-		foreach(CircuitElm elm in elements){
-			sim.elmList.Add(elm);
-		}
+		ACSource
+			.Next(new DiodeElm(sim))
+			.Next(new ResistorElm(sim){
+				Resistance = 640
+			})
+			.Next(new WireElm(sim))
+			.Next(ACSource);
 		
 		sim.analyzeFlag = true;
 	}

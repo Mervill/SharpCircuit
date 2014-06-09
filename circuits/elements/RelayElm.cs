@@ -13,6 +13,7 @@ namespace Circuits {
 	// 3n+2 = end of coil resistor
 
 	public class RelayElm : CircuitElement {
+
 		public double inductance;
 		public Inductor ind;
 		public double r_on, r_off, onCurrent;
@@ -158,9 +159,9 @@ namespace Circuits {
 //		}
 
 		public override ElementLead getLead(int n) {
-			if (n < 3 * poleCount) {
+			if (n < 3 * poleCount)
 				return swposts[n / 3][n % 3];
-			}
+			
 			return coilPosts[n - 3 * poleCount];
 		}
 
@@ -176,10 +177,10 @@ namespace Circuits {
 			base.reset();
 			ind.reset();
 			coilCurrent = coilCurCount = 0;
-			int i;
-			for (i = 0; i != poleCount; i++) {
+
+			for(int i = 0; i != poleCount; i++)
 				switchCurrent[i] = switchCurCount[i] = 0;
-			}
+
 		}
 
 		public override void stamp() {
@@ -188,10 +189,9 @@ namespace Circuits {
 			// resistor from internal node to coil post 2
 			sim.stampResistor(nodes[nCoil3], nodes[nCoil2], coilR);
 
-			int i;
-			for (i = 0; i != poleCount * 3; i++) {
+			for(int i = 0; i != poleCount * 3; i++)
 				sim.stampNonLinear(nodes[nSwitch0 + i]);
-			}
+			
 		}
 
 		public override void startIteration() {
@@ -251,8 +251,7 @@ namespace Circuits {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = i_position == 0 ? "relay (off)"
-					: i_position == 1 ? "relay (on)" : "relay";
+			arr[0] = i_position == 0 ? "relay (off)" : i_position == 1 ? "relay (on)" : "relay";
 			int i;
 			int ln = 1;
 			for (i = 0; i != poleCount; i++) {

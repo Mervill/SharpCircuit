@@ -5,15 +5,16 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class VarRailElm : RailElm {
+
 		public double slider;
 
-		public VarRailElm( CirSim s) : base(WF_VAR, s) {
-			frequency = maxVoltage;
-			waveform = WF_VAR;
+		public VarRailElm(CirSim s) : base(WaveformType.VAR, s) {
+			frequency = MaxVoltage;
+			waveform = WaveformType.VAR;
 		}
 
 		public override double getVoltage() {
-			frequency = slider * (maxVoltage - bias) / 100.0 + bias;
+			frequency = slider * (MaxVoltage - Bias) / 100.0 + Bias;
 			return frequency;
 		}
 

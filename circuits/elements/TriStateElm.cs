@@ -7,62 +7,39 @@ namespace Circuits {
 	// contributed by Edward Calver
 
 	public class TriStateElm : CircuitElement {
-		
-		public double resistance, r_on, r_off;
+
+		/// <summary>
+		/// Resistance
+		/// </summary>
+		public double Resistance{ get; private set; }
+
+		/// <summary>
+		/// On Resistance (ohms)
+		/// </summary>
+		public double ROn{ get; set; }
+
+		/// <summary>
+		/// Off Resistance (ohms)
+		/// </summary>
+		public double ROff{ get; set; }
+
+		/// <summary>
+		/// <c>true</c> if buffer open; otherwise, <c>false</c>
+		/// </summary>
+		public bool Open{ get; private set; }
+
+		public ElementLead lead2;
+		public ElementLead lead3;
 
 		public TriStateElm( CirSim s) : base(s) {
-			r_on = 0.1;
-			r_off = 1e10;
+			lead2 = new ElementLead(this,2);
+			lead3 = new ElementLead(this,3);
+			ROn = 0.1;
+			ROff = 1e10;
 		}
-
-		public bool open;
-		public ElementLead point3;
-		public ElementLead point4;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			calcLeads(32);
-//			ps = new Point();
-//			int hs = 16;
-//
-//			int ww = 16;
-//			if (ww > dn / 2) {
-//				ww = (int) (dn / 2);
-//			}
-//			//Point[] triPoints = newPointArray(3);
-//			//interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs + 2);
-//			//triPoints[2] = interpPoint(point1, point2, .5 + (ww - 2) / dn);
-//			//gatePoly = createPolygon(triPoints);
-//
-//			point3 = interpPoint(point1, point2, .5, -hs);
-//			point4 = interpPoint(point1, point2, .5, 0);
-//			lead3 = interpPoint(point1, point2, .5, -hs / 2);
-//		}
-
-		/*public override void drawPosts(Graphics g) {
-			int i;
-			for (i = 0; i != 3; i++) {
-				Point p = getPost(i);
-				drawPost(g, p.x, p.y, nodes[i]);
-			}
-		}
-
-		void draw(Graphics g) {
-			int hs = 16;
-			setBbox(point1, point2, hs);
-
-			draw2Leads(g);
-
-			g.setColor(lightGrayColor);
-			drawThickPolygon(g, gatePoly);
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, point3, lead3);
-
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
+			current = (volts[0] - volts[1]) / Resistance;
 		}
 
 		// we need this to be able to change the matrix for each step
@@ -77,9 +54,9 @@ namespace Circuits {
 		}
 
 		public override void doStep() {
-			open = (volts[2] < 2.5);
-			resistance = (open) ? r_off : r_on;
-			sim.stampResistor(nodes[3], nodes[1], resistance);
+			Open = (volts[2] < 2.5);
+			Resistance = (Open) ? ROff : ROn;
+			sim.stampResistor(nodes[3], nodes[1], Resistance);
 			sim.updateVoltageSource(0, nodes[3], voltSource, volts[0] > 2.5 ? 5 : 0);
 		}
 
@@ -92,15 +69,12 @@ namespace Circuits {
 		}
 
 		public override ElementLead getLead(int n) {
-			if (point4 == null) {
-				//System.out.print("Hello\n");
-			}
-			return (n == 0) ? point0 : (n == 1) ? point1 : (n == 2) ? point3 : point4;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : (n == 2) ? lead2 : lead3;
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "tri-state buffer";
-			arr[1] = open ? "open" : "closed";
+			arr[1] = Open ? "open" : "closed";
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[3] = "I = " + getCurrentDText(getCurrent());
 			arr[4] = "Vc = " + getVoltageText(volts[2]);
@@ -119,26 +93,5 @@ namespace Circuits {
 			}
 			return false;
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-
-			if (n == 0) {
-				return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-
-			if (n == 0 && ei.value > 0) {
-				r_on = ei.value;
-			}
-			if (n == 1 && ei.value > 0) {
-				r_off = ei.value;
-			}
-		}*/
 	}
 }
