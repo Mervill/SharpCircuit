@@ -8,7 +8,7 @@ namespace Circuits {
 		public int FLAG_RESET = 2;
 		public int FLAG_SET = 4;
 
-		public DFlipFlopElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public DFlipFlopElm( CirSim s) : base(s) {
 			
 		}
 

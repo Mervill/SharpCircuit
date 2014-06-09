@@ -6,8 +6,8 @@ namespace Circuits {
 
 	public class LEDElm : DiodeElm {
 
-		public LEDElm(int xx, int yy, CirSim s) : base(xx, yy,s) {
-			fwdrop = 2.1024259;
+		public LEDElm( CirSim s) : base(s) {
+			forwardDrop = 2.1024259;
 			setup();
 		}
 

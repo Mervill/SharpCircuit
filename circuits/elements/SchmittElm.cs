@@ -8,7 +8,7 @@ namespace Circuits {
 
 	public class SchmittElm : InvertingSchmittElm {
 		
-		public SchmittElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public SchmittElm( CirSim s) : base(s) {
 
 		}
 

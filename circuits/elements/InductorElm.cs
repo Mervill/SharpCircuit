@@ -8,7 +8,7 @@ namespace Circuits {
 		public Inductor ind;
 		public double inductance;
 
-		public InductorElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
+		public InductorElm(CirSim s) : base(s) {
 			ind = new Inductor(sim);
 			inductance = 1;
 			ind.setup(inductance, current, flags);
@@ -36,7 +36,7 @@ namespace Circuits {
 		}*/
 
 		public override void reset() {
-			current = volts[0] = volts[1] = curcount = 0;
+			current = volts[0] = volts[1] = 0;
 			ind.reset();
 		}
 

@@ -11,12 +11,12 @@ namespace Circuits {
 		public int link;
 		public ElementLead[] swposts;
 
-		public Switch2Elm(int xx, int yy,CirSim s) : base(xx, yy,s) {
-			noDiagonal = true;
+		public Switch2Elm(CirSim s) : base(s) {
+
 		}
 
-		public Switch2Elm(int xx, int yy, bool mm, CirSim s) : base(xx, yy,mm,s) {
-			noDiagonal = true;
+		public Switch2Elm(bool mm, CirSim s) : base(mm,s) {
+
 		}
 
 //		public override void setPoints() {

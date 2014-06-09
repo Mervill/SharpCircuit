@@ -5,20 +5,19 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TransformerElm : CircuitElement {
+
 		public double inductance, ratio, couplingCoef;
 		public ElementLead[] ptEnds;
-		new public double[] current, curcount;
+		new public double[] current;
 		public int width;
 		public static int FLAG_BACK_EULER = 2;
 
-		public TransformerElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public TransformerElm( CirSim s) : base(s) {
 			inductance = 4;
 			ratio = 1;
 			width = 32;
-			noDiagonal = true;
 			couplingCoef = 0.999;
 			current = new double[2];
-			curcount = new double[2];
 		}
 
 		public bool isTrapezoidal() {
@@ -81,7 +80,7 @@ namespace Circuits {
 		}
 
 		override public void reset() {
-			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = curcount[0] = curcount[1] = 0;
+			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
 
 		public double a1, a2, a3, a4;

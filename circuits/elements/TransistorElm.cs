@@ -11,7 +11,7 @@ namespace Circuits {
 		public double gmin;
 		public int FLAG_FLIP = 1;
 
-		public TransistorElm(int xx, int yy, bool pnpflag,CirSim s) : base (xx,yy,s) {
+		public TransistorElm( bool pnpflag,CirSim s) : base(s) {
 			pnp = (pnpflag) ? -1 : 1;
 			beta = 100;
 			setup();
@@ -20,7 +20,6 @@ namespace Circuits {
 		public void setup() {
 			vcrit = vt * Math.Log(vt / (Math.Sqrt(2) * leakage));
 			fgain = beta / (beta + 1);
-			noDiagonal = true;
 		}
 
 		public override bool nonLinear() {
@@ -296,8 +295,8 @@ namespace Circuits {
 			}
 		}*/
 
-		public override bool canViewInScope() {
+		/*public override bool canViewInScope() {
 			return true;
-		}
+		}*/
 	}
 }

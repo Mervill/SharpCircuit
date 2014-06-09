@@ -9,7 +9,7 @@ namespace Circuits {
 		public int FLAG_LOG = 1;
 		public int FLAG_BIDIR = 2;
 
-		public SweepElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
+		public SweepElm(CirSim s) : base(s) {
 			minF = 20;
 			maxF = 4000;
 			maxV = 5;

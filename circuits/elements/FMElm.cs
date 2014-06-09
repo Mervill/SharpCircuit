@@ -7,12 +7,12 @@ namespace Circuits {
 	// contributed by Edward Calver
 
 	public class FMElm : CircuitElement {
-		static int FLAG_COS = 2;
+
 		double carrierfreq, signalfreq, maxVoltage, freqTimeZero, deviation;
 		double lasttime = 0;
 		double funcx = 0;
 
-		public FMElm(int xx, int yy, CirSim s) : base (xx, yy, s) {
+		public FMElm(CirSim s) : base (s) {
 			deviation = 200;
 			maxVoltage = 5;
 			carrierfreq = 800;
@@ -27,7 +27,6 @@ namespace Circuits {
 
 		public override void reset() {
 			freqTimeZero = 0;
-			curcount = 0;
 		}
 
 		public override int getLeadCount() {
@@ -43,9 +42,9 @@ namespace Circuits {
 		}
 
 		double getVoltage() {
-			double deltaT = sim.t - lasttime;
-			lasttime = sim.t;
-			double signalamplitude = Math.Sin((2 * pi * (sim.t - freqTimeZero)) * signalfreq);
+			double deltaT = sim.time - lasttime;
+			lasttime = sim.time;
+			double signalamplitude = Math.Sin((2 * pi * (sim.time - freqTimeZero)) * signalfreq);
 			funcx += deltaT * (carrierfreq + (signalamplitude * deviation));
 			double w = 2 * pi * funcx;
 			return Math.Sin(w) * maxVoltage;

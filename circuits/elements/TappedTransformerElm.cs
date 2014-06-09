@@ -7,14 +7,12 @@ namespace Circuits {
 	public class TappedTransformerElm : CircuitElement {
 		public double inductance, ratio;
 		public ElementLead[] ptEnds;
-		new public double[] current, curcount;
+		new public double[] current;
 
-		public TappedTransformerElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
+		public TappedTransformerElm(CirSim s) : base(s) {
 			inductance = 4;
 			ratio = 1;
-			noDiagonal = true;
 			current = new double[4];
-			curcount = new double[4];
 			voltdiff = new double[3];
 			curSourceValue = new double[3];
 			a = new double[9];
@@ -95,7 +93,7 @@ namespace Circuits {
 		}
 
 		public override void reset() {
-			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = curcount[0] = curcount[1] = 0;
+			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
 
 		public double[] a;

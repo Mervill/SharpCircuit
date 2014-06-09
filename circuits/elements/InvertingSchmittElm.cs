@@ -12,9 +12,8 @@ namespace Circuits {
 		public double upperTrigger;
 		public bool state;
 
-		public InvertingSchmittElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
-			noDiagonal = true;
-			slewRate = .5;
+		public InvertingSchmittElm( CirSim s) : base(s) {
+			slewRate = 0.5;
 			state = false;
 			lowerTrigger = 1.66;
 			upperTrigger = 3.33;

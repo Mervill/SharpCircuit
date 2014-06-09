@@ -7,7 +7,7 @@ namespace Circuits {
 
 	public class DeMultiplexerElm : ChipElm {
 		
-		public DeMultiplexerElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public DeMultiplexerElm( CirSim s) : base(s) {
 
 		}
 		

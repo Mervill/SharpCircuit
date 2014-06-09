@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class OutputElm : CircuitElement {
 
-		public OutputElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public OutputElm( CirSim s) : base(s) {
 
 		}
 

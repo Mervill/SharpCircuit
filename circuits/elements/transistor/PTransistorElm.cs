@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class PTransistorElm : TransistorElm {
 		
-		public PTransistorElm(int xx, int yy, CirSim s) : base(xx,yy,true,s) {
+		public PTransistorElm( CirSim s) : base(true,s) {
 
 		}
 		

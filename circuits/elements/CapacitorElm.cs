@@ -9,7 +9,7 @@ namespace Circuits {
 		public double compResistance, voltdiff;
 		public static int FLAG_BACK_EULER = 2;
 
-		public CapacitorElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public CapacitorElm(CirSim s) : base (s) {
 			capacitance = 1e-5;
 		}
 
@@ -23,7 +23,7 @@ namespace Circuits {
 		}
 
 		public override void reset() {
-			current = curcount = 0;
+			current = 0;
 			// put small charge on caps when reset to start oscillators
 			voltdiff = 1e-3;
 		}

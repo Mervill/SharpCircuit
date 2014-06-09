@@ -13,7 +13,7 @@ namespace Circuits {
 		public double resistance;
 		public double slider;
 
-		public ThermistorElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public ThermistorElm( CirSim s) : base(s) {
 			maxresistance = 1e9;
 			minresistance = 1e3;
 		}

@@ -9,7 +9,7 @@ namespace Circuits {
 		public double roomTemp = 300;
 		public double temp, nom_pow, nom_v, warmTime, coolTime;
 
-		public LampElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public LampElm( CirSim s) : base(s) {
 			temp = roomTemp;
 			nom_pow = 100;
 			nom_v = 120;

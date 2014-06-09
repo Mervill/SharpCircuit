@@ -10,10 +10,8 @@ namespace Circuits {
 		public int inputCount = 2;
 		public bool lastOutput;
 
-		public GateElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
-			noDiagonal = true;
+		public GateElm(CirSim s) : base(s) {
 			inputCount = 2;
-			setSize(sim.smallGridCheckItem ? 1 : 2);
 		}
 
 		public virtual bool isInverting() {

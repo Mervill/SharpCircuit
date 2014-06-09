@@ -9,14 +9,9 @@ namespace Circuits {
 		public double currentp, currentg, currentc;
 		public double gridCurrentR = 6000;
 
-		public TriodeElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public TriodeElm( CirSim s) : base(s) {
 			mu = 93;
 			kg1 = 680;
-			setup();
-		}
-
-		void setup() {
-			noDiagonal = true;
 		}
 
 		public override bool nonLinear() {
@@ -25,7 +20,6 @@ namespace Circuits {
 
 		public override void reset() {
 			volts[0] = volts[1] = volts[2] = 0;
-			curcount = 0;
 		}
 
 		public ElementLead plate;

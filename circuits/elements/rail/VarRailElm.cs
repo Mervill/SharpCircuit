@@ -7,7 +7,7 @@ namespace Circuits {
 	public class VarRailElm : RailElm {
 		public double slider;
 
-		public VarRailElm(int xx, int yy, CirSim s) : base(xx, yy, WF_VAR, s) {
+		public VarRailElm( CirSim s) : base(WF_VAR, s) {
 			frequency = maxVoltage;
 			waveform = WF_VAR;
 		}

@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class LatchElm : ChipElm {
 	
-		public LatchElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public LatchElm( CirSim s) : base(s) {
 			
 		}
 

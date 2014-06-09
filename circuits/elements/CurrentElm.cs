@@ -8,7 +8,7 @@ namespace Circuits {
 		
 		public double currentValue;
 
-		public CurrentElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public CurrentElm(CirSim s) : base(s) {
 			currentValue = 0.01;
 		}
 

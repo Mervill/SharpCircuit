@@ -7,11 +7,11 @@ namespace Circuits {
 	public class CC2Elm : ChipElm {
 		public double gain;
 
-		public CC2Elm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public CC2Elm( CirSim s) : base(s) {
 			gain = 1;
 		}
 
-		public CC2Elm(int xx, int yy, int g, CirSim s) : base(xx, yy, s) {
+		public CC2Elm( int g, CirSim s) : base(s) {
 			gain = g;
 		}
 
@@ -60,7 +60,7 @@ namespace Circuits {
 
 	class CC2NegElm : CC2Elm {
 		
-		public CC2NegElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public CC2NegElm( CirSim s) : base(s) {
 			
 		}
 		

@@ -12,7 +12,7 @@ namespace Circuits {
 		public double onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 
-		public DiacElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public DiacElm(CirSim s) : base(s) {
 			// FIXME need to adjust defaults to make sense for diac
 			offresistance = 1e9;
 			onresistance = 1e3;

@@ -7,9 +7,8 @@ namespace Circuits {
 	public class InverterElm : CircuitElement {
 		public double slewRate; // V/ns
 
-		public InverterElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
-			noDiagonal = true;
-			slewRate = .5;
+		public InverterElm( CirSim s) : base(s) {
+			slewRate = 0.5;
 		}
 
 		/*public override void draw(Graphics g) {

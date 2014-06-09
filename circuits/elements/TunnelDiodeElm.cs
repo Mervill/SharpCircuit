@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class TunnelDiodeElm : CircuitElement {
 	
-		public TunnelDiodeElm(int xx, int yy,CirSim s) : base(xx, yy,s) {
+		public TunnelDiodeElm(CirSim s) : base(s) {
 			setup();
 		}
 
@@ -51,7 +51,7 @@ namespace Circuits {
 		}*/
 
 		public override void reset() {
-			lastvoltdiff = volts[0] = volts[1] = curcount = 0;
+			lastvoltdiff = volts[0] = volts[1] = 0;
 		}
 
 		public double lastvoltdiff;

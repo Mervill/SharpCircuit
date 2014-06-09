@@ -14,7 +14,7 @@ namespace Circuits {
 		public int N_OUT = 5;
 		public int N_RST = 6;
 		
-		public TimerElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public TimerElm( CirSim s) : base(s) {
 
 		}
 

@@ -5,15 +5,14 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TransLineElm : CircuitElement {
+
 		double delay, imped;
 		double[] voltageL, voltageR;
-		int lenSteps, ptr, width;
+		int lenSteps, ptr;
 
-		public TransLineElm(int xx, int yy, int  w, CirSim s) : base(xx, yy, s) {
+		public TransLineElm(CirSim s) : base(s) {
 			delay = 1000 * sim.timeStep;
 			imped = 75;
-			noDiagonal = true;
-			width = w;
 			reset();
 		}
 

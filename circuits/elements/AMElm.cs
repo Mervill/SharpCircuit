@@ -10,7 +10,7 @@ namespace Circuits {
 		public static int FLAG_COS = 2;
 		public double carrierfreq, signalfreq, maxVoltage, freqTimeZero;
 
-		public AMElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public AMElm(CirSim s) : base (s) {
 			maxVoltage = 5;
 			carrierfreq = 1000;
 			signalfreq = 40;
@@ -24,7 +24,6 @@ namespace Circuits {
 
 		public override void reset() {
 			freqTimeZero = 0;
-			curcount = 0;
 		}
 
 		public override int getLeadCount() {
@@ -40,7 +39,7 @@ namespace Circuits {
 		}
 
 		public double getVoltage() {
-			double w = 2 * pi * (sim.t - freqTimeZero);
+			double w = 2 * pi * (sim.time - freqTimeZero);
 			return ((Math.Sin(w * signalfreq) + 1) / 2) * Math.Sin(w * carrierfreq) * maxVoltage;
 		}
 

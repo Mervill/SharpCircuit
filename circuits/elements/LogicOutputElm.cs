@@ -11,7 +11,7 @@ namespace Circuits {
 		public double threshold;
 		//public String value;
 
-		public LogicOutputElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public LogicOutputElm( CirSim s) : base(s) {
 			threshold = 2.5;
 		}
 

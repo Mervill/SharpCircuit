@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class DACElm : ChipElm {
 		
-		public DACElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public DACElm( CirSim s) : base(s) {
 			
 		}
 

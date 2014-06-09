@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class DecadeElm : ChipElm {
 		
-		public DecadeElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public DecadeElm( CirSim s) : base(s) {
 
 		}
 

@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class DCVoltageElm : VoltageElm {
 		
-		public DCVoltageElm(int xx, int yy, CirSim s) : base(xx, yy, WF_DC, s) {
+		public DCVoltageElm( CirSim s) : base(WF_DC, s) {
 			
 		}
 

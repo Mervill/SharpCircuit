@@ -8,7 +8,7 @@ namespace Circuits {
 
 	public class SRAMElm : ChipElm {
 		
-		public SRAMElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public SRAMElm( CirSim s) : base(s) {
 			
 			short i;
 			for (i = 0; i < 256; i++) {

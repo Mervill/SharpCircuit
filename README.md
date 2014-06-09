@@ -13,10 +13,10 @@ Licence: MIT/Boost C++
 
 - Access modifiers are a mess, determine what functions need to be public and what should be made protected or private.
 - Same thing goes for properties, look at the old option screen code for direction on what variables should be exposed as properties.
-- Remove dependants on the Point class, the library itself should not care about the spacial relationship between elements and their lead points.
 - Ensure nothing relies on static reference objects / singletons.
 - Finish removing all the vestigial rendering code so we can use it as a library.
 - The API is an absolute mess, improve usability! There needs to be an easy way to connect two elements.
+- Fix scope object and scope element.
 
 **API notes**
 
@@ -67,6 +67,7 @@ The following elements have been tested:
 - Resistor
 - Inductor
 - VarRail (single-terminal DC voltage source)
+- Diode
 
 ## Examples
 
@@ -101,28 +102,83 @@ public class Example {
 		
 		List<CircuitElm> elements = new List<CircuitElm>();
 
-		// Give these two elements absolute positions.
-		elements.Add(ACSource = new ACVoltageElm(50,50,sim));
-		elements.Add(Inductor = new InductorElm(60,50,sim));
+		elements.Add(ACSource = new ACVoltageElm(sim));
+		elements.Add(Resistor = new ResistorElm(sim){
+			resistance = 180
+		});
+		elements.Add(Inductor = new InductorElm(sim));
+		elements.Add(wire = new WireElm(sim));
 
-		// Wire these elements relative to the above elements.
-		elements.Add(Resistor = new ResistorElm(0,0,sim){
-			point1 = ACSource.point1,
-			point2 = Inductor.point1,
-			resistance = 100
-		});
-		
-		elements.Add(wire = new WireElm(0,0,sim){
-			point1 = Inductor.point2,
-			point2 = ACSource.point2
-		});
+		// Link the elements
+		ACSource.point1.Connect(Resistor.point0);
+		Resistor.point1.Connect(Inductor.point0);
+		Inductor.point1.Connect(wire.point0);
+		wire.point1.Connect(ACSource.point0);
 		
 		foreach(CircuitElm elm in elements){
 			sim.elmList.Add(elm);
 		}
 		
 		sim.analyzeFlag = true;
-		sim.stoppedCheck = false;
+	}
+
+	void Tick(){
+		sim.updateCircuit();
+		if(sim.stoppedCheck){
+			Console.WriteLine(sim.stopMessage);
+		}
+	}
+}
+```
+
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using Circuits;
+
+public class Example {
+	
+    //
+	// Half-Wave Reflector
+	// This circuit uses a diode, a device that conducts 
+	// current in only one direction. It takes AC input 
+	// and "rectifies" it so that the negative portion of the 
+	// output is removed.
+	// 
+    
+	CirSim sim;
+	
+	ACVoltageElm 	ACSource;
+	ResistorElm 	Resistor;
+	InductorElm 	Diode;
+	WireElm 		wire;
+	
+	void Init(){
+		
+		sim = new CirSim();
+		
+		List<CircuitElm> elements = new List<CircuitElm>();
+
+		elements.Add(ACSource = new ACVoltageElm(sim));
+		elements.Add(Resistor = new ResistorElm(sim){
+			resistance = 640
+		});
+		elements.Add(Diode = new DiodeElm(sim));
+		elements.Add(wire = new WireElm(sim));
+
+		ACSource.point1.Connect(Diode.point0);
+		Diode.point1.Connect(Resistor.point0);
+		Resistor.point1.Connect(wire.point0);
+		wire.point1.Connect(ACSource.point0);
+		
+		foreach(CircuitElm elm in elements){
+			sim.elmList.Add(elm);
+		}
+		
+		sim.analyzeFlag = true;
 	}
 
 	void Tick(){
@@ -136,15 +192,24 @@ public class Example {
 
 ## Licence
 
-The applet source code [[download](http://www.falstad.com/circuit/src.zip)] does not specify a particular licence. Since the code is freely downloadable from the website I've decided to licence the code under the Boost variant of the MIT Licence.
+The original applet source code [[download](http://www.falstad.com/circuit/src.zip)] is licensed under Paul Falstad's [Applet Source Licence](http://www.falstad.com/licensing.html). The new API and other improvements are licensed under the Boost Software License.
 
 ```
-FalstadCircuitsSharp (c) 2014 Riley 'Mervill' Godard
-
-Java -> C# language conversion project based almost entirely on:
-
-CirSim.java (c) 2010 by Paul Falstad
+CirSim.java (c) 2010 by Paul Falstad - java@falstad.com
 http://www.falstad.com/circuit/
+
+Falstad.com Applet Source Licence.
+http://www.falstad.com/licensing.html
+
+You have permission to use these applets in a classroom setting or take screenshots as long as the applets are unmodified. Modification or redistribution for non-commercial purposes is allowed, as long as you credit me (Paul Falstad) and provide a link to my page (the page you found the applet(s) on, or http://www.falstad.com/mathphysics.html). Contact me for any other uses. The source code for each applet is generally available on that applet's web page, but some of the applets use third-party source code that has restrictions.
+
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+```
+
+```
+FalstadCircuitsSharp (c) 2014 Riley 'Mervill' Godard - mervills.email@gmail.com
+https://github.com/Mervill/FalstadCircuitsSharp
+http://transistorcollective.net/
 
 Boost Software License - Version 1.0 - August 17, 2003
  

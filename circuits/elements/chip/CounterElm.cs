@@ -8,7 +8,7 @@ namespace Circuits {
 		public int FLAG_ENABLE = 2;
 		public bool invertreset = false;
 
-		public CounterElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public CounterElm( CirSim s) : base(s) {
 			
 		}
 

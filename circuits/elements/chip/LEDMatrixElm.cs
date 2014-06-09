@@ -8,7 +8,7 @@ namespace Circuits {
 
 		public static int size = 8;
 
-		public LEDMatrixElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public LEDMatrixElm( CirSim s) : base(s) {
 
 		}
 

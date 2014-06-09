@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class GroundElm : CircuitElement {
 
-		public GroundElm(int xx, int yy,CirSim s) : base(xx, yy, s) {
+		public GroundElm(CirSim s) : base(s) {
 			
 		}
 

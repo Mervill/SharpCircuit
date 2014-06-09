@@ -8,7 +8,7 @@ namespace Circuits {
 		public double resistance, onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 
-		public SparkGapElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public SparkGapElm( CirSim s) : base(s) {
 			offresistance = 1e9;
 			onresistance = 1e3;
 			breakdown = 1e3;

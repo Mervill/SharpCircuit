@@ -8,7 +8,7 @@ namespace Circuits {
 		public double position, maxResistance, resistance1, resistance2;
 		public double current1, current2, current3;
 
-		public PotElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public PotElm( CirSim s) : base(s) {
 			setup();
 			maxResistance = 1000;
 			position = 0.5;

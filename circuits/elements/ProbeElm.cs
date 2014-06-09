@@ -7,7 +7,7 @@ namespace Circuits {
 	public class ProbeElm : CircuitElement {
 		public static int FLAG_SHOWVOLTAGE = 1;
 
-		public ProbeElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public ProbeElm( CirSim s) : base(s) {
 			
 		}
 

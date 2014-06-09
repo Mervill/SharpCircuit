@@ -16,7 +16,7 @@ namespace Circuits {
 		public static int WF_VAR = 6;
 		public double frequency, maxVoltage, freqTimeZero, bias, phaseShift, dutyCycle;
 
-		public VoltageElm(int xx, int yy, int wf, CirSim s) : base(xx, yy, s) {
+		public VoltageElm( int wf, CirSim s) : base(s) {
 			waveform = wf;
 			maxVoltage = 5;
 			frequency = 40;
@@ -31,7 +31,6 @@ namespace Circuits {
 
 		public override void reset() {
 			freqTimeZero = 0;
-			curcount = 0;
 		}
 
 		public double triangleFunc(double x) {
@@ -56,7 +55,7 @@ namespace Circuits {
 		}
 
 		public virtual double getVoltage() {
-			double w = 2 * pi * (sim.t - freqTimeZero) * frequency + phaseShift;
+			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + phaseShift;
 			switch (waveform) {
 			case 0:
 				return maxVoltage + bias;

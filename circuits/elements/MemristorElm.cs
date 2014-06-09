@@ -7,7 +7,7 @@ namespace Circuits {
 	public class MemristorElm : CircuitElement {
 		public double r_on, r_off, dopeWidth, totalWidth, mobility, resistance;
 
-		public MemristorElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public MemristorElm( CirSim s) : base(s) {
 			r_on = 100;
 			r_off = 160 * r_on;
 			dopeWidth = 0;

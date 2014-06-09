@@ -9,7 +9,7 @@ namespace Circuits {
 		public static int FLAG_SHOWCURRENT = 1;
 		public static int FLAG_SHOWVOLTAGE = 2;
 
-		public WireElm(int xx, int yy,CirSim s) : base(xx, yy,s) {
+		public WireElm(CirSim s) : base(s) {
 			
 		}
 

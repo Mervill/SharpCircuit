@@ -7,16 +7,13 @@ namespace Circuits {
 	public class OpAmpElm : CircuitElement {
 
 		public double maxOut, minOut, gain;
-		//public bool reset;
 		public int FLAG_SWAP = 1;
 		public int FLAG_SMALL = 2;
 		public int FLAG_LOWGAIN = 4;
 
-		public OpAmpElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
-			noDiagonal = true;
+		public OpAmpElm( CirSim s) : base(s) {
 			maxOut = 15;
 			minOut = -15;
-			setSize(sim.smallGridCheckItem ? 1 : 2);
 			setGain();
 		}
 

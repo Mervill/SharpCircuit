@@ -12,7 +12,7 @@ namespace Circuits {
 		public double minresistance, maxresistance;
 		public double resistance;
 
-		public PhotoResistorElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public PhotoResistorElm( CirSim s) : base(s) {
 			maxresistance = 1e9;
 			minresistance = 1e3;
 		}

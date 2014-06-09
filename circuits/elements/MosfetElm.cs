@@ -7,14 +7,13 @@ namespace Circuits {
 	public class MosfetElm : CircuitElement {
 		int pnp;
 		int FLAG_PNP = 1;
-		int FLAG_SHOWVT = 2;
+		//int FLAG_SHOWVT = 2;
 		int FLAG_DIGITAL = 4;
 		double vt;
 
-		public MosfetElm(int xx, int yy, bool pnpflag, CirSim s) : base(xx, yy, s) {
+		public MosfetElm( bool pnpflag, CirSim s) : base(s) {
 			pnp = (pnpflag) ? -1 : 1;
 			flags = (pnpflag) ? FLAG_PNP : 0;
-			noDiagonal = true;
 			vt = getDefaultThreshold();
 		}
 
@@ -37,7 +36,7 @@ namespace Circuits {
 
 
 		public override void reset() {
-			lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = curcount = 0;
+			lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = 0;
 		}
 
 		public int hs = 16;
@@ -257,9 +256,9 @@ namespace Circuits {
 			getFetInfo(arr, "MOSFET");
 		}
 
-		public override bool canViewInScope() {
+		/*public override bool canViewInScope() {
 			return true;
-		}
+		}*/
 
 		public override double getVoltageDiff() {
 			return volts[2] - volts[1];

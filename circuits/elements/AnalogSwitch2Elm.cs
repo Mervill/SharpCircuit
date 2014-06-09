@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class AnalogSwitch2Elm : AnalogSwitchElm {
 		
-		public AnalogSwitch2Elm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public AnalogSwitch2Elm(CirSim s) : base(s) {
 
 		}
 

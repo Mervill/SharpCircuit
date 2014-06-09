@@ -8,7 +8,7 @@ namespace Circuits {
 	// http://www.camotruck.net/rollins/simulator.html
 	public class ZenerElm : DiodeElm {
 		
-		public ZenerElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public ZenerElm( CirSim s) : base(s) {
 			zvoltage = default_zvoltage;
 			setup();
 		}

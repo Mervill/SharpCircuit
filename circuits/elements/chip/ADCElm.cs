@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ADCElm : ChipElm {
 		
-		public ADCElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public ADCElm( CirSim s) : base(s) {
 			
 		}
 
@@ -35,7 +35,7 @@ namespace Circuits {
 			// if we round, the half-flash doesn't work
 			double val = imax * volts[bits] / volts[bits + 1]; // + .5;
 			int ival = (int) val;
-			ival = min(imax, max(0, ival));
+			ival = Math.Min(imax, Math.Max(0, ival));
 			int i;
 			for (i = 0; i != bits; i++) {
 				pins[i].value = ((ival & (1 << i)) != 0);

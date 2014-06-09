@@ -11,7 +11,7 @@ namespace Circuits {
 			return false;
 		}
 
-		public SeqGenElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public SeqGenElm( CirSim s) : base(s) {
 
 		}
 
@@ -53,11 +53,11 @@ namespace Circuits {
 
 		public override void execute() {
 			if (oneshot) {
-				if (sim.t - lastchangetime > 0.005) {
+				if (sim.time - lastchangetime > 0.005) {
 					if (position <= 8) {
 						GetNextBit();
 					}
-					lastchangetime = sim.t;
+					lastchangetime = sim.time;
 				}
 			}
 			if (pins[0].value && !clockstate) {

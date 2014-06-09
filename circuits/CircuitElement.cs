@@ -11,25 +11,32 @@ namespace Circuits {
 
 		protected CirSim sim;
 
-		public static double pi = 3.14159265358979323846;
+		public readonly static double pi = 3.14159265358979323846;
 
-		public int[] nodes;
-		public int x, y, x2, y2, flags, voltSource;
+		public int flags, voltSource;
 		public ElementLead point0;
 		public ElementLead point1;
-		public double[] volts;
-		public double current, curcount;
-		public bool noDiagonal;
 
-		public CircuitElement(int xx, int yy, CirSim s) {
+		protected int[] nodes;
+		protected double[] volts;
+		protected double current;
+
+		public CircuitElement(CirSim s) {
 			point0 = new ElementLead(this,0);
 			point1 = new ElementLead(this,1);
 
 			flags = getDefaultFlags();
 			allocNodes();
-			//setPoints();
 			sim = s;
 		}
+
+		public virtual void doStep() { }
+		public virtual void startIteration() { }
+		public virtual void doAdjust() { }
+		public virtual void setupAdjust() { }
+		public virtual void getInfo(String[] arr) { }
+		public virtual void calculateCurrent() { }
+		public virtual void stamp() { }
 
 		public virtual int getDefaultFlags() {
 			return 0;
@@ -45,7 +52,6 @@ namespace Circuits {
 			for (i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {
 				volts[i] = 0;
 			}
-			curcount = 0;
 		}
 
 		public virtual void setCurrent(int x, double c) {
@@ -56,14 +62,6 @@ namespace Circuits {
 			return current;
 		}
 
-		public virtual void doStep() { }
-		public virtual void startIteration() { }
-		public virtual void doAdjust() { }
-		public virtual void setupAdjust() { }
-		public virtual void getInfo(String[] arr) { }
-		public virtual void calculateCurrent() { }
-		public virtual void stamp() { }
-
 		public virtual double getLeadVoltage(int x) {
 			return volts[x];
 		}
@@ -73,27 +71,6 @@ namespace Circuits {
 			calculateCurrent();
 		}
 
-		/*public virtual void setPoints() {
-			dx = x2 - x;
-			dy = y2 - y;
-			dn = Math.Sqrt(dx * dx + dy * dy);
-			dpx1 = dy / dn;
-			dpy1 = -dx / dn;
-			dsign = (dy == 0) ? sign(dx) : sign(dy);
-			point1 = new Point(x, y);
-			point2 = new Point(x2, y2);
-		}
-
-		public virtual void calcLeads(int len) {
-			if (dn < len || len == 0) {
-				lead1 = point1;
-				lead2 = point2;
-				return;
-			}
-			lead1 = interpPoint(point1, point2, (dn - len) / (2 * dn));
-			lead2 = interpPoint(point1, point2, (dn + len) / (2 * dn));
-		}*/
-
 		public virtual int getVoltageSourceCount() {
 			return 0;
 		}
@@ -102,8 +79,8 @@ namespace Circuits {
 			return 0;
 		}
 
-		public virtual void setNode(int p, int n) {
-			nodes[p] = n;
+		public virtual void setNode(int lead, int node) {
+			nodes[lead] = node;
 		}
 
 		public virtual void setVoltageSource(int n, int v) {
@@ -158,26 +135,26 @@ namespace Circuits {
 			return false;
 		}
 
-		public virtual bool canViewInScope() {
+		/*public virtual bool canViewInScope() {
 			return getLeadCount() <= 2;
-		}
+		}*/
 
 		public virtual bool comparePair(int x1, int x2, int y1, int y2) {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
-		}
-
-		public ElementLead[] newPointArray(int n) {
-			ElementLead[] a = new ElementLead[n];
-			while (n > 0) {
-				a[--n] = new ElementLead(this,n);
-			}
-			return a;
 		}
 
 		public int getBasicInfo(String[] arr) {
 			arr[1] = "I = " + getCurrentDText(getCurrent());
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			return 3;
+		}
+
+		public ElementLead[] newLeadArray(int n) {
+			ElementLead[] a = new ElementLead[n];
+			while (n > 0) {
+				a[--n] = new ElementLead(this,n);
+			}
+			return a;
 		}
 
 		#region Static methods
@@ -254,22 +231,6 @@ namespace Circuits {
 		
 		public static String getCurrentDText(double i) {
 			return getUnitText(Math.Abs(i), "A");
-		}
-
-		public static int abs(int x) {
-			return x < 0 ? -x : x;
-		}
-		
-		public static int sign(int x) {
-			return (x < 0) ? -1 : (x == 0) ? 0 : 1;
-		}
-		
-		public static int min(int a, int b) {
-			return (a < b) ? a : b;
-		}
-		
-		public static int max(int a, int b) {
-			return (a > b) ? a : b;
 		}
 		#endregion
 	}

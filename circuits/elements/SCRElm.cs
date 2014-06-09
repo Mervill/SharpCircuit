@@ -18,7 +18,7 @@ namespace Circuits {
 		int inode = 3;
 		Diode diode;
 
-		public SCRElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public SCRElm( CirSim s) : base(s) {
 			setDefaults();
 			setup();
 		}

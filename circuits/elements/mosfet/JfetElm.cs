@@ -6,8 +6,8 @@ namespace Circuits {
 
 	public class JfetElm : MosfetElm {
 		
-		public JfetElm(int xx, int yy, bool pnpflag, CirSim s) : base(xx, yy, pnpflag, s) {
-			noDiagonal = true;
+		public JfetElm( bool pnpflag, CirSim s) : base(pnpflag, s) {
+
 		}
 
 		/*public override void draw(Graphics g) {

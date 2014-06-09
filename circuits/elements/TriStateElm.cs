@@ -10,7 +10,7 @@ namespace Circuits {
 		
 		public double resistance, r_on, r_off;
 
-		public TriStateElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public TriStateElm( CirSim s) : base(s) {
 			r_on = 0.1;
 			r_off = 1e10;
 		}

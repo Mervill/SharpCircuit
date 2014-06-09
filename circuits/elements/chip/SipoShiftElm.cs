@@ -8,7 +8,7 @@ namespace Circuits {
 
 	public class SipoShiftElm : ChipElm {
 		
-		public SipoShiftElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public SipoShiftElm( CirSim s) : base(s) {
 			
 		}
 

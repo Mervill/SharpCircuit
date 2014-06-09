@@ -8,7 +8,7 @@ namespace Circuits {
 		public int FLAG_INVERT = 1;
 		public double resistance, r_on, r_off;
 
-		public AnalogSwitchElm(int xx, int yy,CirSim s) : base(xx, yy,s) {
+		public AnalogSwitchElm(CirSim s) : base(s) {
 			r_on = 20;
 			r_off = 1e10;
 		}

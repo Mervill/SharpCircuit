@@ -30,12 +30,11 @@ namespace Circuits {
 		public int nCoil1, nCoil2, nCoil3;
 		public int FLAG_SWAP_COIL = 1;
 
-		public RelayElm(int xx, int yy,CirSim s) : base(xx,yy, s) {
+		public RelayElm(CirSim s) : base( s) {
 
 			ind = new Inductor(sim);
 			inductance = 0.2;
 			ind.setup(inductance, 0, Inductor.FLAG_BACK_EULER);
-			noDiagonal = true;
 			onCurrent = 0.02;
 			r_on = 0.05;
 			r_off = 1e6;

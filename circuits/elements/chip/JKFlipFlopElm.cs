@@ -7,7 +7,7 @@ namespace Circuits {
 	public class JKFlipFlopElm : ChipElm {
 		public int FLAG_RESET = 2;
 
-		public JKFlipFlopElm(int xx, int yy, CirSim s) : base(xx, yy, s) {
+		public JKFlipFlopElm( CirSim s) : base(s) {
 			
 		}
 		

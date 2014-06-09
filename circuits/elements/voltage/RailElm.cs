@@ -8,7 +8,7 @@ namespace Circuits {
 		
 		public  int FLAG_CLOCK = 1;
 
-		public RailElm(int xx, int yy, int wf, CirSim s) : base(xx, yy, wf, s) {
+		public RailElm( int wf, CirSim s) : base(wf, s) {
 
 		}
 

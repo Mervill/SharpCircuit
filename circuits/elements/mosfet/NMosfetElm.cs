@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class NMosfetElm : MosfetElm {
 		
-		public NMosfetElm(int xx, int yy, bool pnpflag,CirSim s) : base (xx,yy,false,s) {
+		public NMosfetElm( bool pnpflag,CirSim s) : base(false,s) {
 			
 		}
 		

@@ -5,31 +5,18 @@ using System.Collections.Generic;
 namespace Circuits {
 	
 	public abstract class ChipElm : CircuitElement {
-		public int csize, cspc, cspc2;
-		public int bits;
-		public int FLAG_SMALL = 1;
-		public int FLAG_FLIP_X = 1024;
-		public int FLAG_FLIP_Y = 2048;
 
-		public ChipElm(int xx, int yy,CirSim s) : base(xx, yy,s) {
+		public int bits;
+
+		public ChipElm(CirSim s) : base(s) {
 			if (needsBits()) {
 				bits = (this is DecadeElm) ? 10 : 4;
 			}
-			noDiagonal = true;
 			setupPins();
-			setSize(sim.smallGridCheckItem ? 1 : 2);
 		}
 
 		public virtual bool needsBits() {
 			return false;
-		}
-
-		public void setSize(int s) {
-			csize = s;
-			cspc = 8 * s;
-			cspc2 = cspc * 2;
-			flags &= ~FLAG_SMALL;
-			flags |= (s == 1) ? FLAG_SMALL : 0;
 		}
 
 		public virtual void setupPins(){ }

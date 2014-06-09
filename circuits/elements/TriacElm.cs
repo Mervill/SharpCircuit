@@ -22,7 +22,7 @@ namespace Circuits {
 		public int inode = 3;
 		public Diode diode;
 
-		public TriacElm(int xx, int yy, CirSim s) : base (xx,yy,s) {
+		public TriacElm( CirSim s) : base(s) {
 			setDefaults();
 			setup();
 		}
