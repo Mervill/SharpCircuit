@@ -17,6 +17,7 @@ Licence: MIT/Boost C++
 - Add new serialization system (JSON).
 - Fix Scope.cs object and ScopeElm.cs
 - Remove the -Elm suffix from circuit elements?
+- Test everything.
 
 **API notes**
 
@@ -32,22 +33,22 @@ acSource.Attach<Resistor>().Attach<Inductor>().WireTo(acSource);
 // Create
 sim.Create<T>(params args) where T : CircuitElm
 
-elm.Attach<T>(); // Create a new T and attach to first open lead
-elm.Attach<T>(params args); // Create a new T and pass args to the constructor
-elm.Attach<T>([int lead / string lead]); // Create a new T and connect to a specific lead
-elm.Attach<T>([int lead / string lead],params args); // combined
-
-// Also do Attach(Type typ, ...) versions
+// Create a new T and connect to a specific lead
+elm.Attach<T>([int lead / string lead]);
+elm.Attach<T>([int lead / string lead],params args);
+// Attach(Type typ, ...)
 
 elm.Attach([int lead / string lead],CircuitElm elm); // Add elm to the sim if it doesn't exist yet
 
-// WireTo should the same thing as Attach(), but use a wire in between the two leads
+// WireTo should the same thing as Attach(), but use a wire in between the two leads.
+elm.WireTo<T>([int lead / string lead]);
 elm.WireTo<T>([int lead / string lead],params args);
+// WireTo(Type typ, ...)
 
 // If attach or WireTo are called on an element, use the first open node,
 // otherwise Attach and WireTo can be called on specific leads
 
-elm.Attach<T>();
+elm.Attach<T>(...);
 elm.lead.Attach(); // Named lead
 elm.GetLead(0).Attach();
 elm.GetLead("base").Attach();
@@ -190,9 +191,15 @@ http://www.falstad.com/circuit/
 Falstad.com Applet Source Licence.
 http://www.falstad.com/licensing.html
 
-You have permission to use these applets in a classroom setting or take screenshots as long as the applets are unmodified. Modification or redistribution for non-commercial purposes is allowed, as long as you credit me (Paul Falstad) and provide a link to my page (the page you found the applet(s) on, or http://www.falstad.com/mathphysics.html). Contact me for any other uses. The source code for each applet is generally available on that applet's web page, but some of the applets use third-party source code that has restrictions.
+You have permission to use these applets in a classroom setting or take screenshots 
+as long as the applets are unmodified. Modification or redistribution for non-commercial 
+purposes is allowed, as long as you credit me (Paul Falstad) and provide a link to my page 
+(the page you found the applet(s) on, or http://www.falstad.com/mathphysics.html). Contact 
+me for any other uses. The source code for each applet is generally available on that applet's 
+web page, but some of the applets use third-party source code that has restrictions.
 
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
+WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 ```
 
 ```
