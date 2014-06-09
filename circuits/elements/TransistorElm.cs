@@ -39,7 +39,7 @@ namespace Circuits {
 		public ElementLead coll;
 		public ElementLead emit;
 
-		public TransistorElm( bool pnpflag,CirSim s) : base(s) {
+		public TransistorElm(CirSim s,bool pnpflag) : base(s) {
 			coll = new ElementLead(this,1);
 			emit = new ElementLead(this,2);
 

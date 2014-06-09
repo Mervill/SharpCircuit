@@ -11,10 +11,14 @@ namespace Circuits {
 		/// <summary>
 		/// Fwd Voltage @ 1A
 		/// </summary>
-		public double forwardDrop;
+		public double forwardDrop{ get; set; }
 
 		protected double defaultdrop = 0.805904783;
-		protected double zvoltage;
+
+		/// <summary>
+		/// Zener Voltage @ 5mA
+		/// </summary>
+		protected double zvoltage{ get; set; }
 
 		public DiodeElm(CirSim s) : base(s) {
 			diode = new Diode(sim);

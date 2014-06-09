@@ -1,22 +1,22 @@
-// stub implementation of DiacElm, based on SparkGapElm
-// FIXME need to add DiacElm.java to srclist
-// FIXME need to uncomment DiacElm line from CirSim.java
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Stub implementation of DiacElm, based on SparkGapElm
+	// FIXME need to add DiacElm.java to srclist
+	// FIXME need to uncomment DiacElm line from CirSim.java
 	public class DiacElm : CircuitElement {
+
 		public double onresistance, offresistance, breakdown, holdcurrent;
 		public bool state;
 
 		public DiacElm(CirSim s) : base(s) {
 			// FIXME need to adjust defaults to make sense for diac
-			offresistance = 1e9;
-			onresistance = 1e3;
-			breakdown = 1e3;
+			offresistance = 1E9;
+			onresistance = 1E3;
+			breakdown = 1E3;
 			holdcurrent = 0.001;
 			state = false;
 		}
@@ -24,21 +24,6 @@ namespace Circuits {
 		public override bool nonLinear() {
 			return true;
 		}
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			calcLeads(32);
-//			ps3 = new Point();
-//			ps4 = new Point();
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, 6);
-			draw2Leads(g);
-			setPowerColor(g, true);
-			doDots(g);
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
 			double vd = volts[0] - volts[1];

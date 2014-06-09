@@ -14,13 +14,13 @@ namespace Circuits {
 		// position 0 == closed, position 1 == open
 		protected int position, posCount;
 
-		public SwitchElm( CirSim s) : base(s) {
+		public SwitchElm(CirSim s) : base(s) {
 			Momentary = false;
 			position = 0;
 			posCount = 2;
 		}
 
-		public SwitchElm(bool mm, CirSim s) : base(s) {
+		public SwitchElm(CirSim s,bool mm) : base(s) {
 			position = (mm) ? 1 : 0;
 			Momentary = mm;
 			posCount = 2;

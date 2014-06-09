@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class XorGateElm : OrGateElm {
 
-		public XorGateElm( CirSim s) : base(s) {
+		public XorGateElm(CirSim s) : base(s) {
 			
 		}
 		

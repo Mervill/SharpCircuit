@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ProbeElm : CircuitElement {
 
-		public ProbeElm( CirSim s) : base(s) {
+		public ProbeElm(CirSim s) : base(s) {
 			
 		}
 

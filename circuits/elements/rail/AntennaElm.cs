@@ -8,7 +8,7 @@ namespace Circuits {
 
 		private double fmphase;
 
-		public AntennaElm(CirSim s) : base(WaveformType.DC, s) {
+		public AntennaElm(CirSim s) : base(s,WaveformType.DC) {
 			
 		}
 

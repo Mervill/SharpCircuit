@@ -5,71 +5,24 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class LampElm : CircuitElement {
+
+		public static readonly double roomTemp = 300;
+
 		public double resistance;
-		public double roomTemp = 300;
 		public double temp, nom_pow, nom_v, warmTime, coolTime;
 
-		public LampElm( CirSim s) : base(s) {
+		public LampElm(CirSim s) : base(s) {
 			temp = roomTemp;
 			nom_pow = 100;
 			nom_v = 120;
-			warmTime = .4;
-			coolTime = .4;
+			warmTime = 0.4;
+			coolTime = 0.4;
 		}
 
 		public override void reset() {
 			base.reset();
 			temp = roomTemp;
 		}
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int llen = 16;
-//			calcLeads(llen);
-//			bulbLead = newPointArray(2);
-//			filament = newPointArray(2);
-//			bulbR = 20;
-//			filament[0] = interpPoint(lead1, lead2, 0, filament_len);
-//			filament[1] = interpPoint(lead1, lead2, 1, filament_len);
-//			double br = filament_len - Math.Sqrt(bulbR * bulbR - llen * llen);
-//			bulbLead[0] = interpPoint(lead1, lead2, 0, br);
-//			bulbLead[1] = interpPoint(lead1, lead2, 1, br);
-//			bulb = interpPoint(filament[0], filament[1], .5);
-//		}
-
-		/*public override void draw(Graphics g) {
-			double v1 = volts[0];
-			double v2 = volts[1];
-			setBbox(point1, point2, 4);
-			adjustBbox(bulb.x - bulbR, bulb.y - bulbR, bulb.x + bulbR, bulb.y
-					+ bulbR);
-			// adjustbbox
-			draw2Leads(g);
-			setPowerColor(g, true);
-			g.setColor(getTempColor());
-			g.fillOval(bulb.x - bulbR, bulb.y - bulbR, bulbR * 2, bulbR * 2);
-			g.setColor(Color.white);
-			drawThickCircle(g, bulb.x, bulb.y, bulbR);
-			setVoltageColor(g, v1);
-			drawThickLine(g, lead1, filament[0]);
-			setVoltageColor(g, v2);
-			drawThickLine(g, lead2, filament[1]);
-			setVoltageColor(g, (v1 + v2) * .5);
-			drawThickLine(g, filament[0], filament[1]);
-			updateDotCount();
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead1, curcount);
-				double cc = curcount + (dn - 16) / 2;
-				drawDots(g, lead1, filament[0], cc);
-				cc += filament_len;
-				drawDots(g, filament[0], filament[1], cc);
-				cc += 16;
-				drawDots(g, filament[1], lead2, cc);
-				cc += filament_len;
-				drawDots(g, lead2, point2, curcount);
-			}
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
 			current = (volts[0] - volts[1]) / resistance;

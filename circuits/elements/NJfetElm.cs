@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class NJfetElm : JfetElm {
 
-		public NJfetElm( CirSim s) : base( false, s) {
+		public NJfetElm(CirSim s) : base(s,false) {
 
 		}
 
@@ -14,7 +14,7 @@ namespace Circuits {
 
 	class PJfetElm : JfetElm {
 
-		public PJfetElm( CirSim s) : base( true, s) {
+		public PJfetElm(CirSim s) : base(s,false) {
 
 		}
 

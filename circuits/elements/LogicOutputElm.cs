@@ -5,14 +5,18 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class LogicOutputElm : CircuitElement {
-		public int FLAG_TERNARY = 1;
-		public int FLAG_NUMERIC = 2;
-		public int FLAG_PULLDOWN = 4;
-		public double threshold;
-		//public String value;
+
+		public static readonly int FLAG_TERNARY = 1;
+		public static readonly int FLAG_NUMERIC = 2;
+		public static readonly int FLAG_PULLDOWN = 4;
+
+		/// <summary>
+		/// The Threshold Voltage.
+		/// </summary>
+		public double Threshold{ get; set; }
 
 		public LogicOutputElm( CirSim s) : base(s) {
-			threshold = 2.5;
+			Threshold = 2.5;
 		}
 
 		public override int getLeadCount() {
@@ -31,39 +35,9 @@ namespace Circuits {
 			return (flags & FLAG_PULLDOWN) != 0;
 		}
 
-//		public override void setPoints() {
-//			base.setPoints();
-//			lead1 = interpPoint(point1, point2, 1 - 12 / dn);
-//		}
-
-		/*public override void draw(Graphics g) {
-			Font f = new Font("SansSerif", Font.BOLD, 20);
-			g.setFont(f);
-			// g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			g.setColor(lightGrayColor);
-			String s = (volts[0] < threshold) ? "L" : "H";
-			if (isTernary()) {
-				if (volts[0] > 3.75) {
-					s = "2";
-				} else if (volts[0] > 1.25) {
-					s = "1";
-				} else {
-					s = "0";
-				}
-			} else if (isNumeric()) {
-				s = (volts[0] < threshold) ? "0" : "1";
-			}
-			value = s;
-			setBbox(point1, lead1, 0);
-			drawCenteredText(g, s, x2, y2, true);
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, lead1);
-			drawPosts(g);
-		}*/
-
 		public override void stamp() {
 			if (needsPullDown()) {
-				sim.stampResistor(nodes[0], 0, 1e6);
+				sim.stampResistor(nodes[0], 0, 1E6);
 			}
 		}
 
@@ -73,37 +47,9 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "logic output";
-			arr[1] = (volts[0] < threshold) ? "low" : "high";
-			//if (isNumeric()) {
-			//	arr[1] = value;
-			//}
+			arr[1] = (volts[0] < Threshold) ? "low" : "high";
 			arr[2] = "V = " + getVoltageText(volts[0]);
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Threshold", threshold, 10, -10);
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Current Required", needsPullDown());
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				threshold = ei.value;
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags = FLAG_PULLDOWN;
-				} else {
-					flags &= ~FLAG_PULLDOWN;
-				}
-			}
-		}*/
 
 	}
 }

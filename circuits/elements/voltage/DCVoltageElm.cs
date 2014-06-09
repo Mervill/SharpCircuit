@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class DCVoltageElm : VoltageElm {
 		
-		public DCVoltageElm(CirSim s) : base(WaveformType.DC, s) {
+		public DCVoltageElm(CirSim s) : base(s,WaveformType.DC) {
 			
 		}
 

@@ -6,7 +6,9 @@ namespace Circuits {
 	
 	public abstract class ChipElm : CircuitElement {
 
-		public int bits;
+		protected int bits;
+		protected Pin[] pins;
+		protected bool lastClock;
 
 		public ChipElm(CirSim s) : base(s) {
 			if (needsBits()) {
@@ -15,91 +17,12 @@ namespace Circuits {
 			setupPins();
 		}
 
+		public virtual void setupPins(){ }
+		public virtual void execute(){ }
+
 		public virtual bool needsBits() {
 			return false;
 		}
-
-		public virtual void setupPins(){ }
-
-		/*void draw(Graphics g) {
-			drawChip(g);
-		}
-
-		void drawChip(Graphics g) {
-			int i;
-			Font f = new Font("SansSerif", 0, 10 * csize);
-			g.setFont(f);
-			FontMetrics fm = g.getFontMetrics();
-			for (i = 0; i != getLeadCount(); i++) {
-				Pin p = pins[i];
-				setVoltageColor(g, volts[i]);
-				Point a = p.post;
-				Point b = p.stub;
-				drawThickLine(g, a, b);
-				p.curcount = updateDotCount(p.current, p.curcount);
-				drawDots(g, b, a, p.curcount);
-				if (p.bubble) {
-					g.setColor(sim.printableCheckItem.getState() ? Color.white
-							: Color.black);
-					drawThickCircle(g, p.bubbleX, p.bubbleY, 1);
-					g.setColor(lightGrayColor);
-					drawThickCircle(g, p.bubbleX, p.bubbleY, 3);
-				}
-				g.setColor(whiteColor);
-				int sw = fm.stringWidth(p.text);
-				g.drawString(p.text, p.textloc.x - sw / 2,
-						p.textloc.y + fm.getAscent() / 2);
-				if (p.lineOver) {
-					int ya = p.textloc.y - fm.getAscent() / 2;
-					g.drawLine(p.textloc.x - sw / 2, ya, p.textloc.x + sw / 2, ya);
-				}
-			}
-			g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			drawThickPolygon(g, rectPointsX, rectPointsY, 4);
-			if (clockPointsX != null) {
-				g.drawPolyline(clockPointsX, clockPointsY, 3);
-			}
-			for (i = 0; i != getLeadCount(); i++) {
-				drawPost(g, pins[i].post.x, pins[i].post.y, nodes[i]);
-			}
-		}*/
-
-		public int[] clockPointsX, clockPointsY;
-		public Pin[] pins;
-		public bool lastClock;
-
-//		public override void setPoints() {
-//			if (x2 - x > sizeX * cspc2 && this == sim.dragElm) {
-//				setSize(2);
-//			}
-//			int x0 = x + cspc2;
-//			int y0 = y;
-//			int xr = x0 - cspc;
-//			int yr = y0 - cspc;
-//			int xs = sizeX * cspc2;
-//			int ys = sizeY * cspc2;
-//			rectPointsX = new int[] { xr, xr + xs, xr + xs, xr };
-//			rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
-//			//setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
-//			int i;
-//			for (i = 0; i != getLeadCount(); i++) {
-//				Pin p = pins[i];
-//				switch (p.side) {
-//				case 0:
-//					p.setPoint(x0, y0, 1, 0, 0, -1, 0, 0);
-//					break;
-//				case 1:
-//					p.setPoint(x0, y0, 1, 0, 0, 1, 0, ys - cspc2);
-//					break;
-//				case 2:
-//					p.setPoint(x0, y0, 0, 1, -1, 0, 0, 0);
-//					break;
-//				case 3:
-//					p.setPoint(x0, y0, 0, 1, 1, 0, xs - cspc2, 0);
-//					break;
-//				}
-//			}
-//		}
 
 		public override void setVoltageSource(int j, int vs) {
 			int i;
@@ -122,8 +45,6 @@ namespace Circuits {
 				}
 			}
 		}
-
-		public virtual void execute(){ }
 
 		public override void doStep() {
 			int i;
@@ -196,39 +117,6 @@ namespace Circuits {
 			return pins[n1].output;
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Flip X", (flags & FLAG_FLIP_X) != 0);
-				return ei;
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Flip Y", (flags & FLAG_FLIP_Y) != 0);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_FLIP_X;
-				} else {
-					flags &= ~FLAG_FLIP_X;
-				}
-				setPoints();
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_FLIP_Y;
-				} else {
-					flags &= ~FLAG_FLIP_Y;
-				}
-				setPoints();
-			}
-		}*/
-
 		public class Pin {
 
 			public Pin(String nm) {
@@ -240,40 +128,6 @@ namespace Circuits {
 			public int voltSource;
 			public bool lineOver, clock, output, value;
 			public double current;
-			
-			/*public void setPoint(int px, int py, int dx, int dy, int dax, int day, int sx, int sy) {
-				if ((elm.flags & elm.FLAG_FLIP_X) != 0) {
-					dx = -dx;
-					dax = -dax;
-					px += elm.cspc2 * (elm.sizeX - 1);
-					sx = -sx;
-				}
-				if ((elm.flags & elm.FLAG_FLIP_Y) != 0) {
-					dy = -dy;
-					day = -day;
-					py += elm.cspc2 * (elm.sizeY - 1);
-					sy = -sy;
-				}
-				int xa = px + elm.cspc2 * dx * pos + sx;
-				int ya = py + elm.cspc2 * dy * pos + sy;
-				post = new Point(xa + dax * elm.cspc2, ya + day * elm.cspc2);
-				stub = new Point(xa + dax * elm.cspc, ya + day * elm.cspc);
-				textloc = new Point(xa, ya);
-				if (bubble) {
-					bubbleX = xa + dax * 10 * elm.csize;
-					bubbleY = ya + day * 10 * elm.csize;
-				}
-				if (clock) {
-					elm.clockPointsX = new int[3];
-					elm.clockPointsY = new int[3];
-					elm.clockPointsX[0] = xa + dax * elm.cspc - dx * elm.cspc / 2;
-					elm.clockPointsY[0] = ya + day * elm.cspc - dy * elm.cspc / 2;
-					elm.clockPointsX[1] = xa;
-					elm.clockPointsY[1] = ya;
-					elm.clockPointsX[2] = xa + dax * elm.cspc + dx * elm.cspc / 2;
-					elm.clockPointsY[2] = ya + day * elm.cspc + dy * elm.cspc / 2;
-				}
-			}*/
 		}
 
 	}

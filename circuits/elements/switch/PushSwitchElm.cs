@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class PushSwitchElm : SwitchElm {
 		
-		public PushSwitchElm( CirSim s) : base(true, s) {
+		public PushSwitchElm(CirSim s) : base(s,true) {
 
 		}
 	

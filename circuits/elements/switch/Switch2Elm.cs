@@ -8,56 +8,19 @@ namespace Circuits {
 
 		public static int FLAG_CENTER_OFF = 1;
 
-		public int link;
+		public int link{ get; set; }
+
 		public ElementLead[] swposts;
 
 		public Switch2Elm(CirSim s) : base(s) {
-
+			swposts = newLeadArray(2);
+			posCount = hasCenterOff() ? 3 : 2;
 		}
 
-		public Switch2Elm(bool mm, CirSim s) : base(mm,s) {
-
+		public Switch2Elm(CirSim s,bool mm) : base(s,mm) {
+			swposts = newLeadArray(2);
+			posCount = hasCenterOff() ? 3 : 2;
 		}
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			calcLeads(32);
-//			swposts = newPointArray(2);
-//			swpoles = newPointArray(3);
-//			interpPoint2(lead1, lead2, swpoles[0], swpoles[1], 1, openhs);
-//			swpoles[2] = lead2;
-//			interpPoint2(point1, point2, swposts[0], swposts[1], 1, openhs);
-//			posCount = hasCenterOff() ? 3 : 2;
-//		}
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, openhs);
-
-			// draw first lead
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, lead1);
-
-			// draw second lead
-			setVoltageColor(g, volts[1]);
-			drawThickLine(g, swpoles[0], swposts[0]);
-
-			// draw third lead
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, swpoles[1], swposts[1]);
-
-			// draw switch
-			if (!needsHighlight()) {
-				g.setColor(whiteColor);
-			}
-			drawThickLine(g, lead1, swpoles[position]);
-
-			updateDotCount();
-			drawDots(g, point1, lead1, curcount);
-			if (position != 2) {
-				drawDots(g, swpoles[position], swposts[position], curcount);
-			}
-			drawPosts(g);
-		}*/
 
 		public override ElementLead getLead(int n) {
 			return (n == 0) ? lead0 : swposts[n - 1];
@@ -112,16 +75,7 @@ namespace Circuits {
 			arr[1] = "I = " + getCurrentDText(getCurrent());
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Center Off", hasCenterOff());
-				return ei;
-			}
-			return super.getEditInfo(n);
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
+		/*public void setEditValue(int n, EditInfo ei) {
 			if (n == 1) {
 				flags &= ~FLAG_CENTER_OFF;
 				if (ei.checkbox.getState()) {

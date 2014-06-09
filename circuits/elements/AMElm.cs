@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// contributed by Edward Calver
-
+	// Contributed by Edward Calver.
 	public class AMElm : CircuitElement {
-		public static int FLAG_COS = 2;
+
 		public double carrierfreq, signalfreq, maxVoltage, freqTimeZero;
 
 		public AMElm(CirSim s) : base (s) {
@@ -16,11 +15,6 @@ namespace Circuits {
 			signalfreq = 40;
 			reset();
 		}
-
-		/*
-		 * void setCurrent(double c) { current = c;
-		 * System.out.print("v current set to " + c + "\n"); }
-		 */
 
 		public override void reset() {
 			freqTimeZero = 0;
@@ -42,43 +36,6 @@ namespace Circuits {
 			double w = 2 * pi * (sim.time - freqTimeZero);
 			return ((Math.Sin(w * signalfreq) + 1) / 2) * Math.Sin(w * carrierfreq) * maxVoltage;
 		}
-
-		public int circleSize = 17;
-
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, circleSize);
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, lead1);
-
-			Font f = new Font("SansSerif", 0, 12);
-			g.setFont(f);
-			g.setColor(needsHighlight() ? selectColor : whiteColor);
-			setPowerColor(g, false);
-			getVoltage();
-			String s = "AM";
-			drawCenteredText(g, s, x2, y2, true);
-			drawWaveform(g, point2);
-			drawPosts(g);
-			curcount = updateDotCount(-current, curcount);
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead1, curcount);
-			}
-		}
-
-		public override void drawWaveform(Graphics g, Point center) {
-			g.setColor(needsHighlight() ? selectColor : Color.gray);
-			setPowerColor(g, false);
-			int xc = center.x;
-			int yc = center.y;
-			drawThickCircle(g, xc, yc, circleSize);
-			adjustBbox(xc - circleSize, yc - circleSize, xc + circleSize, yc
-					+ circleSize);
-		}*/
-
-		/*public override void setPoints() {
-			base.setPoints();
-			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
-		}*/
 
 		public override double getVoltageDiff() {
 			return volts[0];

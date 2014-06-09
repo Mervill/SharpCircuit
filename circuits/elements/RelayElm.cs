@@ -31,7 +31,7 @@ namespace Circuits {
 		public int nCoil1, nCoil2, nCoil3;
 		public int FLAG_SWAP_COIL = 1;
 
-		public RelayElm(CirSim s) : base( s) {
+		public RelayElm(CirSim s) : base(s) {
 
 			ind = new Inductor(sim);
 			inductance = 0.2;

@@ -12,12 +12,14 @@ Licence: MIT/Boost C++
 ## ToDo
 
 - Pass on all elements, turning relevant fields into properties and and privatizing/protecting everything else.
+- Give leads semantic names.
 - Ensure nothing relies on static reference objects / singletons.
-- Finish removing all the vestigial rendering code so we can use it as a library. (Almost!)
-- Add new serialization system (JSON).
-- Fix Scope.cs object and ScopeElm.cs
+- Finish removing all the vestigial rendering code. (Almost!)
 - Remove the -Elm suffix from circuit elements?
+- Uppercase or lowercase property names?
+- Add new serialization system (JSON).
 - Test everything.
+- Fix Scope.cs object and ScopeElm.cs
 
 **API notes**
 
@@ -69,6 +71,7 @@ The following elements have been tested:
 - Inductor
 - VarRail (single-terminal DC voltage source)
 - Diode
+- Transistor (NPN/PNP)
 
 ## Examples
 
@@ -167,6 +170,53 @@ public class Example {
 			})
 			.Next(new WireElm(sim))
 			.Next(ACSource);
+		
+		sim.analyzeFlag = true;
+	}
+
+	void Tick(){
+		sim.updateCircuit();
+		if(sim.stoppedCheck){
+			Console.WriteLine(sim.stopMessage);
+		}
+	}
+}
+```
+
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using Circuits;
+
+public class Example {
+	
+    //
+	// NPN Transistor
+	// Simple example of an NPN Transistor.
+	//
+	
+	CirSim sim;
+	
+	NTransistorElm npn;
+	
+	void Init(){
+		
+		sim = new CirSim();
+		
+		npn = new NTransistorElm(sim);
+
+		VarRailElm _base = new VarRailElm(sim){ 
+			MaxVoltage = 0.7 
+		};
+		VarRailElm _collector = new VarRailElm(sim);
+		GroundElm _grnd = new GroundElm(sim);
+
+		npn.lead0.Connect(_base.lead0);
+		npn.coll.Connect(_collector.lead0);
+		npn.emit.Connect(_grnd.lead0);
 		
 		sim.analyzeFlag = true;
 	}

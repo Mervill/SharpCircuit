@@ -18,8 +18,8 @@ namespace Circuits {
 
 		public CircuitElement Connect(ElementLead other){
 
-			if(other.element == element)
-				throw new CircuitException("Can't attach a lead to it's own element!");
+			//if(other.element == element)
+			//	throw new CircuitException("Can't attach a lead to it's own element!");
 
 			// Both sides are unconnected.
 			bool empty = !IsConnected() && !other.IsConnected();

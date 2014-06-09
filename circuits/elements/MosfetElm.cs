@@ -5,16 +5,30 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class MosfetElm : CircuitElement {
-		int pnp;
-		int FLAG_PNP = 1;
-		//int FLAG_SHOWVT = 2;
-		int FLAG_DIGITAL = 4;
-		double vt;
 
-		public MosfetElm( bool pnpflag, CirSim s) : base(s) {
+		public static readonly int FLAG_PNP = 1;
+
+		private int pnp;
+		private double lastv1;
+		private double lastv2;
+		private double ids;
+		private int mode;
+		private double gm;
+
+		/// <summary>
+		/// Threshold Voltage
+		/// </summary>
+		public double Threshold{ get; set; }
+
+		public ElementLead src;
+		public ElementLead drn;
+
+		public MosfetElm(CirSim s,bool pnpflag) : base(s) {
+			src = new ElementLead(this,1);
+			drn = new ElementLead(this,2);
 			pnp = (pnpflag) ? -1 : 1;
 			flags = (pnpflag) ? FLAG_PNP : 0;
-			vt = getDefaultThreshold();
+			Threshold = getDefaultThreshold();
 		}
 
 		public virtual double getDefaultThreshold() {
@@ -25,79 +39,14 @@ namespace Circuits {
 			return 0.02;
 		}
 
-
 		public override bool nonLinear() {
 			return true;
 		}
 
-		public bool drawDigital() {
-			return (flags & FLAG_DIGITAL) != 0;
-		}
-
-
 		public override void reset() {
 			lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = 0;
 		}
-
-		public int hs = 16;
-
-		/*public void draw(Graphics g) {
-			setBbox(point1, point2, hs);
-			setVoltageColor(g, volts[1]);
-			drawThickLine(g, src[0], src[1]);
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, drn[0], drn[1]);
-			int segments = 6;
-			int i;
-			setPowerColor(g, true);
-			double segf = 1. / segments;
-			for (i = 0; i != segments; i++) {
-				double v = volts[1] + (volts[2] - volts[1]) * i / segments;
-				setVoltageColor(g, v);
-				interpPoint(src[1], drn[1], ps1, i * segf);
-				interpPoint(src[1], drn[1], ps2, (i + 1) * segf);
-				drawThickLine(g, ps1, ps2);
-			}
-			setVoltageColor(g, volts[1]);
-			drawThickLine(g, src[1], src[2]);
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, drn[1], drn[2]);
-			if (!drawDigital()) {
-				setVoltageColor(g, pnp == 1 ? volts[1] : volts[2]);
-				g.fillPolygon(arrowPoly);
-			}
-			if (sim.powerCheckItem.getState()) {
-				g.setColor(Color.gray);
-			}
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, gate[1]);
-			drawThickLine(g, gate[0], gate[2]);
-			if (drawDigital() && pnp == -1) {
-				drawThickCircle(g, pcircle.x, pcircle.y, pcircler);
-			}
-			if ((flags & FLAG_SHOWVT) != 0) {
-				String s = "" + (vt * pnp);
-				g.setColor(whiteColor);
-				g.setFont(unitsFont);
-				drawCenteredText(g, s, x2 + 2, y2, false);
-			}
-			if ((needsHighlight() || sim.dragElm == this) && dy == 0) {
-				g.setColor(Color.white);
-				g.setFont(unitsFont);
-				int ds = sign(dx);
-				g.drawString("G", gate[1].x - 10 * ds, gate[1].y - 5);
-				g.drawString(pnp == -1 ? "D" : "S", src[0].x - 3 + 9 * ds,
-						src[0].y + 4); // x+6 if ds=1, -12 if -1
-				g.drawString(pnp == -1 ? "S" : "D", drn[0].x - 3 + 9 * ds,
-						drn[0].y + 4);
-			}
-			curcount = updateDotCount(-ids, curcount);
-			drawDots(g, src[0], src[1], curcount);
-			drawDots(g, src[1], drn[1], curcount);
-			drawDots(g, drn[1], drn[0], curcount);
-			drawPosts(g);
-		}*/
-
+		
 		public override ElementLead getLead(int n) {
 			return (n == 0) ? lead0 : (n == 1) ? src : drn;
 		}
@@ -113,45 +62,6 @@ namespace Circuits {
 		public override int getLeadCount() {
 			return 3;
 		}
-
-		public ElementLead src;
-		public ElementLead drn;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//
-//			// find the coordinates of the various points we need to draw
-//			// the MOSFET.
-//			int hs2 = hs * dsign;
-//			src = newPointArray(3);
-//			drn = newPointArray(3);
-//			interpPoint2(point1, point2, src[0], drn[0], 1, -hs2);
-//			interpPoint2(point1, point2, src[1], drn[1], 1 - 22 / dn, -hs2);
-//			interpPoint2(point1, point2, src[2], drn[2], 1 - 22 / dn, -hs2 * 4 / 3);
-//
-//			gate = newPointArray(3);
-//			interpPoint2(point1, point2, gate[0], gate[2], 1 - 28 / dn, hs2 / 2); // was
-//																					// 1-20/dn
-//			interpPoint(gate[0], gate[2], gate[1], .5);
-//
-//			if (!drawDigital()) {
-//				if (pnp == 1) {
-//					//arrowPoly = calcArrow(src[1], src[0], 10, 4);
-//				} else {
-//					//arrowPoly = calcArrow(drn[0], drn[1], 12, 5);
-//				}
-//			} else if (pnp == -1) {
-//				interpPoint(point1, point2, gate[1], 1 - 36 / dn);
-//				int dist = (dsign < 0) ? 32 : 31;
-//				pcircle = interpPoint(point1, point2, 1 - dist / dn);
-//				pcircler = 3;
-//			}
-//		}
-
-		public double lastv1, lastv2;
-		public double ids;
-		public int mode = 0;
-		public double gm = 0;
 
 		public override void stamp() {
 			sim.stampNonLinear(nodes[1]);
@@ -201,25 +111,24 @@ namespace Circuits {
 				sim.stop("JFET is reverse biased!", this);
 				return;
 			}
-			if (vgs < vt) {
+			if (vgs < Threshold) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
 				Gds = 1e-8;
 				ids = vds * Gds;
 				mode = 0;
-			} else if (vds < vgs - vt) {
+			} else if (vds < vgs - Threshold) {
 				// linear
-				ids = beta * ((vgs - vt) * vds - vds * vds * .5);
+				ids = beta * ((vgs - Threshold) * vds - vds * vds * .5);
 				gm = beta * vds;
-				Gds = beta * (vgs - vds - vt);
+				Gds = beta * (vgs - vds - Threshold);
 				mode = 1;
 			} else {
 				// saturation; Gds = 0
-				gm = beta * (vgs - vt);
+				gm = beta * (vgs - Threshold);
 				// use very small Gds to avoid nonconvergence
 				Gds = 1e-8;
-				ids = .5 * beta * (vgs - vt) * (vgs - vt) + (vds - (vgs - vt))
-						* Gds;
+				ids = 0.5 * beta * (vgs - Threshold) * (vgs - Threshold) + (vds - (vgs - Threshold)) * Gds;
 				mode = 2;
 			}
 			double rs = -pnp * ids + Gds * realvds + gm * realvgs;
@@ -243,11 +152,10 @@ namespace Circuits {
 
 		public void getFetInfo(String[] arr, String n) {
 			arr[0] = ((pnp == -1) ? "p-" : "n-") + n;
-			arr[0] += " (Vt = " + getVoltageText(pnp * vt) + ")";
+			arr[0] += " (Vt = " + getVoltageText(pnp * Threshold) + ")";
 			arr[1] = ((pnp == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
 			arr[2] = "Vgs = " + getVoltageText(volts[0] - volts[pnp == -1 ? 2 : 1]);
-			arr[3] = ((pnp == 1) ? "Vds = " : "Vsd = ")
-					+ getVoltageText(volts[2] - volts[1]);
+			arr[3] = ((pnp == 1) ? "Vds = " : "Vsd = ") + getVoltageText(volts[2] - volts[1]);
 			arr[4] = (mode == 0) ? "off" : (mode == 1) ? "linear" : "saturation";
 			arr[5] = "gm = " + getUnitText(gm, "A/V");
 		}
@@ -267,29 +175,5 @@ namespace Circuits {
 		public override bool getConnection(int n1, int n2) {
 			return !(n1 == 0 || n2 == 0);
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Threshold Voltage", pnp * vt, .01, 5);
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Digital Symbol", drawDigital());
-				return ei;
-			}
-
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				vt = pnp * ei.value;
-			}
-			if (n == 1) {
-				flags = (ei.checkbox.getState()) ? (flags | FLAG_DIGITAL)
-						: (flags & ~FLAG_DIGITAL);
-				setPoints();
-			}
-		}*/
 	}
 }

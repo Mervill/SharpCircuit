@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class PMosfetElm : MosfetElm {
 		
-		public PMosfetElm(CirSim s) : base(true,s) {
+		public PMosfetElm(CirSim s) : base(s,true) {
 			
 		}
 		

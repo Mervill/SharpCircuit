@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// contributed by Edward Calver
-
+	// Contributed by Edward Calver.
 	public class InvertingSchmittElm : CircuitElement {
+
 		public double slewRate; // V/ns
 		public double lowerTrigger;
 		public double upperTrigger;
@@ -18,47 +18,6 @@ namespace Circuits {
 			lowerTrigger = 1.66;
 			upperTrigger = 3.33;
 		}
-
-		/*void draw(Graphics g) {
-			drawPosts(g);
-			draw2Leads(g);
-			g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			drawThickPolygon(g, gatePoly);
-			drawThickPolygon(g, symbolPoly);
-			drawThickCircle(g, pcircle.x, pcircle.y, 3);
-			curcount = updateDotCount(current, curcount);
-			drawDots(g, lead2, point2, curcount);
-		}*/
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			int hs = 16;
-//			int ww = 16;
-//			if (ww > dn / 2) {
-//				ww = (int) (dn / 2);
-//			}
-//			lead1 = interpPoint(point1, point2, .5 - ww / dn);
-//			lead2 = interpPoint(point1, point2, .5 + (ww + 2) / dn);
-//			pcircle = interpPoint(point1, point2, .5 + (ww - 2) / dn);
-//			Point[] triPoints = newPointArray(3);
-//			Point[] symPoints = newPointArray(6);
-//			Point dummy = new Point(0, 0);
-//			interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs);
-//			triPoints[2] = interpPoint(point1, point2, .5 + (ww - 5) / dn);
-//
-//			interpPoint2(lead1, lead2, symPoints[5], symPoints[4], 0.2, hs / 4);// 0
-//																				// 5
-//																				// 1
-//			interpPoint2(lead1, lead2, symPoints[1], symPoints[2], 0.35, hs / 4);// 4
-//																					// 2
-//																					// 3
-//			interpPoint2(lead1, lead2, symPoints[0], dummy, 0.1, hs / 4);
-//			interpPoint2(lead1, lead2, dummy, symPoints[3], 0.45, hs / 4);
-//
-//			//gatePoly = createPolygon(triPoints);
-//			//symbolPoly = createPolygon(symPoints);
-//			//setBbox(point1, point2, hs);
-//		}
 
 		public override int getVoltageSourceCount() {
 			return 1;
@@ -141,7 +100,7 @@ namespace Circuits {
 			}
 		}*/
 
-		// there is no current path through the InvertingSchmitt input, but there
+		// There is no current path through the InvertingSchmitt input, but there
 		// is an indirect path through the output to ground.
 		public override bool getConnection(int n1, int n2) {
 			return false;

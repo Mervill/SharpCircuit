@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ACVoltageElm : VoltageElm {
 		
-		public ACVoltageElm(CirSim s) : base(WaveformType.AC, s) {
+		public ACVoltageElm(CirSim s) : base(s,WaveformType.AC) {
 			
 		}
 		

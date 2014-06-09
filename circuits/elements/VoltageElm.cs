@@ -89,7 +89,7 @@ namespace Circuits {
 		}
 		protected double dutyCycle;
 
-		public VoltageElm(WaveformType wf, CirSim s) : base(s) {
+		public VoltageElm(CirSim s,WaveformType wf) : base(s) {
 			waveform = wf;
 			MaxVoltage = 5;
 			frequency = 40;

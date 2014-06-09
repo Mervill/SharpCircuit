@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class PotElm : CircuitElement {
+	public class PotentElm : CircuitElement {
 
 		public double position, maxResistance, resistance1, resistance2;
 		public double current1, current2, current3;
 
 		public ElementLead lead2;
 
-		public PotElm( CirSim s) : base(s) {
+		public PotentElm(CirSim s) : base(s) {
 			lead2 = new ElementLead(this,2);
 			setup();
 			maxResistance = 1000;

@@ -12,7 +12,9 @@ namespace Circuits {
 
 		public readonly static String muString = "u";
 		public readonly static String ohmString = "ohm";
-		
+
+		System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+
 		public Random random;
 
 		public bool stopped = false;
@@ -25,18 +27,18 @@ namespace Circuits {
 		public double powerBrightness = 50;
 
 		public List<CircuitElement> elements = new List<CircuitElement>();
+		public List<CircuitNode> nodeList = new List<CircuitNode>();
+		public CircuitElement[] voltageSources;
 		public int voltageSourceCount{ get; private set; }
 
 		private bool analyzeFlag;
 		public bool dumpMatrix;
-		public String stopMessage;
-		public CircuitElement stopElm;
+		public String stopMessage{ get; private set; }
+		public CircuitElement stopElm{ get; private set; }
 
 		public int scopeCount;
 		public Scope[] scopes;
 		public string[] info;
-
-		System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
 
 		private double[][] circuitMatrix; 
 		private double[] circuitRightSide; 
@@ -47,143 +49,12 @@ namespace Circuits {
 		private bool circuitNonLinear, circuitNeedsMap;
 		private int circuitMatrixSize, circuitMatrixFullSize;
 
-		public List<CircuitNode> nodeList = new List<CircuitNode>();
-		public CircuitElement[] voltageSources;
-
 		private long lastTime, lastFrameTime, lastIterTime, secTime;
 		public int frames{ get; private set; }
 		public int steps{ get; private set; }
 
 		public bool converged;
 		public int subIterations;
-
-		private class FindPathInfo {
-
-			public enum PathType {
-				INDUCT,
-				VOLTAGE,
-				SHORT,
-				CAP_V,
-			}
-
-			CirSim root;
-			bool[] used;
-			int dest;
-			CircuitElement firstElm;
-			PathType type;
-			
-			public FindPathInfo(CirSim r,PathType t, CircuitElement e, int d){
-				root = r;
-				dest = d;
-				type = t;
-				firstElm = e;
-				used = new bool[root.nodeList.Count];
-			}
-			
-			public bool findPath(int n1){
-				return findPath(n1, -1);
-			}
-			
-			public bool findPath(int n1, int depth){
-				if(n1 == dest)
-					return true;
-				
-				if(depth-- == 0)
-					return false;
-
-				if(used[n1]){
-					// System.out.println("used " + n1);
-					return false;
-				}
-
-				used[n1] = true;
-				int i;
-				for (i = 0; i != root.elements.Count; i++){
-					CircuitElement ce = root.getElm(i);
-					if(ce == firstElm)
-						continue;
-
-					if(type == PathType.INDUCT){
-						if(ce is CurrentElm)
-							continue;
-					}
-
-					if(type == PathType.VOLTAGE) {
-						if(!(ce.isWire() || ce is VoltageElm))
-							continue;
-					}
-
-					if(type == PathType.SHORT && !ce.isWire())
-						continue;
-
-
-					if(type == PathType.CAP_V){
-						if(!(ce.isWire() || ce is CapacitorElm || ce is VoltageElm))
-							continue;
-					}
-
-					if(n1 == 0){
-						// look for posts which have a ground connection;
-						// our path can go through ground
-						int z;
-						for(z = 0; z != ce.getLeadCount(); z++){
-							if(ce.hasGroundConnection(z)
-							    && findPath(ce.getNode(z), depth)){
-								used[n1] = false;
-								return true;
-							}
-						}
-					}
-
-					int j;
-					for(j = 0; j != ce.getLeadCount(); j++){
-						// System.out.println(ce + " " + ce.getNode(j));
-						if(ce.getNode(j) == n1)
-							break;
-					}
-
-					if(j == ce.getLeadCount())
-						continue;
-
-					if(ce.hasGroundConnection(j) && findPath(0, depth)){
-						// System.out.println(ce + " has ground");
-						used[n1] = false;
-						return true;
-					}
-
-					if(type == PathType.INDUCT && ce is InductorElm){
-						double c = ce.getCurrent();
-						if(j == 0)
-							c = -c;
-
-						// System.out.println("matching " + c + " to " +
-						// firstElm.getCurrent());
-						// System.out.println(ce + " " + firstElm);
-						if(Math.Abs(c - firstElm.getCurrent()) > 1e-10)
-							continue;
-					}
-
-					int k;
-					for(k = 0; k != ce.getLeadCount(); k++){
-						if(j == k)
-							continue;
-
-						// System.out.println(ce + " " + ce.getNode(j) + "-" +
-						// ce.getNode(k));
-						if(ce.getConnection(j, k) && findPath(ce.getNode(k), depth)){
-							// System.out.println("got findpath " + n1);
-							used[n1] = false;
-							return true;
-						}
-						// System.out.println("back on findpath " + n1);
-					}
-				}
-
-				used[n1] = false;
-				// System.out.println(n1 + " failed");
-				return false;
-			}
-		}
 
 		public CirSim(){
 			watch.Start();
@@ -263,10 +134,7 @@ namespace Circuits {
 			}
 
 
-			if (stopMessage != null) {
-
-			} else {
-
+			if (stopMessage == null) {
 				info = new String[10];
 				info[0] = "time = " + CircuitElement.getUnitText(time, "s");
 
@@ -276,7 +144,6 @@ namespace Circuits {
 				if (badnodes > 0) {
 					info[i++] = badnodes + ((badnodes == 1) ? " bad connection" : " bad connections");
 				}
-				
 			}
 
 			frames++;
@@ -357,18 +224,15 @@ namespace Circuits {
 				
 			}
 
-			// if no ground, and no rails, then the voltage elm's first terminal is ground
-			if (!gotGround && volt != null && !gotRail) {
-				CircuitNode node = new CircuitNode();
+
+			if(!gotGround && volt != null && !gotRail){
+				// If no ground, and no rails, then the voltage elm's first terminal is ground.
 				ElementLead pt = volt.getLead(0);
-				//cn.x = pt.x;
-				//cn.y = pt.y;
-				node = pt.node;
+				CircuitNode node = pt.node;
 				nodeList.Add(node);
-			} else {
-				// otherwise allocate extra node for ground
+			}else{
+				// Otherwise allocate extra node for ground.
 				CircuitNode node = new CircuitNode();
-				//cn.x = cn.y = -1;
 				nodeList.Add(node);
 			}
 			#endregion
@@ -376,10 +240,10 @@ namespace Circuits {
 			#region Nodes and Voltage Sources
 			for (i = 0; i != elements.Count; i++) {
 				CircuitElement current_elm = getElm(i);
-				int num_posts = current_elm.getLeadCount();
+				int num_leads = current_elm.getLeadCount();
 
 				// Populate the node list
-				for (lead_index = 0; lead_index != num_posts; lead_index++) {
+				for (lead_index = 0; lead_index != num_leads; lead_index++) {
 
 					ElementLead current_lead = current_elm.getLead(lead_index);
 
@@ -401,12 +265,12 @@ namespace Circuits {
 				}
 
 				int internal_nodes = current_elm.getInternalNodeCount();
-				for (int internal_post_index = 0; internal_post_index != internal_nodes; internal_post_index++) {
+				for (int internal_lead_index = 0; internal_lead_index != internal_nodes; internal_lead_index++) {
 					CircuitNode newNode = new CircuitNode();
 					//newNode.x = newNode.y = -1;
 					newNode.@internal = true;
 
-					ElementLead newLead = new ElementLead(current_elm,num_posts + internal_post_index);
+					ElementLead newLead = new ElementLead(current_elm,num_leads + internal_lead_index);
 					newNode.links.Add(newLead); // Add the lead to the new node.
 
 					current_elm.setNode(newLead.index, nodeList.Count);	// Associate the lead with the new node.
@@ -420,7 +284,6 @@ namespace Circuits {
 			voltageSources = new CircuitElement[vscount];
 			vscount = 0;
 			voltageSourceCount = vscount;
-
 			#endregion
 
 			// == Determine if circuit is nonlinear
@@ -438,7 +301,6 @@ namespace Circuits {
 			}
 
 			#region Matrix setup
-
 			int matrixSize = nodeList.Count - 1 + vscount;
 			circuitMatrix = new double[matrixSize][]; //matrixSize
 			for (int z = 0; z < matrixSize; z++)
@@ -806,11 +668,6 @@ namespace Circuits {
 			stampMatrix(n2, vn, -1);
 		}
 
-		public void updateVoltageSource(int n1, int n2, int vs, double v) {
-			int vn = nodeList.Count + vs;
-			stampRightSide(vn, v);
-		}
-
 		public void stampResistor(int n1, int n2, double r) {
 			double r0 = 1 / r;
 			if (Double.IsNaN(r0) || Double.IsInfinity(r0)) {
@@ -904,6 +761,11 @@ namespace Circuits {
 		}
 
 		#endregion
+
+		public void updateVoltageSource(int n1, int n2, int vs, double v) {
+			int vn = nodeList.Count + vs;
+			stampRightSide(vn, v);
+		}
 
 		public CircuitNode getCircuitNode(int n) {
 			if (n >= nodeList.Count) {
@@ -1017,10 +879,10 @@ namespace Circuits {
 							break;
 						}
 						if (j < nodeList.Count - 1) {
-							CircuitNode cn = getCircuitNode(j + 1);
-							for (k = 0; k != cn.links.Count; k++) {
-								ElementLead cnl = cn.links[k];
-								cnl.element.setNodeVoltage(cnl.index, res);
+							CircuitNode node = getCircuitNode(j + 1);
+							for (k = 0; k != node.links.Count; k++) {
+								ElementLead lead = node.links[k];
+								lead.element.setNodeVoltage(lead.index, res);
 							}
 						} else {
 							int ji = j - (nodeList.Count - 1);
@@ -1186,6 +1048,134 @@ namespace Circuits {
 					tot -= a[i][j] * b[j];
 				}
 				b[i] = tot / a[i][i];
+			}
+		}
+
+		private class FindPathInfo {
+			
+			public enum PathType {
+				INDUCT,
+				VOLTAGE,
+				SHORT,
+				CAP_V,
+			}
+			
+			CirSim sim;
+			bool[] used;
+			int dest;
+			CircuitElement firstElm;
+			PathType type;
+			
+			public FindPathInfo(CirSim r,PathType t, CircuitElement e, int d){
+				sim = r;
+				dest = d;
+				type = t;
+				firstElm = e;
+				used = new bool[sim.nodeList.Count];
+			}
+			
+			public bool findPath(int n1){
+				return findPath(n1, -1);
+			}
+			
+			public bool findPath(int n1, int depth){
+				if(n1 == dest)
+					return true;
+				
+				if(depth-- == 0)
+					return false;
+				
+				if(used[n1]){
+					// System.out.println("used " + n1);
+					return false;
+				}
+				
+				used[n1] = true;
+				int i;
+				for (i = 0; i != sim.elements.Count; i++){
+					CircuitElement ce = sim.getElm(i);
+					if(ce == firstElm)
+						continue;
+					
+					if(type == PathType.INDUCT){
+						if(ce is CurrentElm)
+							continue;
+					}
+					
+					if(type == PathType.VOLTAGE) {
+						if(!(ce.isWire() || ce is VoltageElm))
+							continue;
+					}
+					
+					if(type == PathType.SHORT && !ce.isWire())
+						continue;
+					
+					
+					if(type == PathType.CAP_V){
+						if(!(ce.isWire() || ce is CapacitorElm || ce is VoltageElm))
+							continue;
+					}
+					
+					if(n1 == 0){
+						// look for posts which have a ground connection;
+						// our path can go through ground
+						int z;
+						for(z = 0; z != ce.getLeadCount(); z++){
+							if(ce.hasGroundConnection(z)
+							   && findPath(ce.getNode(z), depth)){
+								used[n1] = false;
+								return true;
+							}
+						}
+					}
+					
+					int j;
+					for(j = 0; j != ce.getLeadCount(); j++){
+						// System.out.println(ce + " " + ce.getNode(j));
+						if(ce.getNode(j) == n1)
+							break;
+					}
+					
+					if(j == ce.getLeadCount())
+						continue;
+					
+					if(ce.hasGroundConnection(j) && findPath(0, depth)){
+						// System.out.println(ce + " has ground");
+						used[n1] = false;
+						return true;
+					}
+					
+					if(type == PathType.INDUCT && ce is InductorElm){
+						double c = ce.getCurrent();
+						if(j == 0)
+							c = -c;
+						
+						// System.out.println("matching " + c + " to " +
+						// firstElm.getCurrent());
+						// System.out.println(ce + " " + firstElm);
+						if(Math.Abs(c - firstElm.getCurrent()) > 1e-10)
+							continue;
+					}
+					
+					int k;
+					for(k = 0; k != ce.getLeadCount(); k++){
+						if(j == k)
+							continue;
+						
+						// System.out.println(ce + " " + ce.getNode(j) + "-" +
+						// ce.getNode(k));
+						if(ce.getConnection(j, k) && findPath(ce.getNode(k), depth)){
+							// System.out.println("got findpath " + n1);
+							used[n1] = false;
+							return true;
+						}
+						// System.out.println("back on findpath " + n1);
+					}
+				}
+				
+				used[n1] = false;
+				// System.out.println(n1 + " failed");
+				return false;
 			}
 		}
 

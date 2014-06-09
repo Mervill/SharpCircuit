@@ -20,11 +20,6 @@ namespace Circuits {
 			reset();
 		}
 
-		/*
-		 * void setCurrent(double c) { current = c;
-		 * System.out.print("v current set to " + c + "\n"); }
-		 */
-
 		public override void reset() {
 			freqTimeZero = 0;
 		}
@@ -49,43 +44,6 @@ namespace Circuits {
 			double w = 2 * pi * funcx;
 			return Math.Sin(w) * maxVoltage;
 		}
-
-		public int circleSize = 17;
-
-		/*public override void void draw(Graphics g) {
-			setBbox(point1, point2, circleSize);
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, point1, lead1);
-
-			Font f = new Font("SansSerif", 0, 12);
-			g.setFont(f);
-			g.setColor(needsHighlight() ? selectColor : whiteColor);
-			setPowerColor(g, false);
-			getVoltage();
-			String s = "FM";
-			drawCenteredText(g, s, x2, y2, true);
-			drawWaveform(g, point2);
-			drawPosts(g);
-			curcount = updateDotCount(-current, curcount);
-			if (sim.dragElm != this) {
-				drawDots(g, point1, lead1, curcount);
-			}
-		}
-
-		void drawWaveform(Graphics g, Point center) {
-			g.setColor(needsHighlight() ? selectColor : Color.gray);
-			setPowerColor(g, false);
-			int xc = center.x;
-			int yc = center.y;
-			drawThickCircle(g, xc, yc, circleSize);
-			adjustBbox(xc - circleSize, yc - circleSize, xc + circleSize, yc
-					+ circleSize);
-		}*/
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
-//		}
 
 		public override double getVoltageDiff() {
 			return volts[0];
