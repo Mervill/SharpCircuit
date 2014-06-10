@@ -7,10 +7,22 @@ namespace Circuits {
 	// Contributed by Edward Calver.
 	public class InvertingSchmittElm : CircuitElement {
 
-		public double slewRate; // V/ns
-		public double lowerTrigger;
-		public double upperTrigger;
-		public bool state;
+		/// <summary>
+		/// Slew Rate (V/ns)
+		/// </summary>
+		public double slewRate{ get; private set; }
+
+		/// <summary>
+		/// Lower threshold (V)
+		/// </summary>
+		public double lowerTrigger{ get; private set; }
+
+		/// <summary>
+		/// Upper threshold (V)
+		/// </summary>
+		public double upperTrigger{ get; private set; }
+
+		protected bool state;
 
 		public InvertingSchmittElm( CirSim s) : base(s) {
 			slewRate = 0.5;
@@ -64,41 +76,6 @@ namespace Circuits {
 			arr[1] = "Vi = " + getVoltageText(volts[0]);
 			arr[2] = "Vo = " + getVoltageText(volts[1]);
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				dlt = lowerTrigger;
-				return new EditInfo("Lower threshold (V)", lowerTrigger, 0.01, 5);
-			}
-			if (n == 1) {
-				dut = upperTrigger;
-				return new EditInfo("Upper threshold (V)", upperTrigger, 0.01, 5);
-			}
-			if (n == 2) {
-				return new EditInfo("Slew Rate (V/ns)", slewRate, 0, 0);
-			}
-			return null;
-		}*/
-
-		/*public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				dlt = ei.value;
-			}
-			if (n == 1) {
-				dut = ei.value;
-			}
-			if (n == 2) {
-				slewRate = ei.value;
-			}
-
-			if (dlt > dut) {
-				upperTrigger = dlt;
-				lowerTrigger = dut;
-			} else {
-				upperTrigger = dut;
-				lowerTrigger = dlt;
-			}
-		}*/
 
 		// There is no current path through the InvertingSchmitt input, but there
 		// is an indirect path through the output to ground.

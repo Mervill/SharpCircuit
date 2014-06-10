@@ -8,8 +8,32 @@ namespace Circuits {
 
 		public static readonly double roomTemp = 300;
 
-		public double resistance;
-		public double temp, nom_pow, nom_v, warmTime, coolTime;
+		private double resistance;
+
+		/// <summary>
+		/// Tempature
+		/// </summary>
+		public double temp{ get; private set; }
+
+		/// <summary>
+		/// Nominal Power
+		/// </summary>
+		public double nom_pow{ get; set; }
+
+		/// <summary>
+		/// Nominal Voltage
+		/// </summary>
+		public double nom_v{ get; set; }
+
+		/// <summary>
+		/// Warmup Time (s)
+		/// </summary>
+		public double warmTime{ get; set; }
+
+		/// <summary>
+		/// Cooldown Time (s)
+		/// </summary>
+		public double coolTime{ get; set; }
 
 		public LampElm(CirSim s) : base(s) {
 			temp = roomTemp;
@@ -65,37 +89,6 @@ namespace Circuits {
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 			arr[5] = "T = " + ((int) temp) + " K";
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("Nominal Power", nom_pow, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Nominal Voltage", nom_v, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Warmup Time (s)", warmTime, 0, 0);
-			}
-			if (n == 3) {
-				return new EditInfo("Cooldown Time (s)", coolTime, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0 && ei.value > 0) {
-				nom_pow = ei.value;
-			}
-			if (n == 1 && ei.value > 0) {
-				nom_v = ei.value;
-			}
-			if (n == 2 && ei.value > 0) {
-				warmTime = ei.value;
-			}
-			if (n == 3 && ei.value > 0) {
-				coolTime = ei.value;
-			}
-		}*/
+		
 	}
 }

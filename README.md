@@ -12,7 +12,8 @@ Licence: MIT/Boost C++
 ## ToDo
 
 - Pass on all elements, turning relevant fields into properties and and privatizing/protecting everything else.
-- Give leads semantic names.
+- Go back and make sure all publicly editable variables comply with original source.
+- Reorganize leads & give them semantic names.
 - Ensure nothing relies on static reference objects / singletons.
 - Finish removing all the vestigial rendering code. (Almost!)
 - Remove the -Elm suffix from circuit elements?

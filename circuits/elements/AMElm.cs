@@ -7,7 +7,22 @@ namespace Circuits {
 	// Contributed by Edward Calver.
 	public class AMElm : CircuitElement {
 
-		public double carrierfreq, signalfreq, maxVoltage, freqTimeZero;
+		/// <summary>
+		/// Carrier Frequency (Hz)
+		/// </summary>
+		public double carrierfreq{ get; set; }
+
+		/// <summary>
+		/// Signal Frequency (Hz)
+		/// </summary>
+		public double signalfreq{ get; set; }
+
+		/// <summary>
+		/// Max Voltage
+		/// </summary>
+		public double maxVoltage{ get; set; }
+
+		private double freqTimeZero;
 
 		public AMElm(CirSim s) : base (s) {
 			maxVoltage = 5;
@@ -61,31 +76,5 @@ namespace Circuits {
 			arr[4] = "sf = " + getUnitText(signalfreq, "Hz");
 			arr[5] = "Vmax = " + getVoltageText(maxVoltage);
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Max Voltage", maxVoltage, -20, 20);
-			}
-			if (n == 1) {
-				return new EditInfo("Carrier Frequency (Hz)", carrierfreq, 4, 500);
-			}
-			if (n == 2) {
-				return new EditInfo("Signal Frequency (Hz)", signalfreq, 4, 500);
-			}
-
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				maxVoltage = ei.value;
-			}
-			if (n == 1) {
-				carrierfreq = ei.value;
-			}
-			if (n == 2) {
-				signalfreq = ei.value;
-			}
-		}*/
 	}
 }

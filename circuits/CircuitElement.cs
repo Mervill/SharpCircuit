@@ -5,21 +5,20 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public abstract class CircuitElement {
-		
+
+		public readonly static double pi = 3.14159265358979323846;
+
 		public static double voltageRange = 5.0;
 		public static double currentMult, powerMult;
 
 		protected CirSim sim;
-
-		public readonly static double pi = 3.14159265358979323846;
-
-		public int flags, voltSource;
-		public ElementLead lead0;
-		public ElementLead lead1;
-
 		protected int[] nodes;
 		protected double[] volts;
 		protected double current;
+		
+		public int flags, voltSource;
+		public ElementLead lead0;
+		public ElementLead lead1;
 
 		public CircuitElement(CirSim s) {
 			lead0 = new ElementLead(this,0);

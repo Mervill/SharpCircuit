@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Unfinished
 	public class InductorElm : CircuitElement {
 
 		public Inductor ind;
@@ -11,12 +12,12 @@ namespace Circuits {
 		/// <summary>
 		/// Inductance (H)
 		/// </summary>
-		public double Inductance{ get; set; }
+		public double inductance{ get; set; }
 
 		public InductorElm(CirSim s) : base(s) {
 			ind = new Inductor(sim);
-			Inductance = 1;
-			ind.setup(Inductance, current, flags);
+			inductance = 1;
+			ind.setup(inductance, current, flags);
 		}
 
 		public override void reset() {
@@ -49,7 +50,7 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			arr[0] = "inductor";
 			getBasicInfo(arr);
-			arr[3] = "L = " + getUnitText(Inductance, "H");
+			arr[3] = "L = " + getUnitText(inductance, "H");
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 

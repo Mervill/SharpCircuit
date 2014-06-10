@@ -20,9 +20,23 @@ namespace Circuits {
 
 		private Diode diode;
 		private double ia, ic, ig;
-		private double lastvac, lastvag;
+		private double lastvac;
+		private double lastvag;
 
-		public double cresistance, triggerI, holdingI;
+		/// <summary>
+		/// Gate-Cathode Resistance (ohms)
+		/// </summary>
+		public double cresistance{ get; set; }
+
+		/// <summary>
+		/// Trigger Current (A)
+		/// </summary>
+		public double triggerI{ get; set; }
+
+		/// <summary>
+		/// Holding Current (A)
+		/// </summary>
+		public double holdingI{ get; set; }
 		
 		public ElementLead gate;
 
@@ -109,31 +123,5 @@ namespace Circuits {
 			ig = -ic - ia;
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("Trigger Current (A)", triggerI, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Holding Current (A)", holdingI, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Gate-Cathode Resistance (ohms)", cresistance,
-						0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0 && ei.value > 0) {
-				triggerI = ei.value;
-			}
-			if (n == 1 && ei.value > 0) {
-				holdingI = ei.value;
-			}
-			if (n == 2 && ei.value > 0) {
-				cresistance = ei.value;
-			}
-		}*/
 	}
 }

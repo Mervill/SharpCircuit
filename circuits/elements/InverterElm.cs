@@ -9,10 +9,10 @@ namespace Circuits {
 		/// <summary>
 		/// Slew Rate (V/ns)
 		/// </summary>
-		public double SlewRate{ get; set; }
+		public double slewRate{ get; set; }
 
 		public InverterElm( CirSim s) : base(s) {
-			SlewRate = 0.5;
+			slewRate = 0.5;
 		}
 
 		public override int getVoltageSourceCount() {
@@ -26,7 +26,7 @@ namespace Circuits {
 		public override void doStep() {
 			double v0 = volts[1];
 			double @out = volts[0] > 2.5 ? 0 : 5;
-			double maxStep = SlewRate * sim.timeStep * 1e9;
+			double maxStep = slewRate * sim.timeStep * 1e9;
 			@out = Math.Max(Math.Min(v0 + maxStep, @out), v0 - maxStep);
 			sim.updateVoltageSource(0, nodes[1], voltSource, @out);
 		}
@@ -41,7 +41,7 @@ namespace Circuits {
 			arr[2] = "Vo = " + getVoltageText(volts[1]);
 		}
 
-		// there is no current path through the inverter input, but there
+		// There is no current path through the inverter input, but there
 		// is an indirect path through the output to ground.
 		public override bool getConnection(int n1, int n2) {
 			return false;

@@ -11,17 +11,17 @@ namespace Circuits {
 		/// <summary>
 		/// Primary Inductance (H)
 		/// </summary>
-		public double Inductance{ get; set; }
+		public double inductance{ get; set; }
 
 		/// <summary>
 		/// Ratio
 		/// </summary>
-		public double Ratio{ get; set; }
+		public double ratio{ get; set; }
 
 		/// <summary>
 		/// Coupling Coefficient
 		/// </summary>
-		public double CouplingCoef{ get; set; }
+		public double couplingCoef{ get; set; }
 
 		public ElementLead[] ptEnds;
 
@@ -31,9 +31,9 @@ namespace Circuits {
 
 		public TransformerElm( CirSim s) : base(s) {
 			ptEnds = newLeadArray(getLeadCount());
-			Inductance = 4;
-			Ratio = 1;
-			CouplingCoef = 0.999;
+			inductance = 4;
+			ratio = 1;
+			couplingCoef = 0.999;
 			current = new double[2];
 
 		}
@@ -82,9 +82,9 @@ namespace Circuits {
 			// dt instead of dt/2 for the resistor and VCCS.
 			//
 			// first winding goes from node 0 to 2, second is from 1 to 3
-			double l1 = Inductance;
-			double l2 = Inductance * Ratio * Ratio;
-			double m = CouplingCoef * Math.Sqrt(l1 * l2);
+			double l1 = inductance;
+			double l2 = inductance * ratio * ratio;
+			double m = couplingCoef * Math.Sqrt(l1 * l2);
 			// build inverted matrix
 			double deti = 1 / (l1 * l2 - m * m);
 			double ts = isTrapezoidal() ? sim.timeStep / 2 : sim.timeStep;
@@ -130,8 +130,8 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
-			arr[1] = "L = " + getUnitText(Inductance, "H");
-			arr[2] = "Ratio = 1:" + Ratio;
+			arr[1] = "L = " + getUnitText(inductance, "H");
+			arr[2] = "Ratio = 1:" + ratio;
 			arr[3] = "Vd1 = " + getVoltageText(volts[0] - volts[2]);
 			arr[4] = "Vd2 = " + getVoltageText(volts[1] - volts[3]);
 			arr[5] = "I1 = " + getCurrentText(current[0]);

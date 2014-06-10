@@ -6,20 +6,35 @@ namespace Circuits {
 
 	public class OpAmpElm : CircuitElement {
 
-		public double maxOut, minOut, gain;
-		public int FLAG_SWAP = 1;
-		public int FLAG_SMALL = 2;
-		public int FLAG_LOWGAIN = 4;
+		public static readonly int FLAG_SWAP = 1;
+		public static readonly int FLAG_LOWGAIN = 4;
 
-		public OpAmpElm( CirSim s) : base(s) {
+		private double lastvd;
+
+		/// <summary>
+		/// Max Output (V)
+		/// </summary>
+		public double maxOut{ get; set; }
+
+		/// <summary>
+		/// Min Output (V)
+		/// </summary>
+		public double minOut{ get; set; }
+
+		private double gain;
+
+		public ElementLead in1p;
+		public ElementLead in2p;
+
+		public OpAmpElm(CirSim s) : base(s) {
 			maxOut = 15;
 			minOut = -15;
 			setGain();
 		}
 
 		void setGain() {
-			// gain of 100000 breaks e-amp-dfdx.txt
-			// gain was 1000, but it broke amp-schmitt.txt
+			// Gain of 100000 breaks e-amp-dfdx.txt
+			// Gain was 1000, but it broke amp-schmitt.txt
 			gain = ((flags & FLAG_LOWGAIN) != 0) ? 1000 : 100000;
 		}
 
@@ -27,61 +42,9 @@ namespace Circuits {
 			return true;
 		}
 
-		/*public override void draw(Graphics g) {
-			setBbox(point1, point2, opheight * 2);
-			setVoltageColor(g, volts[0]);
-			drawThickLine(g, in1p[0], in1p[1]);
-			setVoltageColor(g, volts[1]);
-			drawThickLine(g, in2p[0], in2p[1]);
-			g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-			setPowerColor(g, true);
-			drawThickPolygon(g, triangle);
-			g.setFont(plusFont);
-			drawCenteredText(g, "-", textp[0].x, textp[0].y - 2, true);
-			drawCenteredText(g, "+", textp[1].x, textp[1].y, true);
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, lead2, point2);
-			curcount = updateDotCount(current, curcount);
-			drawDots(g, point2, lead2, curcount);
-			drawPosts(g);
-		}*/
-
 		public override double getPower() {
 			return volts[2] * current;
 		}
-
-		public ElementLead in1p;
-		public ElementLead in2p;
-
-		void setSize(int s) {
-			flags = (flags & ~FLAG_SMALL) | ((s == 1) ? FLAG_SMALL : 0);
-		}
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			if (dn > 150 && this == sim.dragElm) {
-//				setSize(2);
-//			}
-//			int ww = opwidth;
-//			if (ww > dn / 2) {
-//				ww = (int) (dn / 2);
-//			}
-//			calcLeads(ww * 2);
-//			int hs = opheight * dsign;
-//			if ((flags & FLAG_SWAP) != 0) {
-//				hs = -hs;
-//			}
-//			in1p = newPointArray(2);
-//			in2p = newPointArray(2);
-//			textp = newPointArray(2);
-//			interpPoint2(point1, point2, in1p[0], in2p[0], 0, hs);
-//			interpPoint2(lead1, lead2, in1p[1], in2p[1], 0, hs);
-//			interpPoint2(lead1, lead2, textp[0], textp[1], .2, hs);
-//			Point[] tris = newPointArray(2);
-//			interpPoint2(lead1, lead2, tris[0], tris[1], 0, hs * 2);
-//			//triangle = createPolygon(tris[0], tris[1], lead2);
-//			//plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
-//		}
 
 		public override int getLeadCount() {
 			return 3;
@@ -107,8 +70,6 @@ namespace Circuits {
 			arr[5] = "range = " + getVoltageText(minOut) + " to "
 					+ getVoltageText(maxOut);
 		}
-
-		public double lastvd;
 
 		public override void stamp() {
 			int vn = sim.nodeList.Count + voltSource;
@@ -166,23 +127,5 @@ namespace Circuits {
 			return volts[2] - volts[1];
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Max Output (V)", maxOut, 1, 20);
-			}
-			if (n == 1) {
-				return new EditInfo("Min Output (V)", minOut, -20, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				maxOut = ei.value;
-			}
-			if (n == 1) {
-				minOut = ei.value;
-			}
-		}*/
 	}
 }

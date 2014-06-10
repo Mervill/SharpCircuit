@@ -18,7 +18,7 @@ namespace Circuits {
 		/// <summary>
 		/// Threshold Voltage
 		/// </summary>
-		public double Threshold{ get; set; }
+		public double threshold{ get; set; }
 
 		public ElementLead src;
 		public ElementLead drn;
@@ -28,7 +28,7 @@ namespace Circuits {
 			drn = new ElementLead(this,2);
 			pnp = (pnpflag) ? -1 : 1;
 			flags = (pnpflag) ? FLAG_PNP : 0;
-			Threshold = getDefaultThreshold();
+			threshold = getDefaultThreshold();
 		}
 
 		public virtual double getDefaultThreshold() {
@@ -111,24 +111,24 @@ namespace Circuits {
 				sim.stop("JFET is reverse biased!", this);
 				return;
 			}
-			if (vgs < Threshold) {
+			if (vgs < threshold) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
 				Gds = 1e-8;
 				ids = vds * Gds;
 				mode = 0;
-			} else if (vds < vgs - Threshold) {
+			} else if (vds < vgs - threshold) {
 				// linear
-				ids = beta * ((vgs - Threshold) * vds - vds * vds * .5);
+				ids = beta * ((vgs - threshold) * vds - vds * vds * .5);
 				gm = beta * vds;
-				Gds = beta * (vgs - vds - Threshold);
+				Gds = beta * (vgs - vds - threshold);
 				mode = 1;
 			} else {
 				// saturation; Gds = 0
-				gm = beta * (vgs - Threshold);
+				gm = beta * (vgs - threshold);
 				// use very small Gds to avoid nonconvergence
 				Gds = 1e-8;
-				ids = 0.5 * beta * (vgs - Threshold) * (vgs - Threshold) + (vds - (vgs - Threshold)) * Gds;
+				ids = 0.5 * beta * (vgs - threshold) * (vgs - threshold) + (vds - (vgs - threshold)) * Gds;
 				mode = 2;
 			}
 			double rs = -pnp * ids + Gds * realvds + gm * realvgs;
@@ -152,7 +152,7 @@ namespace Circuits {
 
 		public void getFetInfo(String[] arr, String n) {
 			arr[0] = ((pnp == -1) ? "p-" : "n-") + n;
-			arr[0] += " (Vt = " + getVoltageText(pnp * Threshold) + ")";
+			arr[0] += " (Vt = " + getVoltageText(pnp * threshold) + ")";
 			arr[1] = ((pnp == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
 			arr[2] = "Vgs = " + getVoltageText(volts[0] - volts[pnp == -1 ? 2 : 1]);
 			arr[3] = ((pnp == 1) ? "Vds = " : "Vsd = ") + getVoltageText(volts[2] - volts[1]);

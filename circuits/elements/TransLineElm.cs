@@ -9,24 +9,23 @@ namespace Circuits {
 		/// <summary>
 		/// Delay (s)
 		/// </summary>
-		public double Delay{ get; set; }
+		public double delay{ get; set; }
 
 		/// <summary>
 		/// Impedance (ohms)
 		/// </summary>
-		public double Impedance{ get; set; }
+		public double impedance{ get; set; }
 
 		private double[] voltageL, voltageR;
 		private int lenSteps, ptr;
 		private int voltSource1, voltSource2;
-
-		public double current1, current2;
+		private double current1, current2;
 
 		public ElementLead[] leads;
 
 		public TransLineElm(CirSim s) : base(s) {
-			Delay = 1000 * sim.timeStep;
-			Impedance = 75;
+			delay = 1000 * sim.timeStep;
+			impedance = 75;
 			leads = new ElementLead[] { 
 				new ElementLead(this,0), 
 				new ElementLead(this,1), 
@@ -48,7 +47,7 @@ namespace Circuits {
 			if(sim.timeStep == 0)
 				return;
 			
-			lenSteps = (int) (Delay / sim.timeStep);
+			lenSteps = (int) (delay / sim.timeStep);
 			//System.out.println(lenSteps + " steps");
 			if(lenSteps > 100000){
 				voltageL = voltageR = null;
@@ -79,8 +78,8 @@ namespace Circuits {
 		public override void stamp() {
 			sim.stampVoltageSource(nodes[4], nodes[0], voltSource1);
 			sim.stampVoltageSource(nodes[5], nodes[1], voltSource2);
-			sim.stampResistor(nodes[2], nodes[4], Impedance);
-			sim.stampResistor(nodes[3], nodes[5], Impedance);
+			sim.stampResistor(nodes[2], nodes[4], impedance);
+			sim.stampResistor(nodes[3], nodes[5], impedance);
 		}
 
 		public override void startIteration() {
@@ -136,9 +135,9 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "transmission line";
-			arr[1] = getUnitText(Impedance, CirSim.ohmString);
-			arr[2] = "length = " + getUnitText(2.9979e8 * Delay, "m");
-			arr[3] = "delay = " + getUnitText(Delay, "s");
+			arr[1] = getUnitText(impedance, CirSim.ohmString);
+			arr[2] = "length = " + getUnitText(2.9979e8 * delay, "m");
+			arr[3] = "delay = " + getUnitText(delay, "s");
 		}
 
 	}

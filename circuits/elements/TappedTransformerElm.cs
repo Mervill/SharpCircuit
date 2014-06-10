@@ -9,12 +9,12 @@ namespace Circuits {
 		/// <summary>
 		/// Primary Inductance (H)
 		/// </summary>
-		public double Inductance{ get; set; }
+		public double inductance{ get; set; }
 
 		/// <summary>
 		/// Ratio
 		/// </summary>
-		public double Ratio{ get; set; }
+		public double ratio{ get; set; }
 
 		public ElementLead[] ptEnds;
 		new public double[] current;
@@ -24,8 +24,8 @@ namespace Circuits {
 
 		public TappedTransformerElm(CirSim s) : base(s) {
 			ptEnds = newLeadArray(getLeadCount());
-			Inductance = 4;
-			Ratio = 1;
+			inductance = 4;
+			ratio = 1;
 			current = new double[4];
 			voltdiff = new double[3];
 			curSourceValue = new double[3];
@@ -66,7 +66,7 @@ namespace Circuits {
 			// and similarly for i2
 			//
 			// first winding goes from node 0 to 1, second is from 2 to 3 to 4
-			double l1 = Inductance;
+			double l1 = inductance;
 			double cc = .99;
 			// double m1 = .999*Math.sqrt(l1*l2);
 			// mutual inductance between two halves of the second winding
@@ -76,10 +76,10 @@ namespace Circuits {
 			// load pre-inverted matrix
 			a[0] = (1 + cc) / (l1 * (1 + cc - 2 * cc * cc));
 			a[1] = a[2] = a[3] = a[6] = 2 * cc
-					/ ((2 * cc * cc - cc - 1) * Inductance * Ratio);
+					/ ((2 * cc * cc - cc - 1) * inductance * ratio);
 			a[4] = a[8] = -4 * (1 + cc)
-					/ ((2 * cc * cc - cc - 1) * l1 * Ratio * Ratio);
-			a[5] = a[7] = 4 * cc / ((2 * cc * cc - cc - 1) * l1 * Ratio * Ratio);
+					/ ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
+			a[5] = a[7] = 4 * cc / ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
 			int i;
 			for (i = 0; i != 9; i++) {
 				a[i] *= sim.timeStep / 2;
@@ -135,8 +135,8 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
-			arr[1] = "L = " + getUnitText(Inductance, "H");
-			arr[2] = "Ratio = " + Ratio;
+			arr[1] = "L = " + getUnitText(inductance, "H");
+			arr[2] = "Ratio = " + ratio;
 			// arr[3] = "I1 = " + getCurrentText(current1);
 			arr[3] = "Vd1 = " + getVoltageText(volts[0] - volts[2]);
 			// arr[5] = "I2 = " + getCurrentText(current2);

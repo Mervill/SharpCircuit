@@ -6,8 +6,18 @@ namespace Circuits {
 
 	public class PotentElm : CircuitElement {
 
-		public double position, maxResistance, resistance1, resistance2;
-		public double current1, current2, current3;
+		public double position{ get; set; }
+
+		/// <summary>
+		/// Resistance (ohms)
+		/// </summary>
+		public double maxResistance{ get; set; }
+
+		private double resistance1;
+		private double resistance2;
+		private double current1; 
+		private double current2;
+		private double current3;
 
 		public ElementLead lead2;
 
@@ -50,27 +60,5 @@ namespace Circuits {
 			arr[5] = "I2 = " + getCurrentDText(current2);
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("Resistance (ohms)", maxResistance, 0, 0);
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("Slider Text", 0, -1, -1);
-				ei.text = sliderText;
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				maxResistance = ei.value;
-			}
-			if (n == 1) {
-				sliderText = ei.textf.getText();
-				label.setText(sliderText);
-			}
-		}*/
 	}
 }

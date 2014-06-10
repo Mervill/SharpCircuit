@@ -9,14 +9,14 @@ namespace Circuits {
 		/// <summary>
 		/// Current (A)
 		/// </summary>
-		public double CurrentValue{ get; set; }
+		public double currentValue{ get; set; }
 
 		public CurrentElm(CirSim s) : base(s) {
-			CurrentValue = 0.01;
+			currentValue = 0.01;
 		}
 
 		public override void stamp() {
-			current = CurrentValue;
+			current = currentValue;
 			sim.stampCurrentSource(nodes[0], nodes[1], current);
 		}
 

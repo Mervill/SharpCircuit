@@ -6,12 +6,21 @@ namespace Circuits {
 
 	public class PhotoResistorElm : CircuitElement {
 
-		// stub PhotoResistorElm based on SparkGapElm
+		// Stub PhotoResistorElm based on SparkGapElm.
 		// FIXME need to uncomment PhotoResistorElm line from CirSim.java
 		// FIXME need to add PhotoResistorElm.java to srclist
 
-		public double minresistance, maxresistance;
-		public double resistance;
+		/// <summary>
+		/// Min resistance (ohms)
+		/// </summary>
+		public double minresistance{ get; set; }
+
+		/// <summary>
+		/// Max resistance (ohms)
+		/// </summary>
+		public double maxresistance{ get; set; }
+
+		private double resistance;
 
 		public PhotoResistorElm( CirSim s) : base(s) {
 			maxresistance = 1e9;
@@ -54,10 +63,10 @@ namespace Circuits {
 		/*public EditInfo getEditInfo(int n) {
 			// ohmString doesn't work here on linux
 			if (n == 0) {
-				return new EditInfo("Min resistance (ohms)", minresistance, 0, 0);
+				return new EditInfo("", minresistance, 0, 0);
 			}
 			if (n == 1) {
-				return new EditInfo("Max resistance (ohms)", maxresistance, 0, 0);
+				return new EditInfo("", maxresistance, 0, 0);
 			}
 			return null;
 		}

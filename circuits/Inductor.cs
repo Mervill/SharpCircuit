@@ -5,13 +5,16 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class Inductor {
-		public static int FLAG_BACK_EULER = 2;
+
+		public readonly static int FLAG_BACK_EULER = 2;
+
 		public int[] nodes;
 		public int flags;
 		public CirSim sim;
 
 		public double inductance;
-		public double compResistance, current;
+		public double compResistance;
+		public double current;
 		public double curSourceValue;
 
 		public Inductor(CirSim s) {

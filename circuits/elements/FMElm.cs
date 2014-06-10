@@ -8,9 +8,29 @@ namespace Circuits {
 
 	public class FMElm : CircuitElement {
 
-		double carrierfreq, signalfreq, maxVoltage, freqTimeZero, deviation;
-		double lasttime = 0;
-		double funcx = 0;
+		/// <summary>
+		/// Carrier Frequency (Hz)
+		/// </summary>
+		public double carrierfreq{ get; set; }
+
+		/// <summary>
+		/// The signalfreq.
+		/// </summary>
+		public double signalfreq{ get; set; }
+
+		/// <summary>
+		/// Max Voltage
+		/// </summary>
+		public double maxVoltage{ get; set; }
+
+		/// <summary>
+		/// Deviation (Hz)
+		/// </summary>
+		public double deviation{ get; set; }
+
+		private double freqTimeZero;
+		private double lasttime = 0;
+		private double funcx = 0;
 
 		public FMElm(CirSim s) : base (s) {
 			deviation = 200;
@@ -36,7 +56,7 @@ namespace Circuits {
 			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
 		}
 
-		double getVoltage() {
+		private double getVoltage() {
 			double deltaT = sim.time - lasttime;
 			lasttime = sim.time;
 			double signalamplitude = Math.Sin((2 * pi * (sim.time - freqTimeZero)) * signalfreq);
@@ -62,7 +82,6 @@ namespace Circuits {
 		}
 
 		public override void getInfo(String[] arr) {
-
 			arr[0] = "FM Source";
 			arr[1] = "I = " + getCurrentText(getCurrent());
 			arr[2] = "V = " + getVoltageText(getVoltageDiff());
@@ -71,38 +90,6 @@ namespace Circuits {
 			arr[5] = "dev =" + getUnitText(deviation, "Hz");
 			arr[6] = "Vmax = " + getVoltageText(maxVoltage);
 		}
-
 		
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Max Voltage", maxVoltage, -20, 20);
-			}
-			if (n == 1) {
-				return new EditInfo("Carrier Frequency (Hz)", carrierfreq, 4, 500);
-			}
-			if (n == 2) {
-				return new EditInfo("Signal Frequency (Hz)", signalfreq, 4, 500);
-			}
-			if (n == 3) {
-				return new EditInfo("Deviation (Hz)", deviation, 4, 500);
-			}
-
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				maxVoltage = ei.value;
-			}
-			if (n == 1) {
-				carrierfreq = ei.value;
-			}
-			if (n == 2) {
-				signalfreq = ei.value;
-			}
-			if (n == 3) {
-				deviation = ei.value;
-			}
-		}*/
 	}
 }

@@ -12,24 +12,52 @@ namespace Circuits {
 	// 3n+1 = coil
 	// 3n+2 = end of coil resistor
 
+	// Unfinished
 	public class RelayElm : CircuitElement {
 
-		public double inductance;
-		public Inductor ind;
-		public double r_on, r_off, onCurrent;
-		public ElementLead[] coilPosts; 
+		private Inductor ind;
 
-		public ElementLead[][] swposts;
-		public double coilCurrent, coilCurCount;
-		public double[] switchCurrent, switchCurCount;
-		public double d_position, coilR;
-		public int i_position;
+		/// <summary>
+		/// On Resistance (ohms)
+		/// </summary>
+		public double inductance;
+
+		/// <summary>
+		/// On Resistance (ohms)
+		/// </summary>
+		public double r_on;
+
+		/// <summary>
+		/// Off Resistance (ohms)
+		/// </summary>
+		public double r_off;
+
+		/// <summary>
+		/// On Current (A)
+		/// </summary>
+		public double onCurrent;
+
+		/// <summary>
+		/// Coil Resistance (ohms)
+		/// </summary>
+		public double coilR;
+
+		/// <summary>
+		/// Number of Poles
+		/// </summary>
 		public int poleCount;
-		public int nSwitch0 = 0;
-		public int nSwitch1 = 1;
-		public int nSwitch2 = 2;
-		public int nCoil1, nCoil2, nCoil3;
-		public int FLAG_SWAP_COIL = 1;
+
+		public ElementLead[] coilPosts;
+		private ElementLead[][] swposts;
+
+		private double coilCurrent, coilCurCount;
+		private double[] switchCurrent, switchCurCount;
+		private double d_position;
+		private int i_position;
+		private int nSwitch0 = 0;
+		private int nSwitch1 = 1;
+		private int nSwitch2 = 2;
+		private int nCoil1, nCoil2, nCoil3;
 
 		public RelayElm(CirSim s) : base(s) {
 
@@ -209,7 +237,7 @@ namespace Circuits {
 			if (d_position > 1) {
 				d_position = 1;
 			}
-			if (d_position < .1) {
+			if (d_position < 0.1) {
 				i_position = 0;
 			} else if (d_position > .9) {
 				i_position = 1;
@@ -264,66 +292,6 @@ namespace Circuits {
 		public override bool getConnection(int n1, int n2) {
 			return (n1 / 3 == n2 / 3);
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("Inductance (H)", inductance, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-			}
-			if (n == 3) {
-				return new EditInfo("On Current (A)", onCurrent, 0, 0);
-			}
-			if (n == 4) {
-				return new EditInfo("Number of Poles", poleCount, 1, 4)
-						.setDimensionless();
-			}
-			if (n == 5) {
-				return new EditInfo("Coil Resistance (ohms)", coilR, 0, 0);
-			}
-			if (n == 6) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Swap Coil Direction",
-						(flags & FLAG_SWAP_COIL) != 0);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0 && ei.value > 0) {
-				inductance = ei.value;
-				ind.setup(inductance, coilCurrent, Inductor.FLAG_BACK_EULER);
-			}
-			if (n == 1 && ei.value > 0) {
-				r_on = ei.value;
-			}
-			if (n == 2 && ei.value > 0) {
-				r_off = ei.value;
-			}
-			if (n == 3 && ei.value > 0) {
-				onCurrent = ei.value;
-			}
-			if (n == 4 && ei.value >= 1) {
-				poleCount = (int) ei.value;
-				setPoints();
-			}
-			if (n == 5 && ei.value > 0) {
-				coilR = ei.value;
-			}
-			if (n == 6) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_SWAP_COIL;
-				} else {
-					flags &= ~FLAG_SWAP_COIL;
-				}
-				setPoints();
-			}
-		}*/
 
 	}
 }

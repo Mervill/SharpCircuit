@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// stub implementation of TriacElm, based on SCRElm
+	// Stub implementation of TriacElm, based on SCRElm.
 	// FIXME need to add TriacElm to srclist
 	// FIXME need to uncomment TriacElm line from CirSim.java
 
@@ -30,25 +30,27 @@ namespace Circuits {
 		/// <summary>
 		/// Gate-Cathode Resistance (ohms)
 		/// </summary>
-		public double CResistance{ get; set; }
+		public double cresistance{ get; set; }
 
 		/// <summary>
 		/// Trigger Current (A)
 		/// </summary>
-		public double TriggerI{ get; set; }
+		public double triggerI{ get; set; }
 
 		/// <summary>
 		/// Holding Current (A)
 		/// </summary>
-		public double HoldingI{ get; set; }
+		public double holdingI{ get; set; }
 		
 		public ElementLead gate;
 
+		private double aresistance;
+
 		public TriacElm(CirSim s) : base(s) {
 			gate = new ElementLead(this,2);
-			CResistance = 50;
-			HoldingI = 0.0082;
-			TriggerI = 0.01;
+			cresistance = 50;
+			holdingI = 0.0082;
+			triggerI = 0.01;
 			diode = new Diode(sim);
 			diode.setup(.8, 0);
 		}
@@ -79,14 +81,12 @@ namespace Circuits {
 			return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
 		}
 
-		public double aresistance;
-
 		public override void stamp() {
 			sim.stampNonLinear(nodes[anode]);
 			sim.stampNonLinear(nodes[cnode]);
 			sim.stampNonLinear(nodes[gnode]);
 			sim.stampNonLinear(nodes[inode]);
-			sim.stampResistor(nodes[gnode], nodes[cnode], CResistance);
+			sim.stampResistor(nodes[gnode], nodes[cnode], cresistance);
 			diode.stamp(nodes[inode], nodes[gnode]);
 		}
 
@@ -99,8 +99,8 @@ namespace Circuits {
 			lastvac = vac;
 			lastvag = vag;
 			diode.doStep(volts[inode] - volts[gnode]);
-			double icmult = 1 / TriggerI;
-			double iamult = 1 / HoldingI - icmult;
+			double icmult = 1 / triggerI;
+			double iamult = 1 / holdingI - icmult;
 			// System.out.println(icmult + " " + iamult);
 			aresistance = (-icmult * ic + ia * iamult > 1) ? .0105 : 10e5;
 			// System.out.println(vac + " " + vag + " " + sim.converged + " " + ic +
@@ -122,7 +122,7 @@ namespace Circuits {
 		}
 
 		public override void calculateCurrent() {
-			ic = (volts[cnode] - volts[gnode]) / CResistance;
+			ic = (volts[cnode] - volts[gnode]) / cresistance;
 			ia = (volts[anode] - volts[inode]) / aresistance;
 			ig = -ic - ia;
 		}

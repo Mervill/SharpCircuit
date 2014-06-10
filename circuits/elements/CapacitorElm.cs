@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Unfinished
 	public class CapacitorElm : CircuitElement {
 
 		public static readonly int FLAG_BACK_EULER = 2;
@@ -11,14 +12,14 @@ namespace Circuits {
 		/// <summary>
 		/// Capacitance (F)
 		/// </summary>
-		public double Capacitance{ get; set; }
+		public double capacitance{ get; set; }
 
 		private double compResistance;
 		private double voltdiff;
 		private double curSourceValue;
 
 		public CapacitorElm(CirSim s) : base (s) {
-			Capacitance = 1e-5;
+			capacitance = 1e-5;
 		}
 
 		bool isTrapezoidal() {
@@ -43,9 +44,9 @@ namespace Circuits {
 			// than backward euler but can cause oscillatory behavior
 			// if RC is small relative to the timestep.
 			if (isTrapezoidal()) {
-				compResistance = sim.timeStep / (2 * Capacitance);
+				compResistance = sim.timeStep / (2 * capacitance);
 			} else {
-				compResistance = sim.timeStep / Capacitance;
+				compResistance = sim.timeStep / capacitance;
 			}
 			sim.stampResistor(nodes[0], nodes[1], compResistance);
 			sim.stampRightSide(nodes[0]);
@@ -80,7 +81,7 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			arr[0] = "capacitor";
 			getBasicInfo(arr);
-			arr[3] = "C = " + getUnitText(Capacitance, "F");
+			arr[3] = "C = " + getUnitText(capacitance, "F");
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 			// double v = getVoltageDiff();
 			// arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");

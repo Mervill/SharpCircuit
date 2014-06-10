@@ -11,35 +11,35 @@ namespace Circuits {
 		/// <summary>
 		/// Resistance
 		/// </summary>
-		public double Resistance{ get; private set; }
+		public double resistance{ get; private set; }
 
 		/// <summary>
 		/// On Resistance (ohms)
 		/// </summary>
-		public double ROn{ get; set; }
+		public double r_on{ get; set; }
 
 		/// <summary>
 		/// Off Resistance (ohms)
 		/// </summary>
-		public double ROff{ get; set; }
+		public double r_off{ get; set; }
 
 		/// <summary>
 		/// <c>true</c> if buffer open; otherwise, <c>false</c>
 		/// </summary>
-		public bool Open{ get; private set; }
+		public bool open{ get; private set; }
 
 		public ElementLead lead2;
 		public ElementLead lead3;
 
-		public TriStateElm( CirSim s) : base(s) {
+		public TriStateElm(CirSim s) : base(s) {
 			lead2 = new ElementLead(this,2);
 			lead3 = new ElementLead(this,3);
-			ROn = 0.1;
-			ROff = 1e10;
+			r_on = 0.1;
+			r_off = 1e10;
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / Resistance;
+			current = (volts[0] - volts[1]) / resistance;
 		}
 
 		// we need this to be able to change the matrix for each step
@@ -54,9 +54,9 @@ namespace Circuits {
 		}
 
 		public override void doStep() {
-			Open = (volts[2] < 2.5);
-			Resistance = (Open) ? ROff : ROn;
-			sim.stampResistor(nodes[3], nodes[1], Resistance);
+			open = (volts[2] < 2.5);
+			resistance = (open) ? r_off : r_on;
+			sim.stampResistor(nodes[3], nodes[1], resistance);
 			sim.updateVoltageSource(0, nodes[3], voltSource, volts[0] > 2.5 ? 5 : 0);
 		}
 
@@ -74,7 +74,7 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "tri-state buffer";
-			arr[1] = Open ? "open" : "closed";
+			arr[1] = open ? "open" : "closed";
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[3] = "I = " + getCurrentDText(getCurrent());
 			arr[4] = "Vc = " + getVoltageText(volts[2]);

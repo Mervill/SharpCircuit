@@ -9,18 +9,18 @@ namespace Circuits {
 		/// <summary>
 		/// Number of inputs
 		/// </summary>
-		public int InputCount{ 
+		public int inputCount{ 
 			get {
-				return inputCount;
+				return _inputCount;
 			}
 			set {
-				inputCount = value;
+				_inputCount = value;
 				inLeads = newLeadArray(inputCount);
 			}
 		}
-		protected int inputCount;
+		protected int _inputCount;
 
-		public bool LastOutput{ get; set; }
+		public bool lastOutput{ get; set; }
 
 		public ElementLead[] inLeads;
 
@@ -69,7 +69,7 @@ namespace Circuits {
 			if (isInverting()) {
 				f = !f;
 			}
-			LastOutput = f;
+			lastOutput = f;
 			double res = f ? 5 : 0;
 			sim.updateVoltageSource(0, nodes[inputCount], voltSource, res);
 		}

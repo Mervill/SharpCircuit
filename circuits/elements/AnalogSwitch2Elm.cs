@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Unfinished
 	public class AnalogSwitch2Elm : AnalogSwitchElm {
 		
 		public AnalogSwitch2Elm(CirSim s) : base(s) {

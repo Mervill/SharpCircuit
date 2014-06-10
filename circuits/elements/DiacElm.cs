@@ -9,15 +9,34 @@ namespace Circuits {
 	// FIXME need to uncomment DiacElm line from CirSim.java
 	public class DiacElm : CircuitElement {
 
-		public double onresistance, offresistance, breakdown, holdcurrent;
-		public bool state;
+		/// <summary>
+		/// On resistance (ohms)
+		/// </summary>
+		public double onResistance{ get; set; }
+
+		/// <summary>
+		/// Off resistance (ohms)
+		/// </summary>
+		public double offResistance{ get; set; }
+
+		/// <summary>
+		/// Breakdown voltage (volts)
+		/// </summary>
+		public double breakdown{ get; set; }
+
+		/// <summary>
+		/// Hold current (amps)
+		/// </summary>
+		public double holdCurrent{ get; set; }
+
+		private bool state;
 
 		public DiacElm(CirSim s) : base(s) {
 			// FIXME need to adjust defaults to make sense for diac
-			offresistance = 1E9;
-			onresistance = 1E3;
+			offResistance = 1E9;
+			onResistance = 1E3;
 			breakdown = 1E3;
-			holdcurrent = 0.001;
+			holdCurrent = 0.001;
 			state = false;
 		}
 
@@ -28,15 +47,15 @@ namespace Circuits {
 		public override void calculateCurrent() {
 			double vd = volts[0] - volts[1];
 			if (state) {
-				current = vd / onresistance;
+				current = vd / onResistance;
 			} else {
-				current = vd / offresistance;
+				current = vd / offResistance;
 			}
 		}
 
 		public override void startIteration() {
 			double vd = volts[0] - volts[1];
-			if (Math.Abs(current) < holdcurrent) {
+			if (Math.Abs(current) < holdCurrent) {
 				state = false;
 			}
 			if (Math.Abs(vd) > breakdown) {
@@ -47,9 +66,9 @@ namespace Circuits {
 
 		public override void doStep() {
 			if (state) {
-				sim.stampResistor(nodes[0], nodes[1], onresistance);
+				sim.stampResistor(nodes[0], nodes[1], onResistance);
 			} else {
-				sim.stampResistor(nodes[0], nodes[1], offresistance);
+				sim.stampResistor(nodes[0], nodes[1], offResistance);
 			}
 		}
 
@@ -63,41 +82,11 @@ namespace Circuits {
 			arr[0] = "spark gap";
 			getBasicInfo(arr);
 			arr[3] = state ? "on" : "off";
-			arr[4] = "Ron = " + getUnitText(onresistance, CirSim.ohmString);
-			arr[5] = "Roff = " + getUnitText(offresistance, CirSim.ohmString);
+			arr[4] = "Ron = " + getUnitText(onResistance, CirSim.ohmString);
+			arr[5] = "Roff = " + getUnitText(offResistance, CirSim.ohmString);
 			arr[6] = "Vbrkdn = " + getUnitText(breakdown, "V");
-			arr[7] = "Ihold = " + getUnitText(holdcurrent, "A");
+			arr[7] = "Ihold = " + getUnitText(holdCurrent, "A");
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("On resistance (ohms)", onresistance, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Off resistance (ohms)", offresistance, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Breakdown voltage (volts)", breakdown, 0, 0);
-			}
-			if (n == 3) {
-				return new EditInfo("Hold current (amps)", holdcurrent, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (ei.value > 0 && n == 0) {
-				onresistance = ei.value;
-			}
-			if (ei.value > 0 && n == 1) {
-				offresistance = ei.value;
-			}
-			if (ei.value > 0 && n == 2) {
-				breakdown = ei.value;
-			}
-			if (ei.value > 0 && n == 3) {
-				holdcurrent = ei.value;
-			}
-		}*/
 	}
 }

@@ -5,45 +5,32 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class AnalogSwitchElm : CircuitElement {
-		public int FLAG_INVERT = 1;
-		public double resistance, r_on, r_off;
+
+		/// <summary>
+		/// Normally closed
+		/// </summary>
+		public static readonly int FLAG_INVERT = 1;
+
+		private double resistance;
+
+		public bool open{ get; protected set; }
+
+		/// <summary>
+		/// On Resistance (ohms)
+		/// </summary>
+		public double r_on{ get; set; }
+
+		/// <summary>
+		/// Off Resistance (ohms)
+		/// </summary>
+		public double r_off{ get; set; }
+
+		public ElementLead lead3;
 
 		public AnalogSwitchElm(CirSim s) : base(s) {
 			r_on = 20;
-			r_off = 1e10;
+			r_off = 1E10;
 		}
-
-		public bool open;
-		public ElementLead point3;
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			calcLeads(32);
-//			ps = new Point();
-//			int openhs = 16;
-//			point3 = interpPoint(point1, point2, .5, -openhs);
-//			lead3 = interpPoint(point1, point2, .5, -openhs / 2);
-//		}
-
-		/*public override void draw(Graphics g) {
-			int openhs = 16;
-			int hs = (open) ? openhs : 0;
-			setBbox(point1, point2, openhs);
-
-			draw2Leads(g);
-
-			g.setColor(lightGrayColor);
-			interpPoint(lead1, lead2, ps, 1, hs);
-			drawThickLine(g, lead1, ps);
-
-			setVoltageColor(g, volts[2]);
-			drawThickLine(g, point3, lead3);
-
-			if (!open) {
-				doDots(g);
-			}
-			drawPosts(g);
-		}*/
 
 		public override void calculateCurrent() {
 			current = (volts[0] - volts[1]) / resistance;
@@ -73,7 +60,7 @@ namespace Circuits {
 		}
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : point3;
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : lead3;
 		}
 
 		public override void getInfo(String[] arr) {
@@ -93,33 +80,5 @@ namespace Circuits {
 			return true;
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Normally closed",
-						(flags & FLAG_INVERT) != 0);
-				return ei;
-			}
-			if (n == 1) {
-				return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				flags = (ei.checkbox.getState()) ? (flags | FLAG_INVERT)
-						: (flags & ~FLAG_INVERT);
-			}
-			if (n == 1 && ei.value > 0) {
-				r_on = ei.value;
-			}
-			if (n == 2 && ei.value > 0) {
-				r_off = ei.value;
-			}
-		}*/
 	}
 }

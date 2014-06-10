@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Unfinished
 	public class SweepElm : CircuitElement {
 
 		public double maxV, maxF, minF, sweepTime, frequency;
@@ -17,7 +18,7 @@ namespace Circuits {
 			minF = 20;
 			maxF = 4000;
 			maxV = 5;
-			sweepTime = .1;
+			sweepTime = 0.1;
 			flags = FLAG_BIDIR;
 			reset();
 		}
@@ -55,9 +56,9 @@ namespace Circuits {
 
 		public override void startIteration() {
 			// has timestep been changed?
-			if (sim.timeStep != savedTimeStep) {
+			if(sim.timeStep != savedTimeStep)
 				setParams();
-			}
+			
 			v = Math.Sin(freqTime) * maxV;
 			freqTime += frequency * 2 * pi * sim.timeStep;
 			frequency = frequency * fmul + fadd;
@@ -123,8 +124,7 @@ namespace Circuits {
 			}
 			if (n == 5) {
 				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bidirectional",
-						(flags & FLAG_BIDIR) != 0);
+				ei.checkbox = new Checkbox("Bidirectional",(flags & FLAG_BIDIR) != 0);
 				return ei;
 			}
 			return null;

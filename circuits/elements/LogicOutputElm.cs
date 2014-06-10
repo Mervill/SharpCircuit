@@ -13,10 +13,10 @@ namespace Circuits {
 		/// <summary>
 		/// The Threshold Voltage.
 		/// </summary>
-		public double Threshold{ get; set; }
+		public double threshold{ get; set; }
 
 		public LogicOutputElm( CirSim s) : base(s) {
-			Threshold = 2.5;
+			threshold = 2.5;
 		}
 
 		public override int getLeadCount() {
@@ -47,7 +47,7 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "logic output";
-			arr[1] = (volts[0] < Threshold) ? "low" : "high";
+			arr[1] = (volts[0] < threshold) ? "low" : "high";
 			arr[2] = "V = " + getVoltageText(volts[0]);
 		}
 

@@ -10,6 +10,7 @@ namespace Circuits {
 		private double gridCurrentR = 6000;
 
 		public double currentp, currentg, currentc;
+		private double lastv0, lastv1, lastv2;
 
 		public ElementLead plate;
 		public ElementLead grid;
@@ -43,8 +44,6 @@ namespace Circuits {
 		public override double getPower() {
 			return (volts[0] - volts[2]) * current;
 		}
-
-		public double lastv0, lastv1, lastv2;
 
 		public override void doStep() {
 			double[] vs = new double[3];

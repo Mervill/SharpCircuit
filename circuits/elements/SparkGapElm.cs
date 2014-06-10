@@ -6,13 +6,33 @@ namespace Circuits {
 
 	public class SparkGapElm : CircuitElement {
 
-		public double resistance, onresistance, offresistance, breakdown, holdcurrent;
-		public bool state;
+		/// <summary>
+		/// On resistance (ohms)
+		/// </summary>
+		public double onresistance{ get; set; }
+
+		/// <summary>
+		/// Off resistance (ohms)
+		/// </summary>
+		public double offresistance{ get; set; }
+
+		/// <summary>
+		/// Breakdown voltage
+		/// </summary>
+		public double breakdown{ get; set; }
+
+		/// <summary>
+		/// Holding current (A)
+		/// </summary>
+		public double holdcurrent{ get; set; }
+
+		private double resistance;
+		private bool state;
 
 		public SparkGapElm( CirSim s) : base(s) {
-			offresistance = 1e9;
-			onresistance = 1e3;
-			breakdown = 1e3;
+			offresistance = 1E9;
+			onresistance = 1E3;
+			breakdown = 1E3;
 			holdcurrent = 0.001;
 			state = false;
 		}
@@ -60,36 +80,5 @@ namespace Circuits {
 			arr[6] = "Vbreakdown = " + getUnitText(breakdown, "V");
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("On resistance (ohms)", onresistance, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("Off resistance (ohms)", offresistance, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("Breakdown voltage", breakdown, 0, 0);
-			}
-			if (n == 3) {
-				return new EditInfo("Holding current (A)", holdcurrent, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (ei.value > 0 && n == 0) {
-				onresistance = ei.value;
-			}
-			if (ei.value > 0 && n == 1) {
-				offresistance = ei.value;
-			}
-			if (ei.value > 0 && n == 2) {
-				breakdown = ei.value;
-			}
-			if (ei.value > 0 && n == 3) {
-				holdcurrent = ei.value;
-			}
-		}*/
 	}
 }

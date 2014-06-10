@@ -9,20 +9,20 @@ namespace Circuits {
 		/// <summary>
 		/// Momentary Switch TODO: Fixme
 		/// </summary>
-		public bool Momentary{ get; private set; }
+		public bool momentary{ get; private set; }
 
 		// position 0 == closed, position 1 == open
 		protected int position, posCount;
 
 		public SwitchElm(CirSim s) : base(s) {
-			Momentary = false;
+			momentary = false;
 			position = 0;
 			posCount = 2;
 		}
 
 		public SwitchElm(CirSim s,bool mm) : base(s) {
 			position = (mm) ? 1 : 0;
-			Momentary = mm;
+			momentary = mm;
 			posCount = 2;
 		}
 
@@ -50,7 +50,7 @@ namespace Circuits {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = (Momentary) ? "push switch (SPST)" : "switch (SPST)";
+			arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
 			if (position == 1) {
 				arr[1] = "open";
 				arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());

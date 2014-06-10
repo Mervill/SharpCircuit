@@ -34,8 +34,6 @@ namespace Circuits {
 		private double vcrit;
 		private double lastvbc, lastvbe;
 
-		public int FLAG_FLIP = 1;
-
 		public ElementLead coll;
 		public ElementLead emit;
 
