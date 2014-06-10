@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[X]
+	// Test Prop	[X]
 	public class ResistorElm : CircuitElement {
 
 		/// <summary>

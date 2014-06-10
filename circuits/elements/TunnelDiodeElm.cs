@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class TunnelDiodeElm : CircuitElement {
 	
 		private static readonly double pvp = 0.1;

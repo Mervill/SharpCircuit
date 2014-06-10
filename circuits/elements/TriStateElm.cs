@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// contributed by Edward Calver
+	// Contributed by Edward Calver.
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class TriStateElm : CircuitElement {
 
 		/// <summary>

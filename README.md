@@ -21,6 +21,9 @@ Licence: MIT/Boost C++
 - Add new serialization system (JSON).
 - Test everything.
 - Fix Scope.cs object and ScopeElm.cs
+- Fix momentary switches.
+- Externalize deltatime
+- LogicInputElm
 
 **API notes**
 

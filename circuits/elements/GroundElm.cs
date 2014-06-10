@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class GroundElm : CircuitElement {
 
 		public GroundElm(CirSim s) : base(s) {

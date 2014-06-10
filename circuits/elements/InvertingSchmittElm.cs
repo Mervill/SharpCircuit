@@ -5,6 +5,12 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	// Contributed by Edward Calver.
+
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class InvertingSchmittElm : CircuitElement {
 
 		/// <summary>

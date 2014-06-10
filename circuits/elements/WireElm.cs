@@ -4,11 +4,15 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// Initializers	[_]
-	// Properties	[_]
-	// Leads		[_]
-	// Test Basic	[_]
-	// Test Prop	[_]
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[X]
+	// Test Prop	[X]
+	//
+	// Format		[_]
+	// Flags		[_]
+	// Prop:Ranges	[_]
 	public class WireElm : CircuitElement {
 
 		public WireElm(CirSim s) : base(s) {

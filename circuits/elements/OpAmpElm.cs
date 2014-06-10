@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class OpAmpElm : CircuitElement {
 
-		public static readonly int FLAG_SWAP = 1;
 		public static readonly int FLAG_LOWGAIN = 4;
 
 		private double lastvd;

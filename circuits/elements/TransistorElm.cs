@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class TransistorElm : CircuitElement {
 
 		private static readonly double leakage = 1E-13; // 1e-6;

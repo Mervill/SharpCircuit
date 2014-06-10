@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class TransformerElm : CircuitElement {
 
 		public static readonly int FLAG_BACK_EULER = 2;

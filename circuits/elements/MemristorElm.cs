@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Circuits {
-	
+
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class MemristorElm : CircuitElement {
 
 		/// <summary>
@@ -61,8 +66,8 @@ namespace Circuits {
 			r_on = 100;
 			r_off = 160 * r_on;
 			_dopeWidth = 0;
-			totalWidth = 10E-9; // meters
-			mobility = 1E-10; // m^2/sV
+			_totalWidth = 10E-9; // meters
+			_mobility = 1E-10; // m^2/sV
 			resistance = 100;
 		}
 
@@ -79,13 +84,13 @@ namespace Circuits {
 		}
 
 		public override void startIteration() {
-			double wd = _dopeWidth / totalWidth;
-			_dopeWidth += sim.timeStep * mobility * r_on * current / totalWidth;
+			double wd = _dopeWidth / _totalWidth;
+			_dopeWidth += sim.timeStep * _mobility * r_on * current / _totalWidth;
 			if (_dopeWidth < 0) {
 				_dopeWidth = 0;
 			}
-			if (_dopeWidth > totalWidth) {
-				_dopeWidth = totalWidth;
+			if (_dopeWidth > _totalWidth) {
+				_dopeWidth = _totalWidth;
 			}
 			resistance = r_on * wd + r_off * (1 - wd);
 		}

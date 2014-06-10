@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class DiodeElm : CircuitElement {
 
 		protected Diode diode;
@@ -11,19 +16,37 @@ namespace Circuits {
 		/// <summary>
 		/// Fwd Voltage @ 1A
 		/// </summary>
-		public double forwardDrop{ get; set; }
+		public double forwardDrop{ 
+			get{
+				return _forwardDrop;
+			}
+			set{
+				forwardDrop = value;
+				setup();
+			}
+		}
+		protected double _forwardDrop;
 
 		protected double defaultdrop = 0.805904783;
 
 		/// <summary>
 		/// Zener Voltage @ 5mA
 		/// </summary>
-		protected double zvoltage{ get; set; }
+		public double zvoltage{ 
+			get{
+				return _zvoltage;
+			}
+			set{
+				_zvoltage = value;
+				setup();
+			}
+		}
+		protected double _zvoltage;
 
 		public DiodeElm(CirSim s) : base(s) {
 			diode = new Diode(sim);
-			forwardDrop = defaultdrop;
-			zvoltage = 0;
+			_forwardDrop = defaultdrop;
+			_zvoltage = 0;
 			setup();
 		}
 
@@ -32,7 +55,7 @@ namespace Circuits {
 		}
 
 		public virtual void setup() {
-			diode.setup(forwardDrop, zvoltage);
+			diode.setup(_forwardDrop, _zvoltage);
 		}
 
 		public override void reset() {
@@ -57,7 +80,7 @@ namespace Circuits {
 			arr[1] = "I = " + getCurrentText(getCurrent());
 			arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 			arr[3] = "P = " + getUnitText(getPower(), "W");
-			arr[4] = "Vf = " + getVoltageText(forwardDrop);
+			arr[4] = "Vf = " + getVoltageText(_forwardDrop);
 		}
 
 	}

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class VoltageElm : CircuitElement {
 
 		public enum WaveformType {
@@ -68,7 +73,7 @@ namespace Circuits {
 		/// </summary>
 		public double PhaseShift{ 
 			get{
-				return phaseShift;
+				return phaseShift * 180 / pi;
 			} 
 			set{
 				phaseShift = value * pi / 180;
@@ -81,7 +86,7 @@ namespace Circuits {
 		/// </summary>
 		public double DutyCycle{ 
 			get{
-				return dutyCycle;
+				return dutyCycle * 100;
 			} 
 			set{
 				dutyCycle = value * 0.01;

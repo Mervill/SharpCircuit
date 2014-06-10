@@ -7,6 +7,12 @@ namespace Circuits {
 	// Stub implementation of DiacElm, based on SparkGapElm
 	// FIXME need to add DiacElm.java to srclist
 	// FIXME need to uncomment DiacElm line from CirSim.java
+
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class DiacElm : CircuitElement {
 
 		/// <summary>

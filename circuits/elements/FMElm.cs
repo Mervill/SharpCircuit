@@ -6,6 +6,11 @@ namespace Circuits {
 
 	// contributed by Edward Calver
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class FMElm : CircuitElement {
 
 		/// <summary>

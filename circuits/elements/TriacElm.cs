@@ -15,6 +15,11 @@ namespace Circuits {
 	// 3, 2 = diode
 	// 2, 1 = 50 ohm resistor
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class TriacElm : CircuitElement {
 
 		private static readonly int anode = 0;

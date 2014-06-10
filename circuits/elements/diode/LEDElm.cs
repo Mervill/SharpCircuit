@@ -7,7 +7,7 @@ namespace Circuits {
 	public class LEDElm : DiodeElm {
 
 		public LEDElm( CirSim s) : base(s) {
-			forwardDrop = 2.1024259;
+			_forwardDrop = 2.1024259;
 			setup();
 		}
 

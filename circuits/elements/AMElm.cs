@@ -5,6 +5,12 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	// Contributed by Edward Calver.
+
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class AMElm : CircuitElement {
 
 		/// <summary>

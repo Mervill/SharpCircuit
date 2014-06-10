@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class PhotoResistorElm : CircuitElement {
 
 		// Stub PhotoResistorElm based on SparkGapElm.
@@ -60,24 +65,5 @@ namespace Circuits {
 			arr[5] = "Roff = " + getUnitText(maxresistance, CirSim.ohmString);
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			// ohmString doesn't work here on linux
-			if (n == 0) {
-				return new EditInfo("", minresistance, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("", maxresistance, 0, 0);
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (ei.value > 0 && n == 0) {
-				minresistance = ei.value;
-			}
-			if (ei.value > 0 && n == 1) {
-				maxresistance = ei.value;
-			}
-		}*/
 	}
 }

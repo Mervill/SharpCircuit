@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class MosfetElm : CircuitElement {
 
 		public static readonly int FLAG_PNP = 1;
@@ -18,7 +23,15 @@ namespace Circuits {
 		/// <summary>
 		/// Threshold Voltage
 		/// </summary>
-		public double threshold{ get; set; }
+		public double threshold{ 
+			get {
+				return pnp * _threshold;
+			} 
+			set {
+				_threshold = pnp * value;
+			} 
+		}
+		private double _threshold;
 
 		public ElementLead src;
 		public ElementLead drn;
@@ -28,7 +41,7 @@ namespace Circuits {
 			drn = new ElementLead(this,2);
 			pnp = (pnpflag) ? -1 : 1;
 			flags = (pnpflag) ? FLAG_PNP : 0;
-			threshold = getDefaultThreshold();
+			_threshold = getDefaultThreshold();
 		}
 
 		public virtual double getDefaultThreshold() {
@@ -111,24 +124,24 @@ namespace Circuits {
 				sim.stop("JFET is reverse biased!", this);
 				return;
 			}
-			if (vgs < threshold) {
+			if (vgs < _threshold) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
 				Gds = 1e-8;
 				ids = vds * Gds;
 				mode = 0;
-			} else if (vds < vgs - threshold) {
+			} else if (vds < vgs - _threshold) {
 				// linear
-				ids = beta * ((vgs - threshold) * vds - vds * vds * .5);
+				ids = beta * ((vgs - _threshold) * vds - vds * vds * .5);
 				gm = beta * vds;
-				Gds = beta * (vgs - vds - threshold);
+				Gds = beta * (vgs - vds - _threshold);
 				mode = 1;
 			} else {
 				// saturation; Gds = 0
-				gm = beta * (vgs - threshold);
+				gm = beta * (vgs - _threshold);
 				// use very small Gds to avoid nonconvergence
 				Gds = 1e-8;
-				ids = 0.5 * beta * (vgs - threshold) * (vgs - threshold) + (vds - (vgs - threshold)) * Gds;
+				ids = 0.5 * beta * (vgs - _threshold) * (vgs - _threshold) + (vds - (vgs - _threshold)) * Gds;
 				mode = 2;
 			}
 			double rs = -pnp * ids + Gds * realvds + gm * realvgs;
@@ -152,7 +165,7 @@ namespace Circuits {
 
 		public void getFetInfo(String[] arr, String n) {
 			arr[0] = ((pnp == -1) ? "p-" : "n-") + n;
-			arr[0] += " (Vt = " + getVoltageText(pnp * threshold) + ")";
+			arr[0] += " (Vt = " + getVoltageText(pnp * _threshold) + ")";
 			arr[1] = ((pnp == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
 			arr[2] = "Vgs = " + getVoltageText(volts[0] - volts[pnp == -1 ? 2 : 1]);
 			arr[3] = ((pnp == 1) ? "Vds = " : "Vsd = ") + getVoltageText(volts[2] - volts[1]);

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class LogicOutputElm : CircuitElement {
 
 		public static readonly int FLAG_TERNARY = 1;
@@ -36,9 +41,8 @@ namespace Circuits {
 		}
 
 		public override void stamp() {
-			if (needsPullDown()) {
+			if(needsPullDown())
 				sim.stampResistor(nodes[0], 0, 1E6);
-			}
 		}
 
 		public override double getVoltageDiff() {

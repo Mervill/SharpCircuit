@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public abstract class GateElm : CircuitElement {
 
 		/// <summary>
@@ -16,6 +21,7 @@ namespace Circuits {
 			set {
 				_inputCount = value;
 				inLeads = newLeadArray(inputCount);
+				allocNodes();
 			}
 		}
 		protected int _inputCount;
