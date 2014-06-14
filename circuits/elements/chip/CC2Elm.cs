@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class CC2Elm : ChipElm {
 
-		public double gain;
+		private double gain;
 
 		public CC2Elm(CirSim s) : base(s) {
 			gain = 1;

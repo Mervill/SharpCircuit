@@ -30,7 +30,7 @@ namespace Circuits {
 			}
 			set {
 				_inductance = value;
-				ind.setup(_inductance,coilCurrent,Inductor.FLAG_BACK_EULER);
+				ind.setup(_inductance,coilCurrent,true);
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace Circuits {
 
 			ind = new Inductor(sim);
 			inductance = 0.2;
-			ind.setup(inductance, 0, Inductor.FLAG_BACK_EULER);
+			ind.setup(inductance, 0, true);
 			onCurrent = 0.02;
 			r_on = 0.05;
 			r_off = 1e6;

@@ -6,20 +6,19 @@ namespace Circuits {
 
 	public class Switch2Elm : SwitchElm {
 
-		public static int FLAG_CENTER_OFF = 1;
-
+		public bool hasCenterOff { get; set; }
 		public int link{ get; set; }
 
 		public ElementLead[] swposts;
 
 		public Switch2Elm(CirSim s) : base(s) {
 			swposts = newLeadArray(2);
-			posCount = hasCenterOff() ? 3 : 2;
+			posCount = hasCenterOff ? 3 : 2;
 		}
 
 		public Switch2Elm(CirSim s,bool mm) : base(s,mm) {
 			swposts = newLeadArray(2);
-			posCount = hasCenterOff() ? 3 : 2;
+			posCount = hasCenterOff ? 3 : 2;
 		}
 
 		public override ElementLead getLead(int n) {
@@ -75,24 +74,5 @@ namespace Circuits {
 			arr[1] = "I = " + getCurrentDText(getCurrent());
 		}
 
-		/*public void setEditValue(int n, EditInfo ei) {
-			if (n == 1) {
-				flags &= ~FLAG_CENTER_OFF;
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_CENTER_OFF;
-				}
-				if (hasCenterOff()) {
-					momentary = false;
-				}
-				setPoints();
-			} else {
-				super.setEditValue(n, ei);
-			}
-		}*/
-
-		bool hasCenterOff() {
-			return (flags & FLAG_CENTER_OFF) != 0;
-		}
-		
 	}
 }

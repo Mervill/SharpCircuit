@@ -6,10 +6,10 @@ namespace Circuits {
 
 	public class Inductor {
 
-		public readonly static int FLAG_BACK_EULER = 2;
+		[System.ComponentModel.DefaultValue(true)]
+		public bool isTrapezoidal { get; set; }
 
 		public int[] nodes;
-		public int flags;
 		public CirSim sim;
 
 		public double inductance;
@@ -22,14 +22,10 @@ namespace Circuits {
 			nodes = new int[2];
 		}
 
-		public void setup(double ic, double cr, int f) {
+		public void setup(double ic, double cr, bool trapezoid) {
 			inductance = ic;
 			current = cr;
-			flags = f;
-		}
-
-		public bool isTrapezoidal() {
-			return (flags & FLAG_BACK_EULER) == 0;
+			isTrapezoidal = trapezoid;
 		}
 
 		public void reset() {
@@ -44,7 +40,7 @@ namespace Circuits {
 			// The oscillation is a real problem in circuits with switches.
 			nodes[0] = n0;
 			nodes[1] = n1;
-			if (isTrapezoidal()) {
+			if (isTrapezoidal) {
 				compResistance = 2 * inductance / sim.timeStep;
 			} else {
 				// backward euler
@@ -60,7 +56,7 @@ namespace Circuits {
 		}
 
 		public void startIteration(double voltdiff) {
-			if (isTrapezoidal()) {
+			if (isTrapezoidal) {
 				curSourceValue = voltdiff / compResistance + current;
 			} else {
 				// backward euler

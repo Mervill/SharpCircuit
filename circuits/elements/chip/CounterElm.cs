@@ -6,8 +6,20 @@ namespace Circuits {
 
 	public class CounterElm : ChipElm {
 
-		public int FLAG_ENABLE = 2;
-		public bool invertreset = false;
+		public bool hasEnable { 
+			get {
+				return _hasEnable;
+			}
+			set {
+				_hasEnable = value;
+				setupPins();
+				allocNodes();
+			}
+		}
+
+		public bool invertReset { get; set; }
+
+		private bool _hasEnable;
 
 		public CounterElm(CirSim s) : base(s) {
 			
@@ -32,69 +44,17 @@ namespace Circuits {
 				pins[ii] = new Pin("Q" + (bits - i - 1));
 				pins[ii].output = true;
 			}
-			if (hasEnable()) {
+			if (hasEnable) {
 				pins[bits + 2] = new Pin("En");
 			}
 			allocNodes();
 		}
 
 		public override int getLeadCount() {
-			if (hasEnable()) {
+			if (hasEnable) {
 				return bits + 3;
 			}
 			return bits + 2;
-		}
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Flip X", (flags & FLAG_FLIP_X) != 0);
-				return ei;
-			}
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Flip Y", (flags & FLAG_FLIP_Y) != 0);
-				return ei;
-			}
-			if (n == 2) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Invert reset pin", invertreset);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_FLIP_X;
-				} else {
-					flags &= ~FLAG_FLIP_X;
-				}
-				setPoints();
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_FLIP_Y;
-				} else {
-					flags &= ~FLAG_FLIP_Y;
-				}
-				setPoints();
-			}
-			if (n == 2) {
-				if (ei.checkbox.getState()) {
-					invertreset = true;
-					pins[1].bubble = true;
-				} else {
-					invertreset = false;
-					pins[1].bubble = false;
-				}
-				setPoints();
-			}
-		}*/
-
-		public bool hasEnable() {
-			return (flags & FLAG_ENABLE) != 0;
 		}
 
 		public override int getVoltageSourceCount() {
@@ -103,7 +63,7 @@ namespace Circuits {
 
 		public override void execute() {
 			bool en = true;
-			if (hasEnable()) {
+			if (hasEnable) {
 				en = pins[bits + 2].value;
 			}
 			if (pins[0].value && !lastClock && en) {
@@ -117,7 +77,7 @@ namespace Circuits {
 					pins[ii].value = false;
 				}
 			}
-			if (!pins[1].value == invertreset) {
+			if (!pins[1].value == invertReset) {
 				int i;
 				for (i = 0; i != bits; i++) {
 					pins[i + 2].value = false;

@@ -11,8 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class OpAmpElm : CircuitElement {
 
-		public static readonly int FLAG_LOWGAIN = 4;
-
 		/// <summary>
 		/// Max Output (V)
 		/// </summary>
@@ -32,13 +30,11 @@ namespace Circuits {
 		public OpAmpElm(CirSim s) : base(s) {
 			maxOut = 15;
 			minOut = -15;
-			setGain();
+			gain = 100000;
 		}
 
-		void setGain() {
-			// Gain of 100000 breaks e-amp-dfdx.txt
-			// Gain was 1000, but it broke amp-schmitt.txt
-			gain = ((flags & FLAG_LOWGAIN) != 0) ? 1000 : 100000;
+		public OpAmpElm(CirSim s,bool lowGain) : this(s) {
+			gain = (lowGain) ? 1000 : 100000;
 		}
 
 		public override bool nonLinear() {

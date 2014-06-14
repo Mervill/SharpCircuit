@@ -14,7 +14,7 @@ namespace Circuits {
 		/// <summary>
 		/// Normally closed
 		/// </summary>
-		public static readonly int FLAG_INVERT = 1;
+		public bool invert { get; set; }
 
 		/// <summary>
 		/// On Resistance (ohms)
@@ -53,7 +53,7 @@ namespace Circuits {
 
 		public override void doStep() {
 			open = (volts[2] < 2.5);
-			if ((flags & FLAG_INVERT) != 0) {
+			if (invert) {
 				open = !open;
 			}
 			resistance = (open) ? r_off : r_on;

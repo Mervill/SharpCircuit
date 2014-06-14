@@ -11,8 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class TransformerElm : CircuitElement {
 
-		public static readonly int FLAG_BACK_EULER = 2;
-
 		/// <summary>
 		/// Primary Inductance (H)
 		/// </summary>
@@ -28,11 +26,15 @@ namespace Circuits {
 		/// </summary>
 		public double couplingCoef{ get; set; }
 
+		[System.ComponentModel.DefaultValue(true)]
+		public bool isTrapezoidal { get; set; }
+
 		public ElementLead[] ptEnds;
 
 		new public double[] current;
 
 		private double a1, a2, a3, a4;
+		private double curSourceValue1, curSourceValue2;
 
 		public TransformerElm( CirSim s) : base(s) {
 			ptEnds = newLeadArray(getLeadCount());
@@ -40,26 +42,21 @@ namespace Circuits {
 			ratio = 1;
 			couplingCoef = 0.999;
 			current = new double[2];
-
 		}
 
-		public bool isTrapezoidal() {
-			return (flags & FLAG_BACK_EULER) == 0;
-		}
-
-		override public ElementLead getLead(int n) {
+		public override ElementLead getLead(int n) {
 			return ptEnds[n];
 		}
 
-		override public int getLeadCount() {
+		public override int getLeadCount() {
 			return 4;
 		}
 
-		override public void reset() {
+		public override void reset() {
 			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
 
-		override public void stamp() {
+		public override void stamp() {
 			// equations for transformer:
 			// v1 = L1 di1/dt + M di2/dt
 			// v2 = M di1/dt + L2 di2/dt
@@ -92,7 +89,7 @@ namespace Circuits {
 			double m = couplingCoef * Math.Sqrt(l1 * l2);
 			// build inverted matrix
 			double deti = 1 / (l1 * l2 - m * m);
-			double ts = isTrapezoidal() ? sim.timeStep / 2 : sim.timeStep;
+			double ts = isTrapezoidal ? sim.timeStep / 2 : sim.timeStep;
 			a1 = l2 * deti * ts; // we multiply dt/2 into a1..a4 here
 			a2 = -m * deti * ts;
 			a3 = -m * deti * ts;
@@ -107,10 +104,10 @@ namespace Circuits {
 			sim.stampRightSide(nodes[3]);
 		}
 
-		override public void startIteration() {
+		public override void startIteration() {
 			double voltdiff1 = volts[0] - volts[2];
 			double voltdiff2 = volts[1] - volts[3];
-			if (isTrapezoidal()) {
+			if (isTrapezoidal) {
 				curSourceValue1 = voltdiff1 * a1 + voltdiff2 * a2 + current[0];
 				curSourceValue2 = voltdiff1 * a3 + voltdiff2 * a4 + current[1];
 			} else {
@@ -119,9 +116,7 @@ namespace Circuits {
 			}
 		}
 
-		public double curSourceValue1, curSourceValue2;
-
-		override public void doStep() {
+		public override void doStep() {
 			sim.stampCurrentSource(nodes[0], nodes[2], curSourceValue1);
 			sim.stampCurrentSource(nodes[1], nodes[3], curSourceValue2);
 		}

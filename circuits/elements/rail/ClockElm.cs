@@ -10,7 +10,6 @@ namespace Circuits {
 			MaxVoltage = 2.5;
 			Bias = 2.5;
 			frequency = 100;
-			flags |= FLAG_CLOCK;
 		}
 		
 	}

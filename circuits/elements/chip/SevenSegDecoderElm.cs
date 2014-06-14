@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class SevenSegDecoderElm : ChipElm {
 
-		public static bool[,] symbols = {
+		private static bool[,] symbols = {
 				{ true, true, true, true, true, true, false },// 0
 				{ false, true, true, false, false, false, false },// 1
 				{ true, true, false, true, true, false, true },// 2

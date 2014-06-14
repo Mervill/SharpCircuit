@@ -8,9 +8,9 @@ namespace Circuits {
 
 	public class PisoShiftElm : ChipElm {
 
-		public short data = 0;// Lack of unsigned types sucks
-		public bool clockstate = false;
-		public bool modestate = false;
+		private short data = 0;// Lack of unsigned types sucks
+		private bool clockstate = false;
+		private bool modestate = false;
 
 		public PisoShiftElm(CirSim s) : base(s) {
 

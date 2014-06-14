@@ -6,7 +6,17 @@ namespace Circuits {
 
 	public class TimerElm : ChipElm {
 
-		public int FLAG_RESET = 2;
+		public bool hasResetPin { 
+			get {
+				return _hasReset;
+			}
+			set {
+				_hasReset = value;
+				setupPins();
+				allocNodes();
+			}
+		}
+
 		public int N_DIS = 0;
 		public int N_TRIG = 1;
 		public int N_THRES = 2;
@@ -15,14 +25,12 @@ namespace Circuits {
 		public int N_OUT = 5;
 		public int N_RST = 6;
 
+		private bool _hasReset = true;
+
 		private bool setOut, @out;
 
 		public TimerElm(CirSim s) : base(s) {
 
-		}
-
-		public override int getDefaultFlags() {
-			return FLAG_RESET;
 		}
 		
 		public override String getChipName() {
@@ -44,10 +52,6 @@ namespace Circuits {
 
 		public override bool nonLinear() {
 			return true;
-		}
-
-		public bool hasReset() {
-			return (flags & FLAG_RESET) != 0;
 		}
 
 		public override void stamp() {
@@ -75,7 +79,7 @@ namespace Circuits {
 			if (volts[N_CTL] / 2 > volts[N_TRIG]) {
 				setOut = @out = true;
 			}
-			if (volts[N_THRES] > volts[N_CTL] || (hasReset() && volts[N_RST] < .7)) {
+			if (volts[N_THRES] > volts[N_CTL] || (hasResetPin && volts[N_RST] < .7)) {
 				@out = false;
 			}
 		}
@@ -94,7 +98,7 @@ namespace Circuits {
 		}
 
 		public override int getLeadCount() {
-			return hasReset() ? 7 : 6;
+			return hasResetPin ? 7 : 6;
 		}
 
 		public override int getVoltageSourceCount() {

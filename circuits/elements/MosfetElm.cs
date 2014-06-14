@@ -11,36 +11,34 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class MosfetElm : CircuitElement {
 
-		public static readonly int FLAG_PNP = 1;
-
 		/// <summary>
 		/// Threshold Voltage
 		/// </summary>
 		public double threshold{ 
 			get {
-				return pnp * _threshold;
+				return (pnp ? -1 : 1) * _threshold;
 			} 
 			set {
-				_threshold = pnp * value;
+				_threshold = (pnp ? -1 : 1) * value;
 			} 
 		}
+
 		private double _threshold;
 
 		public ElementLead src;
 		public ElementLead drn;
 
-		private int pnp;
+		private bool pnp;
 		private double lastv1;
 		private double lastv2;
 		private double ids;
 		private int mode;
 		private double gm;
 
-		public MosfetElm(CirSim s,bool pnpflag) : base(s) {
+		public MosfetElm(CirSim s,bool isPNP) : base(s) {
 			src = new ElementLead(this,1);
 			drn = new ElementLead(this,2);
-			pnp = (pnpflag) ? -1 : 1;
-			flags = (pnpflag) ? FLAG_PNP : 0;
+			pnp = isPNP;
 			_threshold = getDefaultThreshold();
 		}
 
@@ -100,7 +98,7 @@ namespace Circuits {
 			}
 			int source = 1;
 			int drain = 2;
-			if (pnp * vs[1] > pnp * vs[2]) {
+			if ((pnp ? -1 : 1) * vs[1] > (pnp ? -1 : 1) * vs[2]) {
 				source = 2;
 				drain = 1;
 			}
@@ -114,8 +112,8 @@ namespace Circuits {
 			lastv2 = vs[2];
 			double realvgs = vgs;
 			double realvds = vds;
-			vgs *= pnp;
-			vds *= pnp;
+			vgs *= (pnp ? -1 : 1);
+			vds *= (pnp ? -1 : 1);
 			ids = 0;
 			gm = 0;
 			double Gds = 0;
@@ -144,7 +142,7 @@ namespace Circuits {
 				ids = 0.5 * beta * (vgs - _threshold) * (vgs - _threshold) + (vds - (vgs - _threshold)) * Gds;
 				mode = 2;
 			}
-			double rs = -pnp * ids + Gds * realvds + gm * realvgs;
+			double rs = -(pnp ? -1 : 1) * ids + Gds * realvds + gm * realvgs;
 			// System.out.println("M " + vds + " " + vgs + " " + ids + " " + gm +
 			// " "+ Gds + " " + volts[0] + " " + volts[1] + " " + volts[2] + " " +
 			// source + " " + rs + " " + this);
@@ -158,17 +156,17 @@ namespace Circuits {
 
 			sim.stampRightSide(nodes[drain], rs);
 			sim.stampRightSide(nodes[source], -rs);
-			if (source == 2 && pnp == 1 || source == 1 && pnp == -1) {
+			if (source == 2 && (pnp ? -1 : 1) == 1 || source == 1 && (pnp ? -1 : 1) == -1) {
 				ids = -ids;
 			}
 		}
 
 		public void getFetInfo(String[] arr, String n) {
-			arr[0] = ((pnp == -1) ? "p-" : "n-") + n;
-			arr[0] += " (Vt = " + getVoltageText(pnp * _threshold) + ")";
-			arr[1] = ((pnp == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
-			arr[2] = "Vgs = " + getVoltageText(volts[0] - volts[pnp == -1 ? 2 : 1]);
-			arr[3] = ((pnp == 1) ? "Vds = " : "Vsd = ") + getVoltageText(volts[2] - volts[1]);
+			arr[0] = (((pnp ? -1 : 1) == -1) ? "p-" : "n-") + n;
+			arr[0] += " (Vt = " + getVoltageText((pnp ? -1 : 1) * _threshold) + ")";
+			arr[1] = (((pnp ? -1 : 1) == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
+			arr[2] = "Vgs = " + getVoltageText(volts[0] - volts[(pnp ? -1 : 1) == -1 ? 2 : 1]);
+			arr[3] = (((pnp ? -1 : 1) == 1) ? "Vds = " : "Vsd = ") + getVoltageText(volts[2] - volts[1]);
 			arr[4] = (mode == 0) ? "off" : (mode == 1) ? "linear" : "saturation";
 			arr[5] = "gm = " + getUnitText(gm, "A/V");
 		}

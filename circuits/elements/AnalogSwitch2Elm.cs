@@ -37,7 +37,7 @@ namespace Circuits {
 
 		public override void doStep() {
 			open = (volts[3] < 2.5);
-			if ((flags & FLAG_INVERT) != 0) {
+			if (invert) {
 				open = !open;
 			}
 			if (open) {

@@ -6,14 +6,21 @@ namespace Circuits {
 
 	public class JKFlipFlopElm : ChipElm {
 
-		public int FLAG_RESET = 2;
+		public bool hasResetPin { 
+			get {
+				return _hasReset;
+			}
+			set {
+				_hasReset = value;
+				setupPins();
+				allocNodes();
+			}
+		}
+
+		private bool _hasReset;
 
 		public JKFlipFlopElm(CirSim s) : base(s) {
 			
-		}
-		
-		public bool hasReset() {
-			return (flags & FLAG_RESET) != 0;
 		}
 		
 		public override String getChipName() {
@@ -32,13 +39,13 @@ namespace Circuits {
 			pins[4].output = true;
 			pins[4].lineOver = true;
 
-			if (hasReset()) {
+			if (hasResetPin) {
 				pins[5] = new Pin("R");
 			}
 		}
 
 		public override int getLeadCount() {
-			return 5 + (hasReset() ? 1 : 0);
+			return 5 + (hasResetPin ? 1 : 0);
 		}
 
 		public override int getVoltageSourceCount() {
@@ -62,7 +69,7 @@ namespace Circuits {
 			}
 			lastClock = pins[1].value;
 
-			if (hasReset()) {
+			if (hasResetPin) {
 				if (pins[5].value) {
 					pins[3].value = false;
 					pins[4].value = true;
@@ -70,30 +77,5 @@ namespace Circuits {
 			}
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 2) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Reset Pin", hasReset());
-				return ei;
-			}
-
-			return super.getEditInfo(n);
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 2) {
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_RESET;
-				} else {
-					flags &= ~FLAG_RESET;
-				}
-
-				setupPins();
-				allocNodes();
-				setPoints();
-			}
-
-			super.setEditValue(n, ei);
-		}*/
 	}
 }

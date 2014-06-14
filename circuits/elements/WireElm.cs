@@ -11,7 +11,6 @@ namespace Circuits {
 	// Test Prop	[X]
 	//
 	// Format		[_]
-	// Flags		[_]
 	// Prop:Contd	[_]
 	public class WireElm : CircuitElement {
 

@@ -24,6 +24,7 @@ namespace Circuits {
 				allocNodes();
 			}
 		}
+
 		protected int _inputCount;
 
 		public bool lastOutput{ get; set; }

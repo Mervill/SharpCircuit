@@ -11,9 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class CapacitorElm : CircuitElement {
 
-		// true by default?
-		public static readonly int FLAG_BACK_EULER = 2;
-
 		/// <summary>
 		/// Capacitance (F)
 		/// </summary>
@@ -27,6 +24,9 @@ namespace Circuits {
 			}
 		}
 
+		[System.ComponentModel.DefaultValue(true)]
+		public bool isTrapezoidal { get; set; }
+
 		private double _capacitance;
 
 		private double compResistance;
@@ -35,10 +35,6 @@ namespace Circuits {
 
 		public CapacitorElm(CirSim s) : base (s) {
 			capacitance = 1e-5;
-		}
-
-		bool isTrapezoidal() {
-			return (flags & FLAG_BACK_EULER) == 0;
 		}
 
 		public override void setNodeVoltage(int n, double c) {
@@ -58,7 +54,7 @@ namespace Circuits {
 			// parallel with a resistor. Trapezoidal is more accurate
 			// than backward euler but can cause oscillatory behavior
 			// if RC is small relative to the timestep.
-			if (isTrapezoidal()) {
+			if (isTrapezoidal) {
 				compResistance = sim.timeStep / (2 * capacitance);
 			} else {
 				compResistance = sim.timeStep / capacitance;
@@ -69,7 +65,7 @@ namespace Circuits {
 		}
 
 		public override void startIteration() {
-			if (isTrapezoidal()) {
+			if (isTrapezoidal) {
 				curSourceValue = -voltdiff / compResistance - current;
 			} else {
 				curSourceValue = -voltdiff / compResistance;

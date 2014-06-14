@@ -11,8 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class RailElm : VoltageElm {
 
-		public static readonly int FLAG_CLOCK = 1;
-
 		public RailElm(CirSim s,WaveType wf) : base(s,wf) {
 
 		}

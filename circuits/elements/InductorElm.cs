@@ -21,7 +21,7 @@ namespace Circuits {
 		public InductorElm(CirSim s) : base(s) {
 			ind = new Inductor(sim);
 			inductance = 1;
-			ind.setup(inductance, current, flags);
+			ind.setup(inductance, current, true);
 		}
 
 		public override void reset() {

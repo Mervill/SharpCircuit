@@ -16,7 +16,7 @@ namespace Circuits {
 		protected double[] volts;
 		protected double current;
 		
-		public int flags, voltSource;
+		public int voltSource;
 		public ElementLead lead0;
 		public ElementLead lead1;
 
@@ -24,7 +24,6 @@ namespace Circuits {
 			lead0 = new ElementLead(this,0);
 			lead1 = new ElementLead(this,1);
 
-			flags = getDefaultFlags();
 			allocNodes();
 
 			sim = s;
@@ -44,10 +43,6 @@ namespace Circuits {
 		public virtual void getInfo(String[] arr){ }
 		public virtual void calculateCurrent(){ }
 		public virtual void stamp(){ }
-
-		public virtual int getDefaultFlags() {
-			return 0;
-		}
 
 		public virtual void allocNodes() {
 			nodes = new int[getLeadCount() + getInternalNodeCount()];

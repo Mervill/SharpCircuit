@@ -11,9 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class SweepElm : CircuitElement {
 
-		public int FLAG_LOG = 1; // Logarithmic
-		public int FLAG_BIDIR = 2; // Bidirectional
-
 		/// <summary>
 		/// Max Frequency (Hz)
 		/// </summary>
@@ -46,6 +43,11 @@ namespace Circuits {
 			}
 		}
 
+		public bool logarithmic { get; set; }
+
+		[System.ComponentModel.DefaultValue(true)]
+		public bool bidirectional { get; set; }
+
 		/// <summary>
 		/// Sweep Time (s)
 		/// </summary>
@@ -70,7 +72,6 @@ namespace Circuits {
 			maxF = 4000;
 			maxV = 5;
 			sweepTime = 0.1;
-			flags = FLAG_BIDIR;
 			reset();
 		}
 
@@ -88,7 +89,7 @@ namespace Circuits {
 				freqTime = 0;
 				dir = 1;
 			}
-			if ((flags & FLAG_LOG) == 0) {
+			if (logarithmic) {
 				fadd = dir * sim.timeStep * (maxF - minF) / sweepTime;
 				fmul = 1;
 			} else {
@@ -114,7 +115,7 @@ namespace Circuits {
 			freqTime += frequency * 2 * pi * sim.timeStep;
 			frequency = frequency * fmul + fadd;
 			if (frequency >= maxF && dir == 1) {
-				if ((flags & FLAG_BIDIR) != 0) {
+				if (bidirectional) {
 					fadd = -fadd;
 					fmul = 1 / fmul;
 					dir = -1;
@@ -146,12 +147,11 @@ namespace Circuits {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = "sweep " + (((flags & FLAG_LOG) == 0) ? "(linear)" : "(log)");
+			arr[0] = "sweep " + (logarithmic ?  "(log)" : "(linear)");
 			arr[1] = "I = " + getCurrentDText(getCurrent());
 			arr[2] = "V = " + getVoltageText(volts[0]);
 			arr[3] = "f = " + getUnitText(frequency, "Hz");
-			arr[4] = "range = " + getUnitText(minF, "Hz") + " .. "
-					+ getUnitText(maxF, "Hz");
+			arr[4] = "range = " + getUnitText(minF, "Hz") + " .. " + getUnitText(maxF, "Hz");
 			arr[5] = "time = " + getUnitText(sweepTime, "s");
 		}
 

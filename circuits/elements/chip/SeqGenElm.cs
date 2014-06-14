@@ -8,11 +8,11 @@ namespace Circuits {
 
 	public class SeqGenElm : ChipElm {
 
-		public short data = 0;
-		public byte position = 0;
-		public bool oneshot = false;
-		public double lastchangetime = 0;
-		public bool clockstate = false;
+		private short data = 0;
+		private byte position = 0;
+		private bool oneshot = false;
+		private double lastchangetime = 0;
+		private bool clockstate = false;
 
 		public SeqGenElm(CirSim s) : base(s) {
 			

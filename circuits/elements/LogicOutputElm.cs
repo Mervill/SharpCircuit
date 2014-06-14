@@ -11,14 +11,12 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class LogicOutputElm : CircuitElement {
 
-		public static readonly int FLAG_TERNARY = 1;
-		public static readonly int FLAG_NUMERIC = 2;
-		public static readonly int FLAG_PULLDOWN = 4;
-
 		/// <summary>
 		/// The Threshold Voltage.
 		/// </summary>
 		public double threshold{ get; set; }
+
+		public bool needsPullDown { get; set; }
 
 		public LogicOutputElm( CirSim s) : base(s) {
 			threshold = 2.5;
@@ -27,21 +25,9 @@ namespace Circuits {
 		public override int getLeadCount() {
 			return 1;
 		}
-
-		public bool isTernary() {
-			return (flags & FLAG_TERNARY) != 0;
-		}
-
-		public bool isNumeric() {
-			return (flags & (FLAG_TERNARY | FLAG_NUMERIC)) != 0;
-		}
-
-		public bool needsPullDown() {
-			return (flags & FLAG_PULLDOWN) != 0;
-		}
-
+		
 		public override void stamp() {
-			if(needsPullDown())
+			if(needsPullDown)
 				sim.stampResistor(nodes[0], 0, 1E6);
 		}
 
