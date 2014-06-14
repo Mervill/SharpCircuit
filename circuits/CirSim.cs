@@ -21,10 +21,7 @@ namespace Circuits {
 		public double time{ get; private set; }
 		public double timeStep = 5.0E-6;
 
-		public bool conventionalCurrent = true;
 		public double speed = Math.Log(10 * 14.3) * 24 + 61.5; // 14.3
-		public double currentSpeed = 55;
-		public double powerBrightness = 50;
 
 		public List<CircuitElement> elements = new List<CircuitElement>();
 		public List<CircuitNode> nodeList = new List<CircuitNode>();
@@ -86,15 +83,6 @@ namespace Circuits {
 
 			if (!stopped) {
 				long sysTime = watch.ElapsedMilliseconds;
-				if (lastTime != 0) {
-					int inc = (int) (sysTime - lastTime);
-					double c = currentSpeed;
-					c = Math.Exp(c / 3.5 - 14.2);
-					CircuitElement.currentMult = 1.7 * inc * c;
-					if (!conventionalCurrent) {
-						CircuitElement.currentMult = -CircuitElement.currentMult;
-					}
-				}
 				if (sysTime - secTime >= 1000) {
 					//framerate = frames;
 					//steprate = steps;
@@ -106,8 +94,6 @@ namespace Circuits {
 			} else {
 				lastTime = 0;
 			}
-
-			CircuitElement.powerMult = Math.Exp(powerBrightness / 4.762 - 7);
 
 			int i = 0;
 			int badnodes = 0;
@@ -259,7 +245,7 @@ namespace Circuits {
 						// if it's the ground node, make sure the node voltage is 0,
 						// cause it may not get set later
 						if (node_index == 0)
-							current_elm.setNodeVoltage(lead_index, 0);
+							current_elm.setLeadVoltage(lead_index, 0);
 						
 					}
 				}
@@ -882,7 +868,7 @@ namespace Circuits {
 							CircuitNode node = getCircuitNode(j + 1);
 							for (k = 0; k != node.links.Count; k++) {
 								ElementLead lead = node.links[k];
-								lead.element.setNodeVoltage(lead.index, res);
+								lead.element.setLeadVoltage(lead.index, res);
 							}
 						} else {
 							int ji = j - (nodeList.Count - 1);

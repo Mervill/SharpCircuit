@@ -6,8 +6,8 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
-	// Test Basic	[_]
+	// Leads		[X]
+	// Test Basic	[X]
 	// Test Prop	[_]
 	public class InductorElm : CircuitElement {
 
@@ -16,12 +16,17 @@ namespace Circuits {
 		/// <summary>
 		/// Inductance (H)
 		/// </summary>
+		[System.ComponentModel.DefaultValue(1)]
 		public double inductance{ get; set; }
 
 		public InductorElm(CirSim s) : base(s) {
 			ind = new Inductor(sim);
-			inductance = 1;
 			ind.setup(inductance, current, true);
+		}
+
+		public InductorElm(CirSim s,double induc) : base(s) {
+			ind = new Inductor(sim);
+			ind.setup(induc, current, true);
 		}
 
 		public override void reset() {
@@ -58,24 +63,5 @@ namespace Circuits {
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Trapezoidal Approximation",ind.isTrapezoidal());
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					flags &= ~Inductor.FLAG_BACK_EULER;
-				} else {
-					flags |= Inductor.FLAG_BACK_EULER;
-				}
-			}
-			ind.setup(inductance, current, flags);
-		}*/
 	}
 }

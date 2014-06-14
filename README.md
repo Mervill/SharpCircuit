@@ -14,7 +14,6 @@ Licence: MIT/Boost C++
 - Pass on all elements, turning relevant fields into properties and and privatizing/protecting everything else.
 - Go back and make sure all publicly editable variables comply with original source.
 - Reorganize leads & give them semantic names.
-- currentMult, powerMult in CircuitElement.cs should not be static.
 - Remove the -Elm suffix from circuit elements?
 - Add new serialization system (JSON).
 - Test everything.

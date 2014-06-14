@@ -6,28 +6,27 @@ namespace Circuits {
 
 	public abstract class CircuitElement {
 
+		protected CirSim sim;
+
 		public readonly static double pi = 3.14159265358979323846;
 
-		public static double voltageRange = 5.0;
-		public static double currentMult, powerMult;
-
-		protected CirSim sim;
-		protected int[] nodes;
-		protected double[] volts;
-		protected double current;
-		
-		public int voltSource;
 		public ElementLead lead0;
 		public ElementLead lead1;
 
+		protected int voltSource;
+		protected double current;
+
+		protected int[] nodes;
+		protected double[] volts;
+
 		public CircuitElement(CirSim s) {
+			sim = s;
+			sim.elements.Add(this);
+
 			lead0 = new ElementLead(this,0);
 			lead1 = new ElementLead(this,1);
 
 			allocNodes();
-
-			sim = s;
-			sim.elements.Add(this);
 		}
 
 		public int getBasicInfo(String[] arr) {
@@ -36,13 +35,19 @@ namespace Circuits {
 			return 3;
 		}
 
+		protected bool comparePair(int x1, int x2, int y1, int y2) {
+			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
+		}
+
 		#region Virtual's
 
-		public virtual void doStep(){ }
-		public virtual void startIteration(){ }
 		public virtual void getInfo(String[] arr){ }
-		public virtual void calculateCurrent(){ }
+
+		public virtual void startIteration(){ }
 		public virtual void stamp(){ }
+		public virtual void doStep(){ }
+
+		public virtual void calculateCurrent(){ }
 
 		public virtual void allocNodes() {
 			nodes = new int[getLeadCount() + getInternalNodeCount()];
@@ -50,63 +55,58 @@ namespace Circuits {
 		}
 
 		public virtual void reset() {
-			int i;
-			for (i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {
+			for (int i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {
 				volts[i] = 0;
 			}
-		}
-
-		public virtual void setCurrent(int x, double c) {
-			current = c;
 		}
 
 		public virtual double getCurrent() {
 			return current;
 		}
 
+		public virtual void setCurrent(int x, double c) {
+			current = c;
+		}
+
 		public virtual double getLeadVoltage(int x) {
 			return volts[x];
 		}
 
-		public virtual void setNodeVoltage(int n, double c) {
+		public virtual void setLeadVoltage(int n, double c) {
 			volts[n] = c;
 			calculateCurrent();
-		}
-
-		public virtual int getVoltageSourceCount() {
-			return 0;
-		}
-
-		public virtual int getInternalNodeCount() {
-			return 0;
-		}
-
-		public virtual void setNode(int lead, int node) {
-			nodes[lead] = node;
-		}
-
-		public virtual void setVoltageSource(int n, int v) {
-			voltSource = v;
-		}
-
-		public virtual int getVoltageSource() {
-			return voltSource;
-		}
-
-		public virtual double getVoltageDiff() {
-			return volts[0] - volts[1];
 		}
 
 		public virtual int getLeadCount() {
 			return 2;
 		}
 
+		public virtual ElementLead getLead(int n) {
+			return (n == 0) ? lead0 : (n == 1) ? lead1 : null;
+		}
+
+		public virtual int getVoltageSourceCount() {
+			return 0;
+		}
+
+		public virtual void setVoltageSource(int n, int v) {
+			voltSource = v;
+		}
+
+		public virtual int getInternalNodeCount() {
+			return 0;
+		}
+
+		public virtual double getVoltageDiff() {
+			return volts[0] - volts[1];
+		}
+
 		public virtual int getNode(int n) {
 			return nodes[n];
 		}
 
-		public virtual ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : null;
+		public virtual void setNode(int lead, int node) {
+			nodes[lead] = node;
 		}
 
 		public virtual double getPower() {
@@ -140,10 +140,6 @@ namespace Circuits {
 		/*public virtual bool canViewInScope() {
 			return getLeadCount() <= 2;
 		}*/
-
-		public virtual bool comparePair(int x1, int x2, int y1, int y2) {
-			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
-		}
 
 		#endregion
 

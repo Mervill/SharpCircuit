@@ -6,8 +6,8 @@ namespace Circuits {
 
 	public class LatchElm : ChipElm {
 
-		public int loadPin;
-		public bool lastLoad = false;
+		private int loadPin;
+		private bool lastLoad = false;
 
 		public LatchElm(CirSim s) : base(s) {
 			

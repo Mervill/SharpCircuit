@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// contributed by Edward Calver
+	// Contributed by Edward Calver
 
 	public class SipoShiftElm : ChipElm {
 		

@@ -32,9 +32,8 @@ namespace Circuits {
 		}
 
 		public override void doStep() {
-			if (waveform != WaveType.DC) {
+			if (waveform != WaveType.DC)
 				sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
-			}
 		}
 
 		public override bool hasGroundConnection(int n1) {

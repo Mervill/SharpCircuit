@@ -6,8 +6,8 @@ namespace Circuits {
 
 	public class ElementLead {
 
-		public CircuitElement element{ get; private set; }
-		public int index{ get; private set; }
+		public CircuitElement element { get; private set; }
+		public int index { get; private set; }
 
 		public CircuitNode node;
 

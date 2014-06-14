@@ -23,6 +23,7 @@ namespace Circuits {
 				_maxF = value;
 				if (_maxF > maxfreq) {
 					_maxF = maxfreq;
+					setParams();
 				}
 			}
 		}
@@ -39,6 +40,7 @@ namespace Circuits {
 				_minF = value;
 				if (_minF > maxfreq) {
 					_minF = maxfreq;
+					setParams();
 				}
 			}
 		}
@@ -155,36 +157,5 @@ namespace Circuits {
 			arr[5] = "time = " + getUnitText(sweepTime, "s");
 		}
 
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				return new EditInfo("", minF, 0, 0);
-			}
-			if (n == 1) {
-				return new EditInfo("", maxF, 0, 0);
-			}
-			if (n == 2) {
-				return new EditInfo("", sweepTime, 0, 0);
-			}
-			if (n == 3) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Logarithmic", (flags & FLAG_LOG) != 0);
-				return ei;
-			}
-			if (n == 4) {
-				return new EditInfo("Max Voltage", maxV, 0, 0);
-			}
-			if (n == 5) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bidirectional",(flags & FLAG_BIDIR) != 0);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			double maxfreq = 1 / (8 * sim.timeStep);
-
-			setParams();
-		}*/
 	}
 }
