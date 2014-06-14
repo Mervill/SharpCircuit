@@ -7,6 +7,7 @@ namespace Circuits {
 	// Unfinished
 	public class CapacitorElm : CircuitElement {
 
+		// true by default?
 		public static readonly int FLAG_BACK_EULER = 2;
 
 		/// <summary>

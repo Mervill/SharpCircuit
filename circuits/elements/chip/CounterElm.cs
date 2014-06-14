@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class CounterElm : ChipElm {
+
 		public int FLAG_ENABLE = 2;
 		public bool invertreset = false;
 

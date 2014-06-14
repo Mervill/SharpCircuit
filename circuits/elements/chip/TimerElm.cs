@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TimerElm : ChipElm {
+
 		public int FLAG_RESET = 2;
 		public int N_DIS = 0;
 		public int N_TRIG = 1;
@@ -13,7 +14,9 @@ namespace Circuits {
 		public int N_CTL = 4;
 		public int N_OUT = 5;
 		public int N_RST = 6;
-		
+
+		private bool setOut, @out;
+
 		public TimerElm( CirSim s) : base(s) {
 
 		}
@@ -64,8 +67,6 @@ namespace Circuits {
 			pins[N_CTL].current = -volts[N_CTL] / 10000 - pins[N_VIN].current;
 			pins[N_DIS].current = (!@out && !setOut) ? -volts[N_DIS] / 10 : 0;
 		}
-
-		bool setOut, @out;
 
 		public override void startIteration() {
 			@out = volts[N_OUT] > volts[N_VIN] / 2;

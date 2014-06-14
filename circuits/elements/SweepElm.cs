@@ -8,8 +8,8 @@ namespace Circuits {
 	public class SweepElm : CircuitElement {
 
 		public double maxV, maxF, minF, sweepTime, frequency;
-		public int FLAG_LOG = 1;
-		public int FLAG_BIDIR = 2;
+		public int FLAG_LOG = 1; // Logarithmic
+		public int FLAG_BIDIR = 2; // Bidirectional
 		public double fadd, fmul, freqTime, savedTimeStep;
 		public int dir = 1;
 		public double v;

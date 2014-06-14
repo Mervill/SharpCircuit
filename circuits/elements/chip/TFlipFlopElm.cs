@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class TFlipFlopElm : ChipElm {
+
 		public int FLAG_RESET = 2;
 		public int FLAG_SET = 4;
 		public bool last_val;

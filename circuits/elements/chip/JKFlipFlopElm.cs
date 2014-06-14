@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class JKFlipFlopElm : ChipElm {
+
 		public int FLAG_RESET = 2;
 
 		public JKFlipFlopElm( CirSim s) : base(s) {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class DFlipFlopElm : ChipElm {
+
 		public int FLAG_RESET = 2;
 		public int FLAG_SET = 4;
 
