@@ -8,10 +8,10 @@ namespace Circuits {
 
 		public double output{ get; set; }
 
-		public VarRailElm(CirSim s) : base(s,WaveformType.VAR) {
+		public VarRailElm(CirSim s) : base(s,WaveType.VAR) {
 			output = 1;
 			frequency = MaxVoltage;
-			waveform = WaveformType.VAR;
+			waveform = WaveType.VAR;
 		}
 
 		public override double getVoltage() {

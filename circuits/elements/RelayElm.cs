@@ -12,7 +12,11 @@ namespace Circuits {
 	// 3n+1 = coil
 	// 3n+2 = end of coil resistor
 
-	// Unfinished
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class RelayElm : CircuitElement {
 
 		private Inductor ind;
@@ -20,32 +24,80 @@ namespace Circuits {
 		/// <summary>
 		/// On Resistance (ohms)
 		/// </summary>
-		public double inductance;
+		public double inductance {
+			get {
+				return _inductance;
+			}
+			set {
+				_inductance = value;
+				ind.setup(_inductance,coilCurrent,Inductor.FLAG_BACK_EULER);
+			}
+		}
 
 		/// <summary>
 		/// On Resistance (ohms)
 		/// </summary>
-		public double r_on;
+		public double r_on {
+			get {
+				return _r_on;
+			}
+			set {
+				if(value > 0)
+					_r_on = value;
+			}
+		}
 
 		/// <summary>
 		/// Off Resistance (ohms)
 		/// </summary>
-		public double r_off;
+		public double r_off {
+			get {
+				return _r_off;
+			}
+			set {
+				if(value > 0)
+					_r_off = value;
+			}
+		}
 
 		/// <summary>
 		/// On Current (A)
 		/// </summary>
-		public double onCurrent;
-
-		/// <summary>
-		/// Coil Resistance (ohms)
-		/// </summary>
-		public double coilR;
+		public double onCurrent {
+			get {
+				return _onCurrent;
+			}
+			set {
+				if(value > 0)
+					_onCurrent = value;
+			}
+		}
 
 		/// <summary>
 		/// Number of Poles
 		/// </summary>
-		public int poleCount;
+		public int poleCount {
+			get {
+				return _poleCount;
+			}
+			set {
+				if(value >= 1){
+					_poleCount = value;
+					setupPoles();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Coil Resistance (ohms)
+		/// </summary>
+		public double coilR{ get; set; }
+
+		private double _inductance;
+		private double _r_on;
+		private double _r_off;
+		private double _onCurrent;
+		private int _poleCount;
 
 		public ElementLead[] coilPosts;
 		private ElementLead[][] swposts;
@@ -82,109 +134,6 @@ namespace Circuits {
 				switchCurCount = new double[poleCount];
 			}
 		}
-
-		/*public void draw(Graphics g) {
-			int i, p;
-			for (i = 0; i != 2; i++) {
-				setVoltageColor(g, volts[nCoil1 + i]);
-				drawThickLine(g, coilLeads[i], coilPosts[i]);
-			}
-			int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
-			drawCoil(g, dsign * 6, coilLeads[x], coilLeads[1 - x],
-					volts[nCoil1 + x], volts[nCoil2 - x]);
-
-			// draw lines
-			g.setColor(Color.darkGray);
-			for (i = 0; i != poleCount; i++) {
-				if (i == 0) {
-					interpPoint(point1, point2, lines[i * 2], .5, openhs * 2 + 5
-							* dsign - i * openhs * 3);
-				} else {
-					interpPoint(point1, point2, lines[i * 2], .5,
-							(int) (openhs * (-i * 3 + 3 - .5 + d_position)) + 5
-									* dsign);
-				}
-				interpPoint(point1, point2, lines[i * 2 + 1], .5,
-						(int) (openhs * (-i * 3 - .5 + d_position)) - 5 * dsign);
-				g.drawLine(lines[i * 2].x, lines[i * 2].y, lines[i * 2 + 1].x,
-						lines[i * 2 + 1].y);
-			}
-
-			for (p = 0; p != poleCount; p++) {
-				int po = p * 3;
-				for (i = 0; i != 3; i++) {
-					// draw lead
-					setVoltageColor(g, volts[nSwitch0 + po + i]);
-					drawThickLine(g, swposts[p][i], swpoles[p][i]);
-				}
-
-				interpPoint(swpoles[p][1], swpoles[p][2], ptSwitch[p], d_position);
-				// setVoltageColor(g, volts[nSwitch0]);
-				g.setColor(Color.lightGray);
-				drawThickLine(g, swpoles[p][0], ptSwitch[p]);
-				switchCurCount[p] = updateDotCount(switchCurrent[p],
-						switchCurCount[p]);
-				drawDots(g, swposts[p][0], swpoles[p][0], switchCurCount[p]);
-
-				if (i_position != 2) {
-					drawDots(g, swpoles[p][i_position + 1],
-							swposts[p][i_position + 1], switchCurCount[p]);
-				}
-			}
-
-			coilCurCount = updateDotCount(coilCurrent, coilCurCount);
-
-			drawDots(g, coilPosts[0], coilLeads[0], coilCurCount);
-			drawDots(g, coilLeads[0], coilLeads[1], coilCurCount);
-			drawDots(g, coilLeads[1], coilPosts[1], coilCurCount);
-
-			drawPosts(g);
-			setBbox(coilPosts[0], coilLeads[1], 0);
-			adjustBbox(swpoles[poleCount - 1][0], swposts[poleCount - 1][1]); // XXX
-		}*/
-
-//		public override void setPoints() {
-//			base.setPoints();
-//			setupPoles();
-//			allocNodes();
-//			openhs = -dsign * 16;
-//
-//			// switch
-//			calcLeads(32);
-//			swposts = new Point[poleCount][]; // 3;
-//			swpoles = new Point[poleCount][]; // 3;
-//			int i, j;
-//			for (i = 0; i != poleCount; i++) {
-//				for (j = 0; j != 3; j++) {
-//					swposts[i][j] = new Point();
-//					swpoles[i][j] = new Point();
-//				}
-//				interpPoint(lead1, lead2, swpoles[i][0], 0, -openhs * 3 * i);
-//				interpPoint(lead1, lead2, swpoles[i][1], 1, -openhs * 3 * i
-//						- openhs);
-//				interpPoint(lead1, lead2, swpoles[i][2], 1, -openhs * 3 * i
-//						+ openhs);
-//				interpPoint(point1, point2, swposts[i][0], 0, -openhs * 3 * i);
-//				interpPoint(point1, point2, swposts[i][1], 1, -openhs * 3 * i
-//						- openhs);
-//				interpPoint(point1, point2, swposts[i][2], 1, -openhs * 3 * i
-//						+ openhs);
-//			}
-//
-//			// coil
-//			coilPosts = newPointArray(2);
-//			coilLeads = newPointArray(2);
-//			ptSwitch = newPointArray(poleCount);
-//
-//			int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
-//			interpPoint(point1, point2, coilPosts[0], x, openhs * 2);
-//			interpPoint(point1, point2, coilPosts[1], x, openhs * 3);
-//			interpPoint(point1, point2, coilLeads[0], .5, openhs * 2);
-//			interpPoint(point1, point2, coilLeads[1], .5, openhs * 3);
-//
-//			// lines
-//			lines = newPointArray(poleCount * 2);
-//		}
 
 		public override ElementLead getLead(int n) {
 			if (n < 3 * poleCount)
@@ -247,7 +196,6 @@ namespace Circuits {
 			}
 		}
 
-		// we need this to be able to change the matrix for each step
 		public override bool nonLinear() {
 			return true;
 		}

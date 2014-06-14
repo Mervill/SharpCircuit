@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class SevenSegElm : ChipElm {
 		
-		public SevenSegElm( CirSim s) : base(s) {
+		public SevenSegElm(CirSim s) : base(s) {
 
 		}
 
@@ -14,10 +14,7 @@ namespace Circuits {
 			return "7-segment driver/display";
 		}
 
-		//public Color darkred;
-
 		public override void setupPins() {
-			//darkred = new Color(30, 0, 0);
 			pins = new Pin[7];
 			pins[0] = new Pin("a");
 			pins[1] = new Pin("b");

@@ -5,8 +5,10 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class PhaseCompElm : ChipElm {
-		
-		public PhaseCompElm( CirSim s) : base(s) {
+
+		private bool ff1, ff2;
+
+		public PhaseCompElm(CirSim s) : base(s) {
 
 		}
 
@@ -32,9 +34,7 @@ namespace Circuits {
 			sim.stampNonLinear(0);
 			sim.stampNonLinear(nodes[2]);
 		}
-
-		bool ff1, ff2;
-
+		
 		public override  void doStep() {
 			bool v1 = volts[0] > 2.5;
 			bool v2 = volts[1] > 2.5;

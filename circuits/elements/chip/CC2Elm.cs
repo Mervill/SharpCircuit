@@ -5,9 +5,10 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class CC2Elm : ChipElm {
+
 		public double gain;
 
-		public CC2Elm( CirSim s) : base(s) {
+		public CC2Elm(CirSim s) : base(s) {
 			gain = 1;
 		}
 

@@ -13,13 +13,6 @@ namespace Circuits {
 
 		public static readonly int FLAG_PNP = 1;
 
-		private int pnp;
-		private double lastv1;
-		private double lastv2;
-		private double ids;
-		private int mode;
-		private double gm;
-
 		/// <summary>
 		/// Threshold Voltage
 		/// </summary>
@@ -35,6 +28,13 @@ namespace Circuits {
 
 		public ElementLead src;
 		public ElementLead drn;
+
+		private int pnp;
+		private double lastv1;
+		private double lastv2;
+		private double ids;
+		private int mode;
+		private double gm;
 
 		public MosfetElm(CirSim s,bool pnpflag) : base(s) {
 			src = new ElementLead(this,1);

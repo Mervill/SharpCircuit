@@ -7,19 +7,20 @@ namespace Circuits {
 	// contributed by Edward Calver
 
 	public class SeqGenElm : ChipElm {
-		public bool hasReset() {
-			return false;
-		}
-
-		public SeqGenElm( CirSim s) : base(s) {
-
-		}
 
 		public short data = 0;
 		public byte position = 0;
 		public bool oneshot = false;
 		public double lastchangetime = 0;
 		public bool clockstate = false;
+
+		public SeqGenElm(CirSim s) : base(s) {
+			
+		}
+
+		public bool hasReset() {
+			return false;
+		}
 
 		public override String getChipName() {
 			return "Sequence generator";

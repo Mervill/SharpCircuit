@@ -13,8 +13,6 @@ namespace Circuits {
 
 		public static readonly int FLAG_LOWGAIN = 4;
 
-		private double lastvd;
-
 		/// <summary>
 		/// Max Output (V)
 		/// </summary>
@@ -25,10 +23,11 @@ namespace Circuits {
 		/// </summary>
 		public double minOut{ get; set; }
 
-		private double gain;
-
 		public ElementLead in1p;
 		public ElementLead in2p;
+
+		private double lastvd;
+		private double gain;
 
 		public OpAmpElm(CirSim s) : base(s) {
 			maxOut = 15;

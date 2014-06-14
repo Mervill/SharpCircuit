@@ -16,10 +16,6 @@ namespace Circuits {
 		/// </summary>
 		public static readonly int FLAG_INVERT = 1;
 
-		private double resistance;
-
-		public bool open{ get; protected set; }
-
 		/// <summary>
 		/// On Resistance (ohms)
 		/// </summary>
@@ -30,7 +26,11 @@ namespace Circuits {
 		/// </summary>
 		public double r_off{ get; set; }
 
+		public bool open{ get; protected set; }
+
 		public ElementLead lead3;
+
+		private double resistance;
 
 		public AnalogSwitchElm(CirSim s) : base(s) {
 			r_on = 20;

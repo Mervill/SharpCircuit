@@ -12,7 +12,7 @@ namespace Circuits {
 	//
 	// Format		[_]
 	// Flags		[_]
-	// Prop:Ranges	[_]
+	// Prop:Contd	[_]
 	public class WireElm : CircuitElement {
 
 		public WireElm(CirSim s) : base(s) {

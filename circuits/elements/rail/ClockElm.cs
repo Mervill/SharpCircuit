@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ClockElm : RailElm {
 		
-		public ClockElm(CirSim s) : base(s,WaveformType.SQUARE) {
+		public ClockElm(CirSim s) : base(s,WaveType.SQUARE) {
 			MaxVoltage = 2.5;
 			Bias = 2.5;
 			frequency = 100;

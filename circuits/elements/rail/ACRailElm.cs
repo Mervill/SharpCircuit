@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ACRailElm : RailElm {
 		
-		public ACRailElm(CirSim s) : base(s,WaveformType.AC) {
+		public ACRailElm(CirSim s) : base(s,WaveType.AC) {
 			
 		}
 

@@ -8,15 +8,15 @@ namespace Circuits {
 
 		public static int size = 8;
 
-		public LEDMatrixElm( CirSim s) : base(s) {
-
-		}
-
 		public bool negateRows = false;
 		public bool negateColumns = false;
 		public double colorR = 1.0;
 		public double colorG = 0.0;
 		public double colorB = 0.0;
+
+		public LEDMatrixElm(CirSim s) : base(s) {
+
+		}
 
 		public override String getChipName() {
 			return "LED Matrix";

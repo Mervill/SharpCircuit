@@ -17,7 +17,7 @@ namespace Circuits {
 
 		private bool setOut, @out;
 
-		public TimerElm( CirSim s) : base(s) {
+		public TimerElm(CirSim s) : base(s) {
 
 		}
 

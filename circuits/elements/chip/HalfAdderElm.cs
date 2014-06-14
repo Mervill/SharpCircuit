@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class HalfAdderElm : ChipElm {
 		
-		public HalfAdderElm( CirSim s) : base(s) {
+		public HalfAdderElm(CirSim s) : base(s) {
 			
 		}
 		

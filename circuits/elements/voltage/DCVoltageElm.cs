@@ -11,7 +11,7 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class DCVoltageElm : VoltageElm {
 		
-		public DCVoltageElm(CirSim s) : base(s,WaveformType.DC) {
+		public DCVoltageElm(CirSim s) : base(s,WaveType.DC) {
 			
 		}
 

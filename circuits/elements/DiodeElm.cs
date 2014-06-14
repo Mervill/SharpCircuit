@@ -21,13 +21,10 @@ namespace Circuits {
 				return _forwardDrop;
 			}
 			set{
-				forwardDrop = value;
+				_forwardDrop = value;
 				setup();
 			}
 		}
-		protected double _forwardDrop;
-
-		protected double defaultdrop = 0.805904783;
 
 		/// <summary>
 		/// Zener Voltage @ 5mA
@@ -41,12 +38,16 @@ namespace Circuits {
 				setup();
 			}
 		}
+
+		protected double _forwardDrop;
 		protected double _zvoltage;
+
+		protected double defaultdrop = 0.805904783;
 
 		public DiodeElm(CirSim s) : base(s) {
 			diode = new Diode(sim);
-			_forwardDrop = defaultdrop;
-			_zvoltage = 0;
+			forwardDrop = defaultdrop;
+			zvoltage = 0;
 			setup();
 		}
 
@@ -55,7 +56,7 @@ namespace Circuits {
 		}
 
 		public virtual void setup() {
-			diode.setup(_forwardDrop, _zvoltage);
+			diode.setup(forwardDrop, zvoltage);
 		}
 
 		public override void reset() {
@@ -80,7 +81,7 @@ namespace Circuits {
 			arr[1] = "I = " + getCurrentText(getCurrent());
 			arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 			arr[3] = "P = " + getUnitText(getPower(), "W");
-			arr[4] = "Vf = " + getVoltageText(_forwardDrop);
+			arr[4] = "Vf = " + getVoltageText(forwardDrop);
 		}
 
 	}

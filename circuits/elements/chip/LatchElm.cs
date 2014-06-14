@@ -5,8 +5,11 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class LatchElm : ChipElm {
-	
-		public LatchElm( CirSim s) : base(s) {
+
+		public int loadPin;
+		public bool lastLoad = false;
+
+		public LatchElm(CirSim s) : base(s) {
 			
 		}
 
@@ -17,8 +20,6 @@ namespace Circuits {
 		public override bool needsBits() {
 			return true;
 		}
-
-		public int loadPin;
 
 		public override void setupPins() {
 			pins = new Pin[getLeadCount()];
@@ -33,8 +34,6 @@ namespace Circuits {
 			pins[loadPin = bits * 2] = new Pin("Ld");
 			allocNodes();
 		}
-
-		public bool lastLoad = false;
 
 		public override void execute() {
 			int i;

@@ -10,7 +10,7 @@ namespace Circuits {
 		public int FLAG_SET = 4;
 		public bool last_val;
 		
-		public TFlipFlopElm( CirSim s) : base(s) {
+		public TFlipFlopElm(CirSim s) : base(s) {
 
 		}
 		

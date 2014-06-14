@@ -11,13 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class TransistorElm : CircuitElement {
 
-		private static readonly double leakage = 1E-13; // 1e-6;
-		private static readonly double vt = 0.025;
-		private static readonly double vdcoef = 1 / vt;
-		private static readonly double rgain = 0.5;
-
-		private int pnp;
-
 		/// <summary>
 		/// Beta/hFE
 		/// </summary>
@@ -30,7 +23,18 @@ namespace Circuits {
 				setup();
 			}
 		}
+
+		public ElementLead coll;
+		public ElementLead emit;
+
 		private double beta;
+
+		private static readonly double leakage = 1E-13; // 1e-6;
+		private static readonly double vt = 0.025;
+		private static readonly double vdcoef = 1 / vt;
+		private static readonly double rgain = 0.5;
+		
+		private int pnp;
 
 		private double fgain;
 		private double gmin;
@@ -38,9 +42,6 @@ namespace Circuits {
 		private double ic, ie, ib;
 		private double vcrit;
 		private double lastvbc, lastvbe;
-
-		public ElementLead coll;
-		public ElementLead emit;
 
 		public TransistorElm(CirSim s,bool pnpflag) : base(s) {
 			coll = new ElementLead(this,1);

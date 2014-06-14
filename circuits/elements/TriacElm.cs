@@ -22,15 +22,7 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class TriacElm : CircuitElement {
 
-		private static readonly int anode = 0;
-		private static readonly int cnode = 1;
-		private static readonly int gnode = 2;
-		private static readonly int inode = 3;
-
 		public Diode diode{ get; private set; }
-
-		private double ia, ic, ig;
-		private double lastvac, lastvag;
 
 		/// <summary>
 		/// Gate-Cathode Resistance (ohms)
@@ -49,7 +41,15 @@ namespace Circuits {
 		
 		public ElementLead gate;
 
+		private static readonly int anode = 0;
+		private static readonly int cnode = 1;
+		private static readonly int gnode = 2;
+		private static readonly int inode = 3;
+
 		private double aresistance;
+
+		private double ia, ic, ig;
+		private double lastvac, lastvag;
 
 		public TriacElm(CirSim s) : base(s) {
 			gate = new ElementLead(this,2);

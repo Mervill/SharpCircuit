@@ -8,20 +8,19 @@ namespace Circuits {
 
 	public class SRAMElm : ChipElm {
 		
-		public SRAMElm( CirSim s) : base(s) {
-			
+		public SRAMElm(CirSim s) : base(s) {
 			short i;
-			for (i = 0; i < 256; i++) {
+			for (i = 0; i < 256; i++)
 				data[i] = 0;
-			}
 		}
 
 		public override String getChipName() {
 			return "SRAM";
 		}
 
-		public short[] data = new short[256];// Fuck this lack of unsigned types. That's
-										// twice as much data as I'd need in C
+		// Fuck this lack of unsigned types. That's
+		// twice as much data as I'd need in C
+		public short[] data = new short[256];
 
 		public override void setupPins() {
 			pins = new Pin[19];

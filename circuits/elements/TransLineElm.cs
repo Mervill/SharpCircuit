@@ -21,12 +21,12 @@ namespace Circuits {
 		/// </summary>
 		public double impedance{ get; set; }
 
+		public ElementLead[] leads;
+
 		private double[] voltageL, voltageR;
 		private int lenSteps, ptr;
 		private int voltSource1, voltSource2;
 		private double current1, current2;
-
-		public ElementLead[] leads;
 
 		public TransLineElm(CirSim s) : base(s) {
 			delay = 1000 * sim.timeStep;

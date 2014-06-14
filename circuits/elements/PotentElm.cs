@@ -18,13 +18,13 @@ namespace Circuits {
 		/// </summary>
 		public double maxResistance{ get; set; }
 
+		public ElementLead lead2;
+
 		private double resistance1;
 		private double resistance2;
 		private double current1; 
 		private double current2;
 		private double current3;
-
-		public ElementLead lead2;
 
 		public PotentElm(CirSim s) : base(s) {
 			lead2 = new ElementLead(this,2);

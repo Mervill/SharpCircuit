@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// Unfinished
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class CapacitorElm : CircuitElement {
 
 		// true by default?
@@ -13,7 +17,17 @@ namespace Circuits {
 		/// <summary>
 		/// Capacitance (F)
 		/// </summary>
-		public double capacitance{ get; set; }
+		public double capacitance{ 
+			get {
+				return _capacitance;
+			}
+			set {
+				if(value > 0)
+					_capacitance = value;
+			}
+		}
+
+		private double _capacitance;
 
 		private double compResistance;
 		private double voltdiff;

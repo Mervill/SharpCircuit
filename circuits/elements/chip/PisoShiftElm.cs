@@ -7,18 +7,18 @@ namespace Circuits {
 	// contributed by Edward Calver
 
 	public class PisoShiftElm : ChipElm {
-		
-		public PisoShiftElm( CirSim s) : base(s) {
+
+		public short data = 0;// Lack of unsigned types sucks
+		public bool clockstate = false;
+		public bool modestate = false;
+
+		public PisoShiftElm(CirSim s) : base(s) {
 
 		}
 		
 		bool hasReset() {
 			return false;
 		}
-		
-		public short data = 0;// Lack of unsigned types sucks
-		public bool clockstate = false;
-		public bool modestate = false;
 
 		public override String getChipName() {
 			return "PISO shift register";

@@ -11,15 +11,15 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class TriodeElm : CircuitElement {
 
-		private double mu, kg1;
-		private double gridCurrentR = 6000;
-
 		public double currentp, currentg, currentc;
-		private double lastv0, lastv1, lastv2;
 
 		public ElementLead plate;
 		public ElementLead grid;
 		public ElementLead cath;
+
+		private double mu, kg1;
+		private double gridCurrentR = 6000;
+		private double lastv0, lastv1, lastv2;
 
 		public TriodeElm( CirSim s) : base(s) {
 			plate = new ElementLead(this,0);

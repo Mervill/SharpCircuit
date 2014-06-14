@@ -25,7 +25,7 @@ namespace Circuits {
 				{ true, false, false, false, true, true, true },// F
 		};
 		
-		public SevenSegDecoderElm( CirSim s) : base(s) {
+		public SevenSegDecoderElm(CirSim s) : base(s) {
 
 		}
 

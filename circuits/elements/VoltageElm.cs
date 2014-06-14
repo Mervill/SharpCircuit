@@ -11,7 +11,7 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class VoltageElm : CircuitElement {
 
-		public enum WaveformType {
+		public enum WaveType {
 			DC,
 			AC,
 			SQUARE,
@@ -24,77 +24,79 @@ namespace Circuits {
 		/// <summary>
 		/// Waveform
 		/// </summary>
-		public WaveformType Waveform{ 
+		public WaveType waveform{ 
 			get{
-				return waveform;
+				return _waveform;
 			} 
 			set {
-				WaveformType ow = waveform;
-				waveform = value;
-				if (waveform == WaveformType.DC && ow != WaveformType.DC) {
+				WaveType ow = _waveform;
+				_waveform = value;
+				if (_waveform == WaveType.DC && ow != WaveType.DC) {
 					Bias = 0;
 				}
 			} 
 		}
-		protected WaveformType waveform;
+
+		/// <summary>
+		/// Frequency (Hz)
+		/// </summary>
+		public double frequency{ 
+			get{
+				return _frequency;
+			} 
+			set{
+				double oldfreq = _frequency;
+				_frequency = value;
+				double maxfreq = 1 / (8 * sim.timeStep);
+				if (_frequency > maxfreq) {
+					_frequency = maxfreq;
+				}
+				freqTimeZero = sim.time - oldfreq * (sim.time - freqTimeZero) / _frequency;
+			} 
+		}
+
+		/// <summary>
+		/// Phase Offset (degrees)
+		/// </summary>
+		public double phaseShift{ 
+			get{
+				return _phaseShift * 180 / pi;
+			} 
+			set{
+				_phaseShift = value * pi / 180;
+			} 
+		}
+
+		/// <summary>
+		/// Duty Cycle
+		/// </summary>
+		public double dutyCycle{ 
+			get{
+				return _dutyCycle * 100;
+			} 
+			set{
+				_dutyCycle = value * 0.01;
+			} 
+		}
 
 		/// <summary>
 		/// The max voltage (AC) or flat voltage (DC)
 		/// </summary>
 		public double MaxVoltage{ get; set; }
-
+		
 		/// <summary>
 		/// DC Offset (V)
 		/// </summary>
 		public double Bias{ get; set; }
 
-		/// <summary>
-		/// Frequency (Hz)
-		/// </summary>
-		public double Frequency{ 
-			get{
-				return frequency;
-			} 
-			set{
-				double oldfreq = frequency;
-				frequency = value;
-				double maxfreq = 1 / (8 * sim.timeStep);
-				if (frequency > maxfreq) {
-					frequency = maxfreq;
-				}
-				freqTimeZero = sim.time - oldfreq * (sim.time - freqTimeZero) / frequency;
-			} 
-		}
-		protected double frequency;
+		private WaveType _waveform;
+		protected double _frequency;
+		private double _phaseShift;
+		private double _dutyCycle;
+
 		protected double freqTimeZero;
 
-		/// <summary>
-		/// Phase Offset (degrees)
-		/// </summary>
-		public double PhaseShift{ 
-			get{
-				return phaseShift * 180 / pi;
-			} 
-			set{
-				phaseShift = value * pi / 180;
-			} 
-		}
-		protected double phaseShift;
-
-		/// <summary>
-		/// Duty Cycle
-		/// </summary>
-		public double DutyCycle{ 
-			get{
-				return dutyCycle * 100;
-			} 
-			set{
-				dutyCycle = value * 0.01;
-			} 
-		}
-		protected double dutyCycle;
-
-		public VoltageElm(CirSim s,WaveformType wf) : base(s) {
+		public VoltageElm(CirSim s,WaveType wf) : base(s) {
 			waveform = wf;
 			MaxVoltage = 5;
 			frequency = 40;
@@ -114,7 +116,7 @@ namespace Circuits {
 		}
 
 		public override void stamp() {
-			if (waveform == WaveformType.DC) {
+			if (waveform == WaveType.DC) {
 				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, getVoltage());
 			} else {
 				sim.stampVoltageSource(nodes[0], nodes[1], voltSource);
@@ -122,7 +124,7 @@ namespace Circuits {
 		}
 
 		public override void doStep() {
-			if (waveform != WaveformType.DC) {
+			if (waveform != WaveType.DC) {
 				sim.updateVoltageSource(nodes[0], nodes[1], voltSource, getVoltage());
 			}
 		}
@@ -130,17 +132,17 @@ namespace Circuits {
 		public virtual double getVoltage() {
 			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + phaseShift;
 			switch (waveform) {
-			case WaveformType.DC:
+			case WaveType.DC:
 				return MaxVoltage + Bias;
-			case WaveformType.AC:
+			case WaveType.AC:
 				return Math.Sin(w) * MaxVoltage + Bias;
-			case WaveformType.SQUARE:
+			case WaveType.SQUARE:
 				return Bias + ((w % (2 * pi) > (2 * pi * dutyCycle)) ? -MaxVoltage : MaxVoltage);
-			case WaveformType.TRIANGLE:
+			case WaveType.TRIANGLE:
 				return Bias + triangleFunc(w % (2 * pi)) * MaxVoltage;
-			case WaveformType.SAWTOOTH:
+			case WaveType.SAWTOOTH:
 				return Bias + (w % (2 * pi)) * (MaxVoltage / pi) - MaxVoltage;
-			case WaveformType.PULSE:
+			case WaveType.PULSE:
 				return ((w % (2 * pi)) < 1) ? MaxVoltage + Bias : Bias;
 			default:
 				return 0;
@@ -161,29 +163,29 @@ namespace Circuits {
 
 		public override void getInfo(String[] arr) {
 			switch (waveform) {
-			case WaveformType.DC:
-			case WaveformType.VAR:
+			case WaveType.DC:
+			case WaveType.VAR:
 				arr[0] = "voltage source";
 				break;
-			case WaveformType.AC:
+			case WaveType.AC:
 				arr[0] = "A/C source";
 				break;
-			case WaveformType.SQUARE:
+			case WaveType.SQUARE:
 				arr[0] = "square wave gen";
 				break;
-			case WaveformType.PULSE:
+			case WaveType.PULSE:
 				arr[0] = "pulse gen";
 				break;
-			case WaveformType.SAWTOOTH:
+			case WaveType.SAWTOOTH:
 				arr[0] = "sawtooth gen";
 				break;
-			case WaveformType.TRIANGLE:
+			case WaveType.TRIANGLE:
 				arr[0] = "triangle gen";
 				break;
 			}
 			arr[1] = "I = " + getCurrentText(getCurrent());
 			arr[2] = ((this is RailElm) ? "V = " : "Vd = ") + getVoltageText(getVoltageDiff());
-			if (waveform != WaveformType.DC && waveform != WaveformType.VAR) {
+			if (waveform != WaveType.DC && waveform != WaveType.VAR) {
 				arr[3] = "f = " + getUnitText(frequency, "Hz");
 				arr[4] = "Vmax = " + getVoltageText(MaxVoltage);
 				int i = 5;

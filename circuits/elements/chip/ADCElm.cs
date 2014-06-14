@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class ADCElm : ChipElm {
 		
-		public ADCElm( CirSim s) : base(s) {
+		public ADCElm(CirSim s) : base(s) {
 			
 		}
 

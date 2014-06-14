@@ -4,15 +4,66 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// Unfinished
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[_]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class SweepElm : CircuitElement {
 
-		public double maxV, maxF, minF, sweepTime, frequency;
 		public int FLAG_LOG = 1; // Logarithmic
 		public int FLAG_BIDIR = 2; // Bidirectional
-		public double fadd, fmul, freqTime, savedTimeStep;
-		public int dir = 1;
-		public double v;
+
+		/// <summary>
+		/// Max Frequency (Hz)
+		/// </summary>
+		public double maxF {
+			get {
+				return _maxF;
+			}
+			set {
+				double maxfreq = 1 / (8 * sim.timeStep);
+				_maxF = value;
+				if (_maxF > maxfreq) {
+					_maxF = maxfreq;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Min Frequency (Hz)
+		/// </summary>
+		public double minF {
+			get {
+				return _maxF;
+			}
+			set {
+				double maxfreq = 1 / (8 * sim.timeStep);
+				_minF = value;
+				if (_minF > maxfreq) {
+					_minF = maxfreq;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Sweep Time (s)
+		/// </summary>
+		public double sweepTime{ get; set; }
+
+		public double frequency{ get; private set; }
+
+		private double _maxF;
+		private double _minF;
+		private double _sweepTime;
+
+		private int dir = 1;
+		private double fadd;
+		private double fmul;
+		private double freqTime;
+		private double savedTimeStep;
+		private double v;
+		private double maxV;
 
 		public SweepElm(CirSim s) : base(s) {
 			minF = 20;
@@ -106,13 +157,13 @@ namespace Circuits {
 
 		/*public EditInfo getEditInfo(int n) {
 			if (n == 0) {
-				return new EditInfo("Min Frequency (Hz)", minF, 0, 0);
+				return new EditInfo("", minF, 0, 0);
 			}
 			if (n == 1) {
-				return new EditInfo("Max Frequency (Hz)", maxF, 0, 0);
+				return new EditInfo("", maxF, 0, 0);
 			}
 			if (n == 2) {
-				return new EditInfo("Sweep Time (s)", sweepTime, 0, 0);
+				return new EditInfo("", sweepTime, 0, 0);
 			}
 			if (n == 3) {
 				EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -132,36 +183,7 @@ namespace Circuits {
 
 		public void setEditValue(int n, EditInfo ei) {
 			double maxfreq = 1 / (8 * sim.timeStep);
-			if (n == 0) {
-				minF = ei.value;
-				if (minF > maxfreq) {
-					minF = maxfreq;
-				}
-			}
-			if (n == 1) {
-				maxF = ei.value;
-				if (maxF > maxfreq) {
-					maxF = maxfreq;
-				}
-			}
-			if (n == 2) {
-				sweepTime = ei.value;
-			}
-			if (n == 3) {
-				flags &= ~FLAG_LOG;
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_LOG;
-				}
-			}
-			if (n == 4) {
-				maxV = ei.value;
-			}
-			if (n == 5) {
-				flags &= ~FLAG_BIDIR;
-				if (ei.checkbox.getState()) {
-					flags |= FLAG_BIDIR;
-				}
-			}
+
 			setParams();
 		}*/
 	}

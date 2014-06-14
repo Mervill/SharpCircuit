@@ -6,7 +6,7 @@ namespace Circuits {
 
 	public class VCOElm : ChipElm {
 		
-		public VCOElm( CirSim s) : base(s) {
+		public VCOElm(CirSim s) : base(s) {
 			
 		}
 

@@ -18,16 +18,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class SCRElm : CircuitElement {
 
-		private static readonly int anode = 0;
-		private static readonly int cnode = 1;
-		private static readonly int gnode = 2;
-		private static readonly int inode = 3;
-
-		private Diode diode;
-		private double ia, ic, ig;
-		private double lastvac;
-		private double lastvag;
-
 		/// <summary>
 		/// Gate-Cathode Resistance (ohms)
 		/// </summary>
@@ -44,6 +34,16 @@ namespace Circuits {
 		public double holdingI{ get; set; }
 		
 		public ElementLead gate;
+
+		private static readonly int anode = 0;
+		private static readonly int cnode = 1;
+		private static readonly int gnode = 2;
+		private static readonly int inode = 3;
+		
+		private Diode diode;
+		private double ia, ic, ig;
+		private double lastvac;
+		private double lastvag;
 
 		public SCRElm(CirSim s) : base(s) {
 			gate = new ElementLead(this,2);

@@ -13,8 +13,6 @@ namespace Circuits {
 
 		public static readonly double roomTemp = 300;
 
-		private double resistance;
-
 		/// <summary>
 		/// Tempature
 		/// </summary>
@@ -39,6 +37,8 @@ namespace Circuits {
 		/// Cooldown Time (s)
 		/// </summary>
 		public double coolTime{ get; set; }
+
+		private double resistance;
 
 		public LampElm(CirSim s) : base(s) {
 			temp = roomTemp;
