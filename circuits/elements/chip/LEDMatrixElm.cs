@@ -1,29 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace Circuits {
 
 	public class LEDMatrixElm : ChipElm {
 
-		[DefaultValue(false)]
 		public bool negateRows { get; set; }
-
-		[DefaultValue(false)]
 		public bool negateColumns { get; set; }
 
-		[DefaultValue(1.0)]
 		public double colorR { get; set; }
-
-		[DefaultValue(0.0)]
 		public double colorG { get; set; }
-
-		[DefaultValue(0.0)]
 		public double colorB { get; set; }
 
 		public LEDMatrixElm(CirSim s) : base(s) {
-
+			colorR = 1;
 		}
 
 		public override String getChipName() {

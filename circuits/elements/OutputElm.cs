@@ -6,10 +6,16 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class OutputElm : CircuitElement {
+
+		public ElementLead leadOut {
+			get {
+				return leads[0];
+			}
+		}
 
 		public OutputElm(CirSim s) : base(s) {
 

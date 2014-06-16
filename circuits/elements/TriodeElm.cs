@@ -6,26 +6,22 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class TriodeElm : CircuitElement {
 
+		public ElementLead leadPlate 	{ get { return leads[0]; }}
+		public ElementLead leadGrid 	{ get { return leads[1]; }}
+		public ElementLead leadCath 	{ get { return leads[2]; }}
+
 		public double currentp, currentg, currentc;
-
-		public ElementLead plate;
-		public ElementLead grid;
-		public ElementLead cath;
-
+		
 		private double mu, kg1;
 		private double gridCurrentR = 6000;
 		private double lastv0, lastv1, lastv2;
 
 		public TriodeElm( CirSim s) : base(s) {
-			plate = new ElementLead(this,0);
-			grid = new ElementLead(this,1);
-			cath = new ElementLead(this,2);
-
 			mu = 93;
 			kg1 = 680;
 		}
@@ -36,10 +32,6 @@ namespace Circuits {
 
 		public override void reset() {
 			volts[0] = volts[1] = volts[2] = 0;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? plate : (n == 1) ? grid : cath;
 		}
 
 		public override int getLeadCount() {

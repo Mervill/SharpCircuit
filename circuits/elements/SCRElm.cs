@@ -13,10 +13,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class SCRElm : CircuitElement {
+
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+		public ElementLead leadGate { get { return leads[2]; }}
 
 		/// <summary>
 		/// Gate-Cathode Resistance (ohms)
@@ -32,8 +36,6 @@ namespace Circuits {
 		/// Holding Current (A)
 		/// </summary>
 		public double holdingI{ get; set; }
-		
-		public ElementLead gate;
 
 		private static readonly int anode = 0;
 		private static readonly int cnode = 1;
@@ -46,7 +48,6 @@ namespace Circuits {
 		private double lastvag;
 
 		public SCRElm(CirSim s) : base(s) {
-			gate = new ElementLead(this,2);
 			diode = new Diode(sim);
 			diode.setup(0.8, 0);
 			cresistance = 50;
@@ -62,10 +63,6 @@ namespace Circuits {
 			volts[anode] = volts[cnode] = volts[gnode] = 0;
 			diode.reset();
 			lastvag = lastvac = 0;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : gate;
 		}
 
 		public override int getLeadCount() {

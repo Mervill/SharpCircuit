@@ -6,7 +6,7 @@ namespace Circuits {
 	
 	public class OpAmpSwapElm : OpAmpElm {
 		
-		public OpAmpSwapElm( CirSim s) : base(s) {
+		public OpAmpSwapElm(CirSim s) : base(s) {
 
 		}
 		

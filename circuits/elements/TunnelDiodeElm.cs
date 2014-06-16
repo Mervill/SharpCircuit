@@ -18,6 +18,9 @@ namespace Circuits {
 		private static readonly double pvpp = 0.525;
 		private static readonly double piv = 370e-6;
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		private double lastvoltdiff;
 
 		public TunnelDiodeElm(CirSim s) : base(s) {

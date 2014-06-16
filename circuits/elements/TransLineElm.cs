@@ -6,7 +6,7 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class TransLineElm : CircuitElement {
@@ -21,8 +21,6 @@ namespace Circuits {
 		/// </summary>
 		public double impedance{ get; set; }
 
-		public ElementLead[] leads;
-
 		private double[] voltageL, voltageR;
 		private int lenSteps, ptr;
 		private int voltSource1, voltSource2;
@@ -31,12 +29,6 @@ namespace Circuits {
 		public TransLineElm(CirSim s) : base(s) {
 			delay = 1000 * sim.timeStep;
 			impedance = 75;
-			leads = new ElementLead[] { 
-				new ElementLead(this,0), 
-				new ElementLead(this,1), 
-				new ElementLead(this,2), 
-				new ElementLead(this,3) 
-			};
 			reset();
 		}
 
@@ -118,10 +110,6 @@ namespace Circuits {
 				sim.stop("Need to ground transmission line!", this);
 				return;
 			}
-		}
-
-		public override ElementLead getLead(int n) {
-			return leads[n];
 		}
 
 		// double getVoltageDiff() { return volts[0]; }

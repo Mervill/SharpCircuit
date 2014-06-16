@@ -10,8 +10,17 @@ namespace Circuits {
 
 		public readonly static double pi = 3.14159265358979323846;
 
-		public ElementLead lead0;
-		public ElementLead lead1;
+		protected ElementLead lead0 {
+			get {
+				return leads[0];
+			}
+		}
+
+		protected ElementLead lead1 {
+			get {
+				return leads[1];
+			}
+		}
 
 		protected int voltSource;
 		protected double current;
@@ -24,9 +33,7 @@ namespace Circuits {
 			sim = s;
 			sim.elements.Add(this);
 
-			lead0 = new ElementLead(this,0);
-			lead1 = new ElementLead(this,1);
-
+			allocLeads();
 			allocNodes();
 		}
 
@@ -38,11 +45,6 @@ namespace Circuits {
 
 		protected bool comparePair(int x1, int x2, int y1, int y2) {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
-		}
-
-		protected virtual void allocNodes() {
-			nodes = new int[getLeadCount() + getInternalNodeCount()];
-			volts = new double[getLeadCount() + getInternalNodeCount()];
 		}
 
 		#region Virtual's
@@ -69,6 +71,22 @@ namespace Circuits {
 			current = c;
 		}
 
+		public virtual void allocLeads(){
+			leads = new ElementLead[getLeadCount()];
+			for(int i = 0;i < getLeadCount();i++){
+				leads[i] = new ElementLead(this,i);
+			}
+		}
+
+		public virtual int getLeadCount() {
+			return 2;
+		}
+		
+		public virtual ElementLead getLead(int n) {
+			return leads[n];
+			//return (n == 0) ? lead0 : (n == 1) ? lead1 : null;
+		}
+
 		public virtual double getLeadVoltage(int x) {
 			return volts[x];
 		}
@@ -78,20 +96,17 @@ namespace Circuits {
 			calculateCurrent();
 		}
 
-		public virtual int getLeadCount() {
-			return 2;
-		}
-
-		public virtual ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : null;
-		}
-
 		public virtual int getVoltageSourceCount() {
 			return 0;
 		}
 
 		public virtual void setVoltageSource(int n, int v) {
 			voltSource = v;
+		}
+
+		protected virtual void allocNodes() {
+			nodes = new int[getLeadCount() + getInternalNodeCount()];
+			volts = new double[getLeadCount() + getInternalNodeCount()];
 		}
 
 		public virtual int getInternalNodeCount() {

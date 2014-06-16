@@ -11,8 +11,7 @@ Licence: MIT/Boost C++
 
 ## ToDo
 
-- Pass on all elements, turning relevant fields into properties and and privatizing/protecting everything else.
-- Go back and make sure all publicly editable variables comply with original source.
+- Go back and make sure all publicly editable variables have proper checks.
 - Reorganize leads & give them semantic names.
 - Remove the -Elm suffix from circuit elements?
 - Add new serialization system (JSON).
@@ -21,6 +20,7 @@ Licence: MIT/Boost C++
 - Fix momentary switches.
 - Externalize deltatime
 - LogicInputElm
+- Develop testing strategy. 
 
 **API notes**
 
@@ -96,35 +96,29 @@ public class Example {
     
 	CirSim sim;
 	
-	ACVoltageElm 	ACSource;
-	ResistorElm 	Resistor;
-	InductorElm 	Inductor;
-	WireElm 		wire;
+	public ACVoltageElm acSource;
+	public ResistorElm resistorA;
+	public InductorElm inductor;
+	public WireElm wire;
 	
 	void Init(){
 		
 		sim = new CirSim();
 		
-		List<CircuitElm> elements = new List<CircuitElm>();
-
-		elements.Add(ACSource = new ACVoltageElm(sim));
-		elements.Add(Resistor = new ResistorElm(sim){
+		acSource = new ACVoltageElm(sim);
+		resistorA = new ResistorElm(sim){
 			resistance = 180
-		});
-		elements.Add(Inductor = new InductorElm(sim));
-		elements.Add(wire = new WireElm(sim));
-
-		// Link the elements
-		ACSource.point1.Connect(Resistor.point0);
-		Resistor.point1.Connect(Inductor.point0);
-		Inductor.point1.Connect(wire.point0);
-		wire.point1.Connect(ACSource.point0);
+		};
+		inductor = new InductorElm(sim);
+		wire = new WireElm(sim);
 		
-		foreach(CircuitElm elm in elements){
-			sim.elmList.Add(elm);
-		}
+		acSource
+			.Next(resistorA)
+			.Next(inductor)
+			.Next(wire)
+			.Next(acSource);
 		
-		sim.analyzeFlag = true;
+		sim.needAnalyze();
 	}
 
 	void Tick(){
@@ -147,7 +141,7 @@ using Circuits;
 public class Example {
 	
     //
-	// Half-Wave Reflector
+	// Half-Wave Rectifier
 	// This circuit uses a diode, a device that conducts 
 	// current in only one direction. It takes AC input 
 	// and "rectifies" it so that the negative portion of the 
@@ -156,23 +150,29 @@ public class Example {
     
 	CirSim sim;
 	
-	ACVoltageElm ACSource;
+	public ACVoltageElm acSource;
+	public ResistorElm resistorA;
+	public DiodeElm diode;
+	public WireElm wire;
 	
 	void Init(){
 		
 		sim = new CirSim();
 		
-		ACSource = new ACVoltageElm(sim);
-
-		ACSource
-			.Next(new DiodeElm(sim))
-			.Next(new ResistorElm(sim){
-				Resistance = 640
-			})
-			.Next(new WireElm(sim))
-			.Next(ACSource);
+		acSource = new ACVoltageElm(sim);
+		resistorA = new ResistorElm(sim){
+			resistance = 640
+		};
+		diode = new DiodeElm(sim);
+		wire = new WireElm(sim);
 		
-		sim.analyzeFlag = true;
+		acSource
+			.Next(diode)
+			.Next(resistorA)
+			.Next(wire)
+			.Next(acSource);
+		
+		sim.needAnalyze();
 	}
 
 	void Tick(){
@@ -201,25 +201,30 @@ public class Example {
 	
 	CirSim sim;
 	
-	NTransistorElm npn;
+	public NPNTransistorElm transistor;
+	public VarRailElm baseVoltage;
+	public VarRailElm collectorVoltage;
+	public GroundElm ground;
 	
 	void Init(){
 		
 		sim = new CirSim();
 		
-		npn = new NTransistorElm(sim);
-
-		VarRailElm _base = new VarRailElm(sim){ 
-			MaxVoltage = 0.7 
-		};
-		VarRailElm _collector = new VarRailElm(sim);
-		GroundElm _grnd = new GroundElm(sim);
-
-		npn.lead0.Connect(_base.lead0);
-		npn.coll.Connect(_collector.lead0);
-		npn.emit.Connect(_grnd.lead0);
+		baseVoltage = new VarRailElm(sim);
+		baseVoltage.maxVoltage = 0.7025;
 		
-		sim.analyzeFlag = true;
+		collectorVoltage = new VarRailElm(sim);
+		collectorVoltage.maxVoltage = 2;
+		
+		ground = new GroundElm(sim);
+		
+		transistor = new NPNTransistorElm(sim);
+		
+		baseVoltage.Attach(0,transistor.leadBase);
+		collectorVoltage.Attach(0,transistor.leadCollector);
+		ground.Attach(0,transistor.leadEmitter);
+		
+		sim.needAnalyze();
 	}
 
 	void Tick(){

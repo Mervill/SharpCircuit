@@ -17,10 +17,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class TriacElm : CircuitElement {
+
+		public ElementLead leadBase 	{ get { return leads[0]; }}
+		public ElementLead leadSrc 		{ get { return leads[1]; }}
+		public ElementLead leadGate 	{ get { return leads[2]; }}
 
 		public Diode diode{ get; private set; }
 
@@ -38,8 +42,7 @@ namespace Circuits {
 		/// Holding Current (A)
 		/// </summary>
 		public double holdingI{ get; set; }
-		
-		public ElementLead gate;
+
 
 		private static readonly int anode = 0;
 		private static readonly int cnode = 1;
@@ -52,7 +55,6 @@ namespace Circuits {
 		private double lastvac, lastvag;
 
 		public TriacElm(CirSim s) : base(s) {
-			gate = new ElementLead(this,2);
 			cresistance = 50;
 			holdingI = 0.0082;
 			triggerI = 0.01;
@@ -68,10 +70,6 @@ namespace Circuits {
 			volts[anode] = volts[cnode] = volts[gnode] = 0;
 			diode.reset();
 			lastvag = lastvac = 0;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : gate;
 		}
 
 		public override int getLeadCount() {

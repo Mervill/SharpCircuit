@@ -6,10 +6,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class PotentElm : CircuitElement {
+
+		public ElementLead leadOut 		{ get { return leads[0]; }}
+		public ElementLead leadIn1 		{ get { return leads[1]; }}
+		public ElementLead leadVoltage 	{ get { return leads[2]; }}
 
 		public double position{ get; set; }
 
@@ -18,8 +22,6 @@ namespace Circuits {
 		/// </summary>
 		public double maxResistance{ get; set; }
 
-		public ElementLead lead2;
-
 		private double resistance1;
 		private double resistance2;
 		private double current1; 
@@ -27,20 +29,12 @@ namespace Circuits {
 		private double current3;
 
 		public PotentElm(CirSim s) : base(s) {
-			lead2 = new ElementLead(this,2);
-			setup();
 			maxResistance = 1000;
 			position = 0.5;
 		}
 
-		public void setup() { }
-
 		public override int getLeadCount() {
 			return 3;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : lead2;
 		}
 
 		public override void calculateCurrent() {

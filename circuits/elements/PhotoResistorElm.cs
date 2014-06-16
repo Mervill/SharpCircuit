@@ -15,6 +15,9 @@ namespace Circuits {
 		// FIXME need to uncomment PhotoResistorElm line from CirSim.java
 		// FIXME need to add PhotoResistorElm.java to srclist
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Min resistance (ohms)
 		/// </summary>

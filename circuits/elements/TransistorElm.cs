@@ -6,10 +6,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class TransistorElm : CircuitElement {
+
+		public ElementLead leadBase 		{ get { return leads[0]; }}
+		public ElementLead leadCollector 	{ get { return leads[1]; }}
+		public ElementLead leadEmitter 		{ get { return leads[2]; }}
 
 		/// <summary>
 		/// Beta/hFE
@@ -24,9 +28,6 @@ namespace Circuits {
 			}
 		}
 
-		public ElementLead coll;
-		public ElementLead emit;
-
 		private double beta;
 
 		private static readonly double leakage = 1E-13; // 1e-6;
@@ -34,7 +35,7 @@ namespace Circuits {
 		private static readonly double vdcoef = 1 / vt;
 		private static readonly double rgain = 0.5;
 		
-		private int pnp;
+		private double pnp;
 
 		private double fgain;
 		private double gmin;
@@ -44,9 +45,6 @@ namespace Circuits {
 		private double lastvbc, lastvbe;
 
 		public TransistorElm(CirSim s,bool pnpflag) : base(s) {
-			coll = new ElementLead(this,1);
-			emit = new ElementLead(this,2);
-
 			pnp = (pnpflag) ? -1 : 1;
 			beta = 100;
 			setup();
@@ -64,10 +62,6 @@ namespace Circuits {
 		public override void reset() {
 			volts[0] = volts[1] = volts[2] = 0;
 			lastvbc = lastvbe = 0;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? coll : emit;
 		}
 
 		public override int getLeadCount() {

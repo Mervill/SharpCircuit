@@ -11,6 +11,9 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class ProbeElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		public ProbeElm(CirSim s) : base(s) {
 			
 		}

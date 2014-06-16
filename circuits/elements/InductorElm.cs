@@ -11,22 +11,34 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class InductorElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		public Inductor ind;
 
 		/// <summary>
 		/// Inductance (H)
 		/// </summary>
-		[System.ComponentModel.DefaultValue(1)]
-		public double inductance{ get; set; }
+		public double inductance{ 
+			get {
+				return _inductance;
+			}
+			set {
+				_inductance = value;
+				ind.setup(_inductance,current,true);
+			}
+		}
+
+		private double _inductance;
 
 		public InductorElm(CirSim s) : base(s) {
 			ind = new Inductor(sim);
-			ind.setup(inductance, current, true);
+			inductance = 1;
 		}
 
 		public InductorElm(CirSim s,double induc) : base(s) {
 			ind = new Inductor(sim);
-			ind.setup(induc, current, true);
+			inductance = induc;
 		}
 
 		public override void reset() {

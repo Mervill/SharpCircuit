@@ -6,10 +6,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class OpAmpElm : CircuitElement {
+
+		public ElementLead leadOut { get { return leads[0]; }}
+		public ElementLead leadIn1 { get { return leads[1]; }}
+		public ElementLead leadIn2 { get { return leads[2]; }}
 
 		/// <summary>
 		/// Max Output (V)
@@ -20,9 +24,6 @@ namespace Circuits {
 		/// Min Output (V)
 		/// </summary>
 		public double minOut{ get; set; }
-
-		public ElementLead in1p;
-		public ElementLead in2p;
 
 		private double lastvd;
 		private double gain;
@@ -50,7 +51,7 @@ namespace Circuits {
 		}
 
 		public override ElementLead getLead(int n) {
-			return (n == 0) ? in1p : (n == 1) ? in2p : lead1;
+			return (n == 0) ? leadIn1 : (n == 1) ? leadIn2 : lead1;
 		}
 
 		public override int getVoltageSourceCount() {

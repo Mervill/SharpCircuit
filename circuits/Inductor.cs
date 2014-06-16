@@ -5,14 +5,13 @@ using System.Collections.Generic;
 namespace Circuits {
 
 	public class Inductor {
-
-		[System.ComponentModel.DefaultValue(true)]
+		
 		public bool isTrapezoidal { get; set; }
 
 		public int[] nodes;
 		public CirSim sim;
 
-		public double inductance;
+		public double inductance = 1;
 		public double compResistance;
 		public double current;
 		public double curSourceValue;

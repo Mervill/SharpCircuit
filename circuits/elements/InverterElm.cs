@@ -11,6 +11,9 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class InverterElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Slew Rate (V/ns)
 		/// </summary>

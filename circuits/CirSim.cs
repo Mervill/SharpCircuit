@@ -43,8 +43,8 @@ namespace Circuits {
 		private double[] origRightSide;
 		private RowInfo[] circuitRowInfo;
 		private int[] circuitPermute;
-		private bool circuitNonLinear, circuitNeedsMap;
 		private int circuitMatrixSize, circuitMatrixFullSize;
+		private bool circuitNonLinear, circuitNeedsMap;
 
 		private long lastTime, lastFrameTime, lastIterTime, secTime;
 		public int frames{ get; private set; }
@@ -100,7 +100,7 @@ namespace Circuits {
 			// find bad connections, nodes not connected to other elements which
 			// intersect other elements' bounding boxes
 			// debugged by hausen: nullPointerException
-			if (nodeList != null) {
+			/*if (nodeList != null) {
 				for (i = 0; i != nodeList.Count; i++) {
 					CircuitNode cn = getCircuitNode(i);
 					if (!cn.@internal && cn.links.Count == 1) {
@@ -117,8 +117,7 @@ namespace Circuits {
 						}
 					}
 				}
-			}
-
+			}*/
 
 			if (stopMessage == null) {
 				info = new String[10];

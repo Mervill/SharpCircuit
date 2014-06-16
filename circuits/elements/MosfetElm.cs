@@ -6,10 +6,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class MosfetElm : CircuitElement {
+
+		public ElementLead leadBase 	{ get { return leads[0]; }}
+		public ElementLead leadSrc 		{ get { return leads[1]; }}
+		public ElementLead leadDrain 	{ get { return leads[2]; }}
 
 		/// <summary>
 		/// Threshold Voltage
@@ -25,9 +29,6 @@ namespace Circuits {
 
 		private double _threshold;
 
-		public ElementLead src;
-		public ElementLead drn;
-
 		private bool pnp;
 		private double lastv1;
 		private double lastv2;
@@ -36,8 +37,6 @@ namespace Circuits {
 		private double gm;
 
 		public MosfetElm(CirSim s,bool isPNP) : base(s) {
-			src = new ElementLead(this,1);
-			drn = new ElementLead(this,2);
 			pnp = isPNP;
 			_threshold = getDefaultThreshold();
 		}
@@ -56,10 +55,6 @@ namespace Circuits {
 
 		public override void reset() {
 			lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = 0;
-		}
-		
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? src : drn;
 		}
 
 		public override double getCurrent() {

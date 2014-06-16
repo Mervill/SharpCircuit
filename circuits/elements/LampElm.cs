@@ -13,6 +13,9 @@ namespace Circuits {
 
 		public static readonly double roomTemp = 300;
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Tempature
 		/// </summary>

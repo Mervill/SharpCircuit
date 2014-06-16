@@ -11,6 +11,9 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class SparkGapElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// On resistance (ohms)
 		/// </summary>

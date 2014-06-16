@@ -11,6 +11,9 @@ namespace Circuits {
 	// Test Prop	[X]
 	public class ResistorElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Resistance (ohms)
 		/// </summary>
@@ -18,6 +21,10 @@ namespace Circuits {
 
 		public ResistorElm(CirSim s) : base(s) {
 			resistance = 100;
+		}
+
+		public ResistorElm(CirSim s,double r) : base(s) {
+			resistance = r;
 		}
 
 		public override void calculateCurrent() {

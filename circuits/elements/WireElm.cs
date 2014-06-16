@@ -14,6 +14,9 @@ namespace Circuits {
 	// Prop:Contd	[_]
 	public class WireElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		public WireElm(CirSim s) : base(s) {
 			
 		}

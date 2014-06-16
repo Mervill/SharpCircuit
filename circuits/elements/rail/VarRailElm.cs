@@ -10,13 +10,13 @@ namespace Circuits {
 
 		public VarRailElm(CirSim s) : base(s,WaveType.VAR) {
 			output = 1;
-			frequency = MaxVoltage;
+			frequency = maxVoltage;
 			waveform = WaveType.VAR;
 		}
 
 		public override double getVoltage() {
 			//frequency = slider * (MaxVoltage - Bias) / 100.0 + Bias;
-			frequency = output * (MaxVoltage - Bias) + Bias;
+			frequency = output * (maxVoltage - bias) + bias;
 			return frequency;
 		}
 

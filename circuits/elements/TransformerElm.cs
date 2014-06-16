@@ -6,7 +6,7 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class TransformerElm : CircuitElement {
@@ -26,10 +26,7 @@ namespace Circuits {
 		/// </summary>
 		public double couplingCoef{ get; set; }
 
-		[System.ComponentModel.DefaultValue(true)]
 		public bool isTrapezoidal { get; set; }
-
-		public ElementLead[] ptEnds;
 
 		new public double[] current;
 
@@ -37,15 +34,11 @@ namespace Circuits {
 		private double curSourceValue1, curSourceValue2;
 
 		public TransformerElm( CirSim s) : base(s) {
-			ptEnds = newLeadArray(getLeadCount());
+			isTrapezoidal = true;
 			inductance = 4;
 			ratio = 1;
 			couplingCoef = 0.999;
 			current = new double[2];
-		}
-
-		public override ElementLead getLead(int n) {
-			return ptEnds[n];
 		}
 
 		public override int getLeadCount() {

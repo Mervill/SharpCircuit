@@ -12,7 +12,7 @@ namespace Circuits {
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class SchmittElm : InvertingSchmittElm {
-		
+
 		public SchmittElm(CirSim s) : base(s) {
 
 		}

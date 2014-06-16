@@ -6,10 +6,12 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class RailElm : VoltageElm {
+
+		public ElementLead leadOut 	{ get { return leads[0]; }}
 
 		public RailElm(CirSim s,WaveType wf) : base(s,wf) {
 

@@ -6,10 +6,12 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class SweepElm : CircuitElement {
+
+		public ElementLead leadOut { get { return leads[0]; }}
 
 		/// <summary>
 		/// Max Frequency (Hz)
@@ -33,7 +35,7 @@ namespace Circuits {
 		/// </summary>
 		public double minF {
 			get {
-				return _maxF;
+				return _minF;
 			}
 			set {
 				double maxfreq = 1 / (8 * sim.timeStep);
@@ -47,7 +49,6 @@ namespace Circuits {
 
 		public bool logarithmic { get; set; }
 
-		[System.ComponentModel.DefaultValue(true)]
 		public bool bidirectional { get; set; }
 
 		/// <summary>
@@ -73,6 +74,7 @@ namespace Circuits {
 			maxF = 4000;
 			maxV = 5;
 			sweepTime = 0.1;
+			bidirectional = true;
 			reset();
 		}
 

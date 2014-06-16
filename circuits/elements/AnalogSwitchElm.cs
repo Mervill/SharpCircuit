@@ -6,10 +6,14 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class AnalogSwitchElm : CircuitElement {
+
+		public ElementLead leadIn 		{ get { return leads[0]; }}
+		public ElementLead leadOut 		{ get { return leads[1]; }}
+		public ElementLead leadSwitch 	{ get { return leads[2]; }}
 
 		/// <summary>
 		/// Normally closed
@@ -27,8 +31,6 @@ namespace Circuits {
 		public double r_off{ get; set; }
 
 		public bool open{ get; protected set; }
-
-		public ElementLead lead3;
 
 		private double resistance;
 
@@ -62,10 +64,6 @@ namespace Circuits {
 
 		public override int getLeadCount() {
 			return 3;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : lead3;
 		}
 
 		public override void getInfo(String[] arr) {

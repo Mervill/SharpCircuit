@@ -11,17 +11,20 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class CurrentElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Current (A)
 		/// </summary>
-		public double currentValue{ get; set; }
+		public double currentVoltage{ get; set; }
 
 		public CurrentElm(CirSim s) : base(s) {
-			currentValue = 0.01;
+			currentVoltage = 0.01;
 		}
 
 		public override void stamp() {
-			current = currentValue;
+			current = currentVoltage;
 			sim.stampCurrentSource(nodes[0], nodes[1], current);
 		}
 

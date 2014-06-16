@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	public class PTransistorElm : TransistorElm {
+	public class NPNTransistorElm : TransistorElm {
 		
-		public PTransistorElm(CirSim s) : base(s,true) {
-
+		public NPNTransistorElm(CirSim s) : base(s,false) {
+			
 		}
 		
 	}

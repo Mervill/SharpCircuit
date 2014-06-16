@@ -6,10 +6,12 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class GroundElm : CircuitElement {
+
+		public ElementLead leadIn { get { return lead0; }}
 
 		public GroundElm(CirSim s) : base(s) {
 			

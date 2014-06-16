@@ -21,24 +21,18 @@ namespace Circuits {
 		/// </summary>
 		public double ratio{ get; set; }
 
-		public ElementLead[] ptEnds;
 		new public double[] current;
 
 		private double[] a;
 		private double[] curSourceValue, voltdiff;
 
 		public TappedTransformerElm(CirSim s) : base(s) {
-			ptEnds = newLeadArray(getLeadCount());
 			inductance = 4;
 			ratio = 1;
 			current = new double[4];
 			voltdiff = new double[3];
 			curSourceValue = new double[3];
 			a = new double[9];
-		}
-
-		public override ElementLead getLead(int n) {
-			return ptEnds[n];
 		}
 
 		public override int getLeadCount() {

@@ -20,7 +20,7 @@ namespace Circuits {
 			}
 			set {
 				_inputCount = value;
-				inLeads = newLeadArray(inputCount);
+				allocLeads();
 				allocNodes();
 			}
 		}
@@ -28,8 +28,6 @@ namespace Circuits {
 		protected int _inputCount;
 
 		public bool lastOutput{ get; set; }
-
-		public ElementLead[] inLeads;
 
 		public GateElm(CirSim s) : base(s) {
 			inputCount = 2;
@@ -44,13 +42,6 @@ namespace Circuits {
 
 		public override int getLeadCount() {
 			return inputCount + 1;
-		}
-
-		public override ElementLead getLead(int n) {
-			if (n == inputCount) {
-				return lead1;
-			}
-			return inLeads[n];
 		}
 
 		public override int getVoltageSourceCount() {

@@ -8,10 +8,12 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class FMElm : CircuitElement {
+
+		public ElementLead leadOut { get { return leads[0]; }}
 
 		/// <summary>
 		/// Carrier Frequency (Hz)

@@ -32,7 +32,7 @@ namespace Circuits {
 				WaveType ow = _waveform;
 				_waveform = value;
 				if (_waveform == WaveType.DC && ow != WaveType.DC) {
-					Bias = 0;
+					bias = 0;
 				}
 			} 
 		}
@@ -82,25 +82,23 @@ namespace Circuits {
 		/// <summary>
 		/// The max voltage (AC) or flat voltage (DC)
 		/// </summary>
-		public double MaxVoltage{ get; set; }
+		public double maxVoltage{ get; set; }
 		
 		/// <summary>
 		/// DC Offset (V)
 		/// </summary>
-		public double Bias{ get; set; }
+		public double bias{ get; set; }
 
 		private WaveType _waveform;
-		private double _frequency;
+		private double _frequency = 40;
 		private double _phaseShift;
-		private double _dutyCycle;
+		private double _dutyCycle = 0.5;
 
 		protected double freqTimeZero;
 
 		public VoltageElm(CirSim s,WaveType wf) : base(s) {
 			waveform = wf;
-			MaxVoltage = 5;
-			frequency = 40;
-			_dutyCycle = 0.5;
+			maxVoltage = 5;
 			reset();
 		}
 
@@ -133,17 +131,17 @@ namespace Circuits {
 			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + _phaseShift;
 			switch (waveform) {
 			case WaveType.DC:
-				return MaxVoltage + Bias;
+				return maxVoltage + bias;
 			case WaveType.AC:
-				return Math.Sin(w) * MaxVoltage + Bias;
+				return Math.Sin(w) * maxVoltage + bias;
 			case WaveType.SQUARE:
-				return Bias + ((w % (2 * pi) > (2 * pi * _dutyCycle)) ? -MaxVoltage : MaxVoltage);
+				return bias + ((w % (2 * pi) > (2 * pi * _dutyCycle)) ? -maxVoltage : maxVoltage);
 			case WaveType.TRIANGLE:
-				return Bias + triangleFunc(w % (2 * pi)) * MaxVoltage;
+				return bias + triangleFunc(w % (2 * pi)) * maxVoltage;
 			case WaveType.SAWTOOTH:
-				return Bias + (w % (2 * pi)) * (MaxVoltage / pi) - MaxVoltage;
+				return bias + (w % (2 * pi)) * (maxVoltage / pi) - maxVoltage;
 			case WaveType.PULSE:
-				return ((w % (2 * pi)) < 1) ? MaxVoltage + Bias : Bias;
+				return ((w % (2 * pi)) < 1) ? maxVoltage + bias : bias;
 			default:
 				return 0;
 			}
@@ -187,10 +185,10 @@ namespace Circuits {
 			arr[2] = ((this is RailElm) ? "V = " : "Vd = ") + getVoltageText(getVoltageDiff());
 			if (waveform != WaveType.DC && waveform != WaveType.VAR) {
 				arr[3] = "f = " + getUnitText(frequency, "Hz");
-				arr[4] = "Vmax = " + getVoltageText(MaxVoltage);
+				arr[4] = "Vmax = " + getVoltageText(maxVoltage);
 				int i = 5;
-				if (Bias != 0) {
-					arr[i++] = "Voff = " + getVoltageText(Bias);
+				if (bias != 0) {
+					arr[i++] = "Voff = " + getVoltageText(bias);
 				} else if (frequency > 500) {
 					arr[i++] = "wavelength = "
 							+ getUnitText(2.9979e8 / frequency, "m");

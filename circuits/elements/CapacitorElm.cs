@@ -11,6 +11,9 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class CapacitorElm : CircuitElement {
 
+		public ElementLead leadIn 	{ get { return leads[0]; }}
+		public ElementLead leadOut 	{ get { return leads[1]; }}
+
 		/// <summary>
 		/// Capacitance (F)
 		/// </summary>
@@ -24,7 +27,6 @@ namespace Circuits {
 			}
 		}
 
-		[System.ComponentModel.DefaultValue(true)]
 		public bool isTrapezoidal { get; set; }
 
 		private double _capacitance = 1E-5;
@@ -34,7 +36,12 @@ namespace Circuits {
 		private double curSourceValue;
 
 		public CapacitorElm(CirSim s) : base (s) {
+			isTrapezoidal = true;
+		}
 
+		public CapacitorElm(CirSim s,double c) : base (s) {
+			capacitance = c;
+			isTrapezoidal = true;
 		}
 
 		public override void setLeadVoltage(int n, double c) {

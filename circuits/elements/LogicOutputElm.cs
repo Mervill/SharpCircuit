@@ -6,10 +6,12 @@ namespace Circuits {
 
 	// Initializers	[X]
 	// Properties	[X]
-	// Leads		[_]
+	// Leads		[X]
 	// Test Basic	[_]
 	// Test Prop	[_]
 	public class LogicOutputElm : CircuitElement {
+
+		public ElementLead leadIn { get { return leads[0]; }}
 
 		/// <summary>
 		/// The Threshold Voltage.
