@@ -112,7 +112,6 @@ namespace Circuits {
 		private int nCoil1, nCoil2, nCoil3;
 
 		public RelayElm(CirSim s) : base(s) {
-
 			ind = new Inductor(sim);
 			inductance = 0.2;
 			ind.setup(inductance, 0, true);

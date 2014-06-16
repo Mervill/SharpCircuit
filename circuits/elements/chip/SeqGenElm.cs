@@ -4,9 +4,127 @@ using System.Collections.Generic;
 
 namespace Circuits {
 
-	// contributed by Edward Calver
+	// Contributed by Edward Calver
 
 	public class SeqGenElm : ChipElm {
+
+		public bool Bit0Set {
+			get {
+				return (data & 1) != 0;
+			}
+			set {
+				if (value) {
+					data |= 1;
+				} else {
+					data &= ~1;
+				}
+			}
+		}
+
+		public bool Bit1set {
+			get {
+				return (data & 2) != 0;
+			}
+			set {
+				if (value) {
+					data |= 2;
+				} else {
+					data &= ~2;
+				}
+			}
+		}
+
+		public bool Bit2Set {
+			get {
+				return (data & 4) != 0;
+			}
+			set {
+				if (value) {
+					data |= 4;
+				} else {
+					data &= ~4;
+				}
+			}
+		}
+
+		public bool Bit3Set {
+			get {
+				return (data & 8) != 0;
+			}
+			set {
+				if (value) {
+					data |= 8;
+				} else {
+					data &= ~8;
+				}
+			}
+		}
+
+		public bool Bit4Set {
+			get {
+				return (data & 16) != 0;
+			}
+			set {
+				if (value) {
+					data |= 16;
+				} else {
+					data &= ~16;
+				}
+			}
+		}
+
+		public bool Bit5Set {
+			get {
+				return (data & 32) != 0;
+			}
+			set {
+				if (value) {
+					data |= 32;
+				} else {
+					data &= ~32;
+				}
+			}
+		}
+
+		public bool Bit6Set {
+			get {
+				return (data & 64) != 0;
+			}
+			set {
+				if (value) {
+					data |= 64;
+				} else {
+					data &= ~64;
+				}
+			}
+		}
+
+		public bool Bit7Set {
+			get {
+				return (data & 128) != 0;
+			}
+			set {
+				if (value) {
+					data |= 128;
+				} else {
+					data &= ~128;
+				}
+			}
+		}
+
+		public bool OneShot {
+			get {
+				return oneshot;
+			}
+			set {
+				oneshot = value;
+				if (oneshot) {
+					position = 8;
+				} else {
+					position = 0;
+				}
+			}
+		}
 
 		private short data = 0;
 		private byte position = 0;
@@ -77,137 +195,6 @@ namespace Circuits {
 			}
 
 		}
-
-		/*public EditInfo getEditInfo(int n) {
-			// My code
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 0 set", (data & 1) != 0);
-				return ei;
-			}
-
-			if (n == 1) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 1 set", (data & 2) != 0);
-				return ei;
-			}
-			if (n == 2) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 2 set", (data & 4) != 0);
-				return ei;
-			}
-			if (n == 3) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 3 set", (data & 8) != 0);
-				return ei;
-			}
-
-			if (n == 4) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 4 set", (data & 16) != 0);
-				return ei;
-			}
-			if (n == 5) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 5 set", (data & 32) != 0);
-				return ei;
-			}
-
-			if (n == 6) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 6 set", (data & 64) != 0);
-				return ei;
-			}
-
-			if (n == 7) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Bit 7 set", (data & 128) != 0);
-				return ei;
-			}
-			if (n == 8) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("One shot", oneshot);
-				return ei;
-			}
-			return null;
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0) {
-				if (ei.checkbox.getState()) {
-					data |= 1;
-				} else {
-					data &= ~1;
-				}
-				setPoints();
-			}
-			if (n == 1) {
-				if (ei.checkbox.getState()) {
-					data |= 2;
-				} else {
-					data &= ~2;
-				}
-				setPoints();
-			}
-			if (n == 2) {
-				if (ei.checkbox.getState()) {
-					data |= 4;
-				} else {
-					data &= ~4;
-				}
-				setPoints();
-			}
-			if (n == 3) {
-				if (ei.checkbox.getState()) {
-					data |= 8;
-				} else {
-					data &= ~8;
-				}
-				setPoints();
-			}
-			if (n == 4) {
-				if (ei.checkbox.getState()) {
-					data |= 16;
-				} else {
-					data &= ~16;
-				}
-				setPoints();
-			}
-			if (n == 5) {
-				if (ei.checkbox.getState()) {
-					data |= 32;
-				} else {
-					data &= ~32;
-				}
-				setPoints();
-			}
-			if (n == 6) {
-				if (ei.checkbox.getState()) {
-					data |= 64;
-				} else {
-					data &= ~64;
-				}
-				setPoints();
-			}
-			if (n == 7) {
-				if (ei.checkbox.getState()) {
-					data |= 128;
-				} else {
-					data &= ~128;
-				}
-				setPoints();
-			}
-			if (n == 8) {
-				if (ei.checkbox.getState()) {
-					oneshot = true;
-					position = 8;
-				} else {
-					position = 0;
-					oneshot = false;
-				}
-			}
-
-		}*/
 
 	}
 }

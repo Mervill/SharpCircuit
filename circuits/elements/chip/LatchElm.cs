@@ -24,9 +24,8 @@ namespace Circuits {
 		public override void setupPins() {
 			pins = new Pin[getLeadCount()];
 			int i;
-			for (i = 0; i != bits; i++) {
+			for (i = 0; i != bits; i++)
 				pins[i] = new Pin("I"+i);
-			}
 			for (i = 0; i != bits; i++) {
 				pins[i + bits] = new Pin("O"+i);
 				pins[i + bits].output = true;
@@ -37,11 +36,9 @@ namespace Circuits {
 
 		public override void execute() {
 			int i;
-			if (pins[loadPin].value && !lastLoad) {
-				for (i = 0; i != bits; i++) {
+			if (pins[loadPin].value && !lastLoad)
+				for (i = 0; i != bits; i++)
 					pins[i + bits].value = pins[i].value;
-				}
-			}
 			lastLoad = pins[loadPin].value;
 		}
 

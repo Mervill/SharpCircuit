@@ -66,9 +66,9 @@ namespace Circuits {
 		public MemristorElm( CirSim s) : base(s) {
 			r_on = 100;
 			r_off = 160 * r_on;
-			dopeWidth = 0;
-			totalWidth = 10E-9; // meters
-			mobility = 1E-10; // m^2/sV
+			_dopeWidth = 0;
+			_totalWidth = 10E-9; // meters
+			_mobility = 1E-10; // m^2/sV
 			resistance = 100;
 		}
 
@@ -81,17 +81,17 @@ namespace Circuits {
 		}
 
 		public override void reset() {
-			dopeWidth = 0;
+			_dopeWidth = 0;
 		}
 
 		public override void startIteration() {
-			double wd = dopeWidth / totalWidth;
-			dopeWidth += sim.timeStep * mobility * r_on * current / totalWidth;
-			if (dopeWidth < 0) {
-				dopeWidth = 0;
+			double wd = _dopeWidth / _totalWidth;
+			_dopeWidth += sim.timeStep * _mobility * r_on * current / _totalWidth;
+			if (_dopeWidth < 0) {
+				_dopeWidth = 0;
 			}
-			if (dopeWidth > totalWidth) {
-				dopeWidth = totalWidth;
+			if (_dopeWidth > _totalWidth) {
+				_dopeWidth = _totalWidth;
 			}
 			resistance = r_on * wd + r_off * (1 - wd);
 		}

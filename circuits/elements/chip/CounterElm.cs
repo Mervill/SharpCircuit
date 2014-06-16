@@ -13,7 +13,6 @@ namespace Circuits {
 			set {
 				_hasEnable = value;
 				setupPins();
-				allocNodes();
 			}
 		}
 

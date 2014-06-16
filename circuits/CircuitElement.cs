@@ -16,8 +16,9 @@ namespace Circuits {
 		protected int voltSource;
 		protected double current;
 
-		protected int[] nodes;
-		protected double[] volts;
+		protected ElementLead[] leads;
+		protected int[] 		nodes;
+		protected double[] 		volts;
 
 		public CircuitElement(CirSim s) {
 			sim = s;
@@ -39,6 +40,11 @@ namespace Circuits {
 			return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
 		}
 
+		protected virtual void allocNodes() {
+			nodes = new int[getLeadCount() + getInternalNodeCount()];
+			volts = new double[getLeadCount() + getInternalNodeCount()];
+		}
+
 		#region Virtual's
 
 		public virtual void getInfo(String[] arr){ }
@@ -48,11 +54,6 @@ namespace Circuits {
 		public virtual void doStep(){ }
 
 		public virtual void calculateCurrent(){ }
-
-		public virtual void allocNodes() {
-			nodes = new int[getLeadCount() + getInternalNodeCount()];
-			volts = new double[getLeadCount() + getInternalNodeCount()];
-		}
 
 		public virtual void reset() {
 			for (int i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {

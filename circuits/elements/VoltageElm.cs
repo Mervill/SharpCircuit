@@ -90,7 +90,7 @@ namespace Circuits {
 		public double Bias{ get; set; }
 
 		private WaveType _waveform;
-		protected double _frequency;
+		private double _frequency;
 		private double _phaseShift;
 		private double _dutyCycle;
 
@@ -100,7 +100,7 @@ namespace Circuits {
 			waveform = wf;
 			MaxVoltage = 5;
 			frequency = 40;
-			dutyCycle = 0.5;
+			_dutyCycle = 0.5;
 			reset();
 		}
 
@@ -130,14 +130,14 @@ namespace Circuits {
 		}
 
 		public virtual double getVoltage() {
-			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + phaseShift;
+			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + _phaseShift;
 			switch (waveform) {
 			case WaveType.DC:
 				return MaxVoltage + Bias;
 			case WaveType.AC:
 				return Math.Sin(w) * MaxVoltage + Bias;
 			case WaveType.SQUARE:
-				return Bias + ((w % (2 * pi) > (2 * pi * dutyCycle)) ? -MaxVoltage : MaxVoltage);
+				return Bias + ((w % (2 * pi) > (2 * pi * _dutyCycle)) ? -MaxVoltage : MaxVoltage);
 			case WaveType.TRIANGLE:
 				return Bias + triangleFunc(w % (2 * pi)) * MaxVoltage;
 			case WaveType.SAWTOOTH:

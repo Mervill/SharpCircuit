@@ -7,15 +7,16 @@ namespace Circuits {
 	// Contributed by Edward Calver
 
 	public class SipoShiftElm : ChipElm {
-		
+
+		// This has to be a short because there's no unsigned byte
+		// and it's screwing with my code
+		public short data = 0;
+		public bool clockstate = false;
+
 		public SipoShiftElm(CirSim s) : base(s) {
 			
 		}
 
-		public short data = 0;	// This has to be a short because there's no unsigned byte
-								// and it's screwing with my code
-		public bool clockstate = false;
-		
 		bool hasReset() {
 			return false;
 		}

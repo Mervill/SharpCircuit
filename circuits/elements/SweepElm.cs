@@ -59,7 +59,6 @@ namespace Circuits {
 
 		private double _maxF;
 		private double _minF;
-		private double _sweepTime;
 
 		private int dir = 1;
 		private double fadd;

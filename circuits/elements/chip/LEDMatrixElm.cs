@@ -1,18 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Circuits {
 
 	public class LEDMatrixElm : ChipElm {
 
-		public static int size = 8;
+		[DefaultValue(false)]
+		public bool negateRows { get; set; }
 
-		public bool negateRows = false;
-		public bool negateColumns = false;
-		public double colorR = 1.0;
-		public double colorG = 0.0;
-		public double colorB = 0.0;
+		[DefaultValue(false)]
+		public bool negateColumns { get; set; }
+
+		[DefaultValue(1.0)]
+		public double colorR { get; set; }
+
+		[DefaultValue(0.0)]
+		public double colorG { get; set; }
+
+		[DefaultValue(0.0)]
+		public double colorB { get; set; }
 
 		public LEDMatrixElm(CirSim s) : base(s) {
 
@@ -62,51 +70,6 @@ namespace Circuits {
 					radius = (3 * cspc) / 4;
 					drawThickCircle(g, centreX, centreY, radius);
 				}
-			}
-		}*/
-
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 2) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Negate rows", negateRows);
-				return ei;
-			}
-			if (n == 3) {
-				EditInfo ei = new EditInfo("", 0, -1, -1);
-				ei.checkbox = new Checkbox("Negate columns", negateColumns);
-				return ei;
-			}
-			if (n == 4) {
-				return new EditInfo("Red Value (0-1)", colorR, 0, 1)
-						.setDimensionless();
-			}
-			if (n == 5) {
-				return new EditInfo("Green Value (0-1)", colorG, 0, 1)
-						.setDimensionless();
-			}
-			if (n == 6) {
-				return new EditInfo("Blue Value (0-1)", colorB, 0, 1)
-						.setDimensionless();
-			}
-			return base.getEditInfo(n);
-		}
-
-		public void setEditValue(int n, EditInfo ei) {
-			base.setEditValue(n, ei);
-			if (n == 2) {
-				negateRows = ei.checkbox.getState();
-			}
-			if (n == 3) {
-				negateColumns = ei.checkbox.getState();
-			}
-			if (n == 4) {
-				colorR = ei.value;
-			}
-			if (n == 5) {
-				colorG = ei.value;
-			}
-			if (n == 6) {
-				colorB = ei.value;
 			}
 		}*/
 

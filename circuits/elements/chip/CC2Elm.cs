@@ -44,11 +44,6 @@ namespace Circuits {
 			sim.stampCCCS(0, nodes[2], pins[0].voltSource, gain);
 		}
 
-		/*public override void draw(Graphics g) {
-			pins[2].current = pins[0].current * gain;
-			drawChip(g);
-		}*/
-
 		public override int getLeadCount() {
 			return 3;
 		}

@@ -90,11 +90,6 @@ namespace Circuits {
 			pins[0].current = -pins[4].current;
 		}
 
-		/*public override void draw(Graphics g) {
-			computeCurrent();
-			drawChip(g);
-		}*/
-
 		public override int getLeadCount() {
 			return 6;
 		}

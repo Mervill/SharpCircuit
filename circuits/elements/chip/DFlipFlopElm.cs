@@ -13,7 +13,6 @@ namespace Circuits {
 			set {
 				_hasReset = value;
 				setupPins();
-				allocNodes();
 			}
 		}
 
@@ -24,7 +23,6 @@ namespace Circuits {
 			set {
 				_hasSet = value;
 				setupPins();
-				allocNodes();
 			}
 		}
 
