@@ -19,7 +19,6 @@ Licence: MIT/Boost C++
 - Fix Scope.cs object and ScopeElm.cs
 - Fix momentary switches.
 - Externalize deltatime
-- LogicInputElm
 - Develop testing strategy. 
 
 **API notes**
@@ -73,6 +72,7 @@ The following elements have been tested:
 - VarRail (single-terminal DC voltage source)
 - Diode
 - Transistor (NPN/PNP)
+- Op-Amp
 
 ## Examples
 
