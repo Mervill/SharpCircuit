@@ -3,8 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Circuits {
-	
+
+	// Initializers	[X]
+	// Properties	[X]
+	// Leads		[X]
+	// Test Basic	[_]
+	// Test Prop	[_]
 	public class LogicInputElm : SwitchElm {
+
+		public ElementLead leadOut 	{ get { return leads[0]; }}
 
 		public double highVoltage 	{ get; set; } 
 		public double lowVoltage 	{ get; set; }
@@ -51,29 +58,6 @@ namespace Circuits {
 		public override bool hasGroundConnection(int n1) {
 			return true;
 		}
-		
-		/*public EditInfo getEditInfo(int n) {
-			if (n == 0) {
-				EditInfo ei = new EditInfo("", 0, 0, 0);
-				ei.checkbox = new Checkbox("Momentary Switch", momentary);
-				return ei;
-			}
-			if (n == 1)
-				return new EditInfo("High Voltage", hiV, 10, -10);
-			if (n == 2)
-				return new EditInfo("Low Voltage", loV, 10, -10);
-			return null;
-		}
-
-
-		public void setEditValue(int n, EditInfo ei) {
-			if (n == 0)
-				momentary = ei.checkbox.getState();
-			if (n == 1)
-				hiV = ei.value;
-			if (n == 2)
-				loV = ei.value;
-		}*/
 
 	}
 }

@@ -49,8 +49,7 @@ namespace Circuits {
 		public override void toggle() {
 			base.toggle();
 			if (link != 0) {
-				int i;
-				for (i = 0; i != sim.elements.Count; i++) {
+				for (int i = 0; i != sim.elements.Count; i++) {
 					Object o = sim.elements[i];
 					if (o is Switch2Elm) {
 						Switch2Elm s2 = (Switch2Elm) o;

@@ -11,13 +11,12 @@ Licence: MIT/Boost C++
 
 ## ToDo
 
-- Go back and make sure all publicly editable variables have proper checks.
 - Reorganize leads & give them semantic names.
 - Remove the -Elm suffix from circuit elements?
 - Add new serialization system (JSON).
 - Test everything.
 - Fix Scope.cs object and ScopeElm.cs
-- Fix momentary switches.
+- Momentary switches.
 - Externalize deltatime
 - Develop testing strategy. 
 

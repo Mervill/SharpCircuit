@@ -11,9 +11,6 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class SwitchElm : CircuitElement {
 
-		public ElementLead leadIn 	{ get { return leads[0]; }}
-		public ElementLead leadOut 	{ get { return leads[1]; }}
-
 		/// <summary>
 		/// Momentary Switch TODO: Fixme
 		/// </summary>
@@ -29,9 +26,16 @@ namespace Circuits {
 		}
 
 		public SwitchElm(CirSim s,bool mm) : base(s) {
-			position = (mm) ? 1 : 0;
 			momentary = mm;
+			position = (mm) ? 1 : 0;
 			posCount = 2;
+		}
+
+		public virtual void toggle() {
+			position++;
+			if (position >= posCount) {
+				position = 0;
+			}
 		}
 
 		public override void calculateCurrent() {
@@ -48,13 +52,6 @@ namespace Circuits {
 
 		public override int getVoltageSourceCount() {
 			return (position == 1) ? 0 : 1;
-		}
-
-		public virtual void toggle() {
-			position++;
-			if (position >= posCount) {
-				position = 0;
-			}
 		}
 
 		public override void getInfo(String[] arr) {

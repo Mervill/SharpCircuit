@@ -11,7 +11,7 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class OutputElm : CircuitElement {
 
-		public ElementLead leadOut {
+		public ElementLead leadIn {
 			get {
 				return leads[0];
 			}

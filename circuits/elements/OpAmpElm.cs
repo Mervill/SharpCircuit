@@ -11,9 +11,9 @@ namespace Circuits {
 	// Test Prop	[_]
 	public class OpAmpElm : CircuitElement {
 
-		public ElementLead leadOut { get { return leads[0]; }}
-		public ElementLead leadIn1 { get { return leads[1]; }}
-		public ElementLead leadIn2 { get { return leads[2]; }}
+		public ElementLead leadPos 	{ get { return leads[0]; }}
+		public ElementLead leadNeg 	{ get { return leads[1]; }}
+		public ElementLead leadOut 	{ get { return leads[2]; }}
 
 		/// <summary>
 		/// Max Output (V)
@@ -48,10 +48,6 @@ namespace Circuits {
 
 		public override int getLeadCount() {
 			return 3;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? leadIn1 : (n == 1) ? leadIn2 : lead1;
 		}
 
 		public override int getVoltageSourceCount() {
