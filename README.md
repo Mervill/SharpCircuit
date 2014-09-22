@@ -1,4 +1,4 @@
-FalstadCircuitsSharp
+SharpCircuit
 =======
 
 This is a C# port of Paul Falstad's excellent [circuit simulator](http://www.falstad.com/circuit/) applet. 
