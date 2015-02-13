@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Circuits;
+using SharpCircuit;
 using NUnit.Framework;
 
 namespace SharpCircuitTest {
@@ -43,9 +43,9 @@ namespace SharpCircuitTest {
 
 			Assert.AreEqual(0.01, Math.Round(sim.time, 4));
 
-			Assert.AreEqual( 0.00158254, Math.Round(baseWire.current, 8));
-			Assert.AreEqual( 0.15825359, Math.Round(collectorWire.current, 8));
-			Assert.AreEqual(-0.15983612, Math.Round(emitterWire.current, 8));
+			Assert.AreEqual( 0.00158254, Math.Round(baseWire.getCurrent(), 8));
+			Assert.AreEqual( 0.15825359, Math.Round(collectorWire.getCurrent(), 8));
+			Assert.AreEqual(-0.15983612, Math.Round(emitterWire.getCurrent(), 8));
 		}
 
 		[Test]
@@ -81,10 +81,10 @@ namespace SharpCircuitTest {
 				sim.update(x);
 
 			Assert.AreEqual(0.01, Math.Round(sim.time, 4));
-			
-			Assert.AreEqual(-0.07374479, Math.Round(baseWire.current, 8));
-			Assert.AreEqual( 0.00143194, Math.Round(collectorWire.current, 8));
-			Assert.AreEqual( 0.07231285, Math.Round(emitterWire.current, 8));
+
+			Assert.AreEqual(-0.07374479, Math.Round(baseWire.getCurrent(), 8));
+			Assert.AreEqual( 0.00143194, Math.Round(collectorWire.getCurrent(), 8));
+			Assert.AreEqual( 0.07231285, Math.Round(emitterWire.getCurrent(), 8));
 		}
 
 	}

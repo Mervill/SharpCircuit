@@ -93,7 +93,7 @@ namespace SharpCircuit {
 			arr[0] = "capacitor";
 			getBasicInfo(arr);
 			arr[3] = "C = " + getUnitText(capacitance, "F");
-			arr[4] = "P = " + getUnitText(power(), "W");
+			arr[4] = "P = " + getUnitText(getPower(), "W");
 			// double v = getVoltageDiff();
 			// arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");
 		}

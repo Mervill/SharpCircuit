@@ -37,7 +37,7 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override double power() {
+		public override double getPower() {
 			return volts[2] * current;
 		}
 

@@ -35,7 +35,7 @@ namespace SharpCircuit {
 			arr[0] = "resistor";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
-			arr[4] = "P = " + getUnitText(power(), "W");
+			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 
 	}

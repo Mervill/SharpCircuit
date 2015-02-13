@@ -1121,13 +1121,13 @@ namespace SharpCircuit {
 					}
 
 					if(type == PathType.INDUCT && ce is InductorElm) {
-						double c = ce.current;
+						double c = ce.getCurrent();
 						if(j == 0)
 							c = -c;
 
 						// System.out.println("matching " + c + " to " + firstElm.getCurrent());
 						// System.out.println(ce + " " + firstElm);
-						if(Math.Abs(c - firstElm.current) > 1e-10)
+						if(Math.Abs(c - firstElm.getCurrent()) > 1e-10)
 							continue;
 					}
 

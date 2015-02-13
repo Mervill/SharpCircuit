@@ -9,9 +9,9 @@ namespace SharpCircuit {
 		public readonly static double pi = 3.14159265358979323846;
 
 		protected CirSim sim;
-		protected int voltSource;
-		public double current { get; protected set; }
 
+		protected int voltSource;
+		protected double current;
 		protected int[] nodes;
 		protected double[] volts;
 
@@ -35,7 +35,6 @@ namespace SharpCircuit {
 			volts = new double[getLeadCount() + getInternalNodeCount()];
 		}
 
-
 		public int getNode(int n) {
 			return nodes[n];
 		}
@@ -43,7 +42,6 @@ namespace SharpCircuit {
 		public void setNode(int lead, int node) {
 			nodes[lead] = node;
 		}
-
 
 		public double getLeadVoltage(int x) {
 			return volts[x];
@@ -56,14 +54,15 @@ namespace SharpCircuit {
 		public virtual void stamp() { }
 		public virtual void doStep() { }
 
-		public virtual void calculateCurrent() { }
-
 		protected virtual void onGetSim() { }
 
 		public virtual void reset() {
-			for(int i = 0; i != getLeadCount() + getInternalNodeCount(); i++) {
+			for(int i = 0; i != getLeadCount() + getInternalNodeCount(); i++)
 				volts[i] = 0;
-			}
+		}
+
+		public virtual double getCurrent() {
+			return current;
 		}
 
 		public virtual void setCurrent(int x, double c) {
@@ -73,6 +72,8 @@ namespace SharpCircuit {
 		public virtual int getLeadCount() {
 			return 2;
 		}
+
+		public virtual void calculateCurrent() { }
 
 		public virtual void setLeadVoltage(int n, double c) {
 			volts[n] = c;
@@ -95,7 +96,7 @@ namespace SharpCircuit {
 			return volts[0] - volts[1];
 		}
 
-		public virtual double power() {
+		public virtual double getPower() {
 			return getVoltageDiff() * current;
 		}
 

@@ -43,9 +43,9 @@ namespace SharpCircuit {
 			}
 			Debug.Log(Math.Round(sim.time, 4));
 
-			Debug.Log(Math.Round(baseWire.current, 8));
-			Debug.Log(Math.Round(collectorWire.current, 8));
-			Debug.Log(Math.Round(emitterWire.current, 8));
+			Debug.Log(Math.Round(baseWire.getCurrent(), 8));
+			Debug.Log(Math.Round(collectorWire.getCurrent(), 8));
+			Debug.Log(Math.Round(emitterWire.getCurrent(), 8));
 
 			string json = JsonSerializer.SerializeToString(sim);
 			sim.PrintDump();

@@ -80,7 +80,7 @@ namespace SharpCircuit {
 			arr[0] = "tunnel diode";
 			arr[1] = "I = " + getCurrentText(current);
 			arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
-			arr[3] = "P = " + getUnitText(power(), "W");
+			arr[3] = "P = " + getUnitText(getPower(), "W");
 		}
 	}
 }

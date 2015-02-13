@@ -27,7 +27,7 @@ namespace SharpCircuit {
 			arr[2] = "V = " + getVoltageText(volts[0]);
 		}
 
-		public override double power() {
+		public override double getPower() {
 			return 0;
 		}
 

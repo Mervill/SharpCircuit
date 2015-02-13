@@ -68,7 +68,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double power() {
+		public override double getPower() {
 			return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
 		}
 

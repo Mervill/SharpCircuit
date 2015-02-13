@@ -67,7 +67,7 @@ namespace SharpCircuit {
 			arr[0] = "inductor";
 			getBasicInfo(arr);
 			arr[3] = "L = " + getUnitText(inductance, "H");
-			arr[4] = "P = " + getUnitText(power(), "W");
+			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 
 	}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Circuits;
+using SharpCircuit;
 using NUnit.Framework;
 
 namespace SharpCircuitTest {

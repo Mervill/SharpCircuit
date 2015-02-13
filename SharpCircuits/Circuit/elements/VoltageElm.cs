@@ -146,7 +146,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double power() {
+		public override double getPower() {
 			return -getVoltageDiff() * current;
 		}
 
@@ -188,7 +188,7 @@ namespace SharpCircuit {
 					arr[i++] = "wavelength = "
 							+ getUnitText(2.9979e8 / frequency, "m");
 				}
-				arr[i++] = "P = " + getUnitText(power(), "W");
+				arr[i++] = "P = " + getUnitText(getPower(), "W");
 			}
 		}
 

@@ -107,7 +107,7 @@ namespace SharpCircuit {
 			arr[0] = "memristor";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
-			arr[4] = "P = " + getUnitText(power(), "W");
+			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 
 		//public override double getScopeValue(int x) {

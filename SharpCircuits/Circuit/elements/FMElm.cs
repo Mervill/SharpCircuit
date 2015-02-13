@@ -79,7 +79,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double power() {
+		public override double getPower() {
 			return -getVoltageDiff() * current;
 		}
 

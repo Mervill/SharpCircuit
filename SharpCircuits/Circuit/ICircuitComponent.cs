@@ -21,20 +21,20 @@ namespace SharpCircuit {
 		void doStep();
 		void stamp();
 
-		double power(); // { get; }
+		double getPower();
 
 		void getInfo(String[] arr);
 		void reset();
 
 		// leads
-		int getLeadCount(); // { get; }
+		int getLeadCount();
 		double getLeadVoltage(int x);
 		void setLeadVoltage(int n, double c);
 
 		// current
-		double current { get; }
-		void calculateCurrent();
+		double getCurrent();
 		void setCurrent(int x, double c);
+		void calculateCurrent();
 
 		// voltage
 		double getVoltageDiff();
@@ -53,9 +53,9 @@ namespace SharpCircuit {
 		public static ScopeFrame GetScopeFrame(this ICircuitComponent component, long elapsedMilliseconds) {
 			return new ScopeFrame {
 				time = elapsedMilliseconds,
-				current = component.current,
+				current = component.getCurrent(),
 				voltage = component.getVoltageDiff(),
-				power = component.power(),
+				power = component.getPower(),
 			};
 		}
 
