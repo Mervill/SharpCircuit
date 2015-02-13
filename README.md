@@ -38,7 +38,7 @@ WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A 
 
 ```
 FalstadCircuitsSharp (c) 2014 Riley 'Mervill' Godard - mervills.email@gmail.com
-https://github.com/Mervill/FalstadCircuitsSharp
+https://github.com/Mervill/SharpCircuit
 http://transistorcollective.net/
 
 Boost Software License - Version 1.0 - August 17, 2003
