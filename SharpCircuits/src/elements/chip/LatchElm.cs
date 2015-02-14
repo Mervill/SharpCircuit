@@ -2,15 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class LatchElm : ChipElm {
 
 		private int loadPin;
 		private bool lastLoad = false;
 
-		public LatchElm(CirSim s) : base(s) {
-			
+		public LatchElm() : base() {
+
 		}
 
 		public override String getChipName() {
@@ -23,21 +23,19 @@ namespace Circuits {
 
 		public override void setupPins() {
 			pins = new Pin[getLeadCount()];
-			int i;
-			for (i = 0; i != bits; i++)
-				pins[i] = new Pin("I"+i);
-			for (i = 0; i != bits; i++) {
-				pins[i + bits] = new Pin("O"+i);
+			for(int i = 0; i != bits; i++)
+				pins[i] = new Pin("I" + i);
+			for(int i = 0; i != bits; i++) {
+				pins[i + bits] = new Pin("O" + i);
 				pins[i + bits].output = true;
 			}
 			pins[loadPin = bits * 2] = new Pin("Ld");
 			allocNodes();
 		}
 
-		public override void execute() {
-			int i;
-			if (pins[loadPin].value && !lastLoad)
-				for (i = 0; i != bits; i++)
+		public override void execute(CirSim sim) {
+			if(pins[loadPin].value && !lastLoad)
+				for(int i = 0; i != bits; i++)
 					pins[i + bits].value = pins[i].value;
 			lastLoad = pins[loadPin].value;
 		}

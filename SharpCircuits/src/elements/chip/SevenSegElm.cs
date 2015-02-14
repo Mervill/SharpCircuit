@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class SevenSegElm : ChipElm {
 		
-		public SevenSegElm(CirSim s) : base(s) {
+		public SevenSegElm() : base() {
 
 		}
 

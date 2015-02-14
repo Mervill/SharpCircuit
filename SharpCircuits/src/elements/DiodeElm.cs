@@ -43,11 +43,7 @@ namespace SharpCircuit {
 		protected double defaultdrop = 0.805904783;
 
 		public DiodeElm() {
-			
-		}
-
-		protected override void onGetSim() {
-			diode = new Diode(sim);
+			diode = new Diode();
 			forwardDrop = defaultdrop;
 			zvoltage = 0;
 			setup();
@@ -66,12 +62,12 @@ namespace SharpCircuit {
 			volts[0] = volts[1] = 0;
 		}
 
-		public override void stamp() {
-			diode.stamp(nodes[0], nodes[1]);
+		public override void stamp(CirSim sim) {
+			diode.stamp(sim, nodes[0], nodes[1]);
 		}
 
-		public override void doStep() {
-			diode.doStep(volts[0] - volts[1]);
+		public override void doStep(CirSim sim) {
+			diode.doStep(sim, volts[0] - volts[1]);
 		}
 
 		public override void calculateCurrent() {

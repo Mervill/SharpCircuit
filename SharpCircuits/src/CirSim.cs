@@ -93,8 +93,7 @@ namespace SharpCircuit {
 		public void AddElement(CircuitElement elm) {
 			if(!elements.Contains(elm)) {
 				elements.Add(elm);
-				elm.setSim(this);
-
+				
 				nodeMesh.Add(new long[elm.getLeadCount()]);
 				for(int x = 0; x < elm.getLeadCount(); x++)
 					nodeMesh[nodeMesh.Count - 1][x] = -1;
@@ -280,7 +279,7 @@ namespace SharpCircuit {
 				int subiter;
 				for(int i = 0; i != elements.Count; i++) {
 					CircuitElement ce = elements[i];
-					ce.startIteration();
+					ce.startIteration(timeStep);
 				}
 				
 				int subiterCount = 5000;
@@ -298,7 +297,7 @@ namespace SharpCircuit {
 
 					for(int i = 0; i != elements.Count; i++) {
 						CircuitElement ce = elements[i];
-						ce.doStep();
+						ce.doStep(this);
 					}
 
 					if(stopMessage != null)
@@ -499,7 +498,7 @@ namespace SharpCircuit {
 			// Stamp linear circuit elements.
 			for(i = 0; i != elements.Count; i++) {
 				CircuitElement ce = elements[i];
-				ce.stamp();
+				ce.stamp(this);
 			}
 
 			#region //// Determine nodes that are unconnected ////
@@ -824,7 +823,7 @@ namespace SharpCircuit {
 			stampMatrix(n2, vn, -1);
 		}
 
-		// use this if the amount of voltage is going to be updated in doStep()
+		// use this if the amount of voltage is going to be updated in doStep(CirSim sim)
 		public void stampVoltageSource(int n1, int n2, int vs) {
 			int vn = nodeList.Count + vs;
 			stampMatrix(vn, n1, -1);
@@ -903,13 +902,13 @@ namespace SharpCircuit {
 			}
 		}
 
-		// indicate that the value on the right side of row i changes in doStep()
+		// indicate that the value on the right side of row i changes in doStep(CirSim sim)
 		public void stampRightSide(int i) {
 			if(i > 0)
 				circuitRowInfo[i - 1].rsChanges = true;
 		}
 
-		// indicate that the values on the left side of row i change in doStep()
+		// indicate that the values on the left side of row i change in doStep(CirSim sim)
 		public void stampNonLinear(int i) {
 			if(i > 0)
 				circuitRowInfo[i - 1].lsChanges = true;

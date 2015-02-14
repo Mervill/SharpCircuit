@@ -16,9 +16,9 @@ namespace SharpCircuit {
 				return _maxF;
 			}
 			set {
-				double maxfreq = 1 / (8 * sim.timeStep);
 				_maxF = value;
-				if (_maxF > maxfreq) {
+				double maxfreq = 1 / (8 * sim.timeStep);
+				if(_maxF > maxfreq) {
 					_maxF = maxfreq;
 					setParams();
 				}
@@ -33,9 +33,9 @@ namespace SharpCircuit {
 				return _minF;
 			}
 			set {
-				double maxfreq = 1 / (8 * sim.timeStep);
 				_minF = value;
-				if (_minF > maxfreq) {
+				double maxfreq = 1 / (8 * sim.timeStep);
+				if(_minF > maxfreq) {
 					_minF = maxfreq;
 					setParams();
 				}
@@ -49,9 +49,9 @@ namespace SharpCircuit {
 		/// <summary>
 		/// Sweep Time (s)
 		/// </summary>
-		public double sweepTime{ get; set; }
+		public double sweepTime { get; set; }
 
-		public double frequency{ get; private set; }
+		public double frequency { get; private set; }
 
 		private double _maxF;
 		private double _minF;
@@ -77,24 +77,24 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[0], voltSource);
 		}
 
-		public void setParams() {
-			if (frequency < minF || frequency > maxF) {
+		public void setParams(double timeStep) {
+			if(frequency < minF || frequency > maxF) {
 				frequency = minF;
 				freqTime = 0;
 				dir = 1;
 			}
-			if (logarithmic) {
-				fadd = dir * sim.timeStep * (maxF - minF) / sweepTime;
+			if(logarithmic) {
+				fadd = dir * timeStep * (maxF - minF) / sweepTime;
 				fmul = 1;
 			} else {
 				fadd = 0;
-				fmul = Math.Pow(maxF / minF, dir * sim.timeStep / sweepTime);
+				fmul = Math.Pow(maxF / minF, dir * timeStep / sweepTime);
 			}
-			savedTimeStep = sim.timeStep;
+			savedTimeStep = timeStep;
 		}
 
 		public override void reset() {
@@ -104,16 +104,16 @@ namespace SharpCircuit {
 			setParams();
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			// has timestep been changed?
-			if(sim.timeStep != savedTimeStep)
-				setParams();
+			if(timeStep != savedTimeStep)
+				setParams(timeStep);
 
 			v = Math.Sin(freqTime) * maxV;
-			freqTime += frequency * 2 * pi * sim.timeStep;
+			freqTime += frequency * 2 * pi * timeStep;
 			frequency = frequency * fmul + fadd;
-			if (frequency >= maxF && dir == 1) {
-				if (bidirectional) {
+			if(frequency >= maxF && dir == 1) {
+				if(bidirectional) {
 					fadd = -fadd;
 					fmul = 1 / fmul;
 					dir = -1;
@@ -121,14 +121,15 @@ namespace SharpCircuit {
 					frequency = minF;
 				}
 			}
-			if (frequency <= minF && dir == -1) {
+
+			if(frequency <= minF && dir == -1) {
 				fadd = -fadd;
 				fmul = 1 / fmul;
 				dir = 1;
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			sim.updateVoltageSource(0, nodes[0], voltSource, v);
 		}
 
@@ -145,7 +146,7 @@ namespace SharpCircuit {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = "sweep " + (logarithmic ?  "(log)" : "(linear)");
+			arr[0] = "sweep " + (logarithmic ? "(log)" : "(linear)");
 			arr[1] = "I = " + getCurrentDText(current);
 			arr[2] = "V = " + getVoltageText(volts[0]);
 			arr[3] = "f = " + getUnitText(frequency, "Hz");

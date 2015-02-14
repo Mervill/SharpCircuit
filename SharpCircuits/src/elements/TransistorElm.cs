@@ -67,7 +67,7 @@ namespace SharpCircuit {
 			return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
 		}
 
-		public double limitStep(double vnew, double vold) {
+		public double limitStep(CirSim sim, double vnew, double vold) {
 			double arg;
 			if (vnew > vcrit && Math.Abs(vnew - vold) > (vt + vt)) {
 				if (vold > 0) {
@@ -86,13 +86,13 @@ namespace SharpCircuit {
 			return (vnew);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 			sim.stampNonLinear(nodes[2]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double vbc = volts[0] - volts[1]; // typically negative
 			double vbe = volts[0] - volts[2]; // typically positive
 			if (Math.Abs(vbc - lastvbc) > 0.01 || // .01
@@ -109,8 +109,8 @@ namespace SharpCircuit {
 				}
 			}
 			// System.out.print("T " + vbc + " " + vbe + "\n");
-			vbc = pnp * limitStep(pnp * vbc, pnp * lastvbc);
-			vbe = pnp * limitStep(pnp * vbe, pnp * lastvbe);
+			vbc = pnp * limitStep(sim, pnp * vbc, pnp * lastvbc);
+			vbe = pnp * limitStep(sim, pnp * vbe, pnp * lastvbe);
 			lastvbc = vbc;
 			lastvbe = vbe;
 			double pcoef = vdcoef * pnp;

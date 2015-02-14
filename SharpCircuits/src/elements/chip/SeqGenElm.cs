@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
@@ -13,7 +13,7 @@ namespace Circuits {
 				return (data & 1) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 1;
 				} else {
 					data &= ~1;
@@ -26,7 +26,7 @@ namespace Circuits {
 				return (data & 2) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 2;
 				} else {
 					data &= ~2;
@@ -39,7 +39,7 @@ namespace Circuits {
 				return (data & 4) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 4;
 				} else {
 					data &= ~4;
@@ -52,7 +52,7 @@ namespace Circuits {
 				return (data & 8) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 8;
 				} else {
 					data &= ~8;
@@ -65,7 +65,7 @@ namespace Circuits {
 				return (data & 16) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 16;
 				} else {
 					data &= ~16;
@@ -78,7 +78,7 @@ namespace Circuits {
 				return (data & 32) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 32;
 				} else {
 					data &= ~32;
@@ -91,7 +91,7 @@ namespace Circuits {
 				return (data & 64) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 64;
 				} else {
 					data &= ~64;
@@ -104,7 +104,7 @@ namespace Circuits {
 				return (data & 128) != 0;
 			}
 			set {
-				if (value) {
+				if(value) {
 					data |= 128;
 				} else {
 					data &= ~128;
@@ -118,7 +118,7 @@ namespace Circuits {
 			}
 			set {
 				oneshot = value;
-				if (oneshot) {
+				if(oneshot) {
 					position = 8;
 				} else {
 					position = 0;
@@ -132,8 +132,8 @@ namespace Circuits {
 		private double lastchangetime = 0;
 		private bool clockstate = false;
 
-		public SeqGenElm(CirSim s) : base(s) {
-			
+		public SeqGenElm() : base() {
+
 		}
 
 		public bool hasReset() {
@@ -162,7 +162,7 @@ namespace Circuits {
 		}
 
 		void GetNextBit() {
-			if (((data >> position) & 1) != 0) {
+			if(((data >> position) & 1) != 0) {
 				pins[1].value = true;
 			} else {
 				pins[1].value = false;
@@ -170,30 +170,26 @@ namespace Circuits {
 			position++;
 		}
 
-		public override void execute() {
-			if (oneshot) {
-				if (sim.time - lastchangetime > 0.005) {
-					if (position <= 8) {
+		public override void execute(CirSim sim) {
+			if(oneshot) {
+				if(sim.time - lastchangetime > 0.005) {
+					if(position <= 8)
 						GetNextBit();
-					}
 					lastchangetime = sim.time;
 				}
 			}
-			if (pins[0].value && !clockstate) {
+			if(pins[0].value && !clockstate) {
 				clockstate = true;
-				if (oneshot) {
+				if(oneshot) {
 					position = 0;
 				} else {
 					GetNextBit();
-					if (position >= 8) {
+					if(position >= 8)
 						position = 0;
-					}
 				}
 			}
-			if (!pins[0].value) {
+			if(!pins[0].value)
 				clockstate = false;
-			}
-
 		}
 
 	}

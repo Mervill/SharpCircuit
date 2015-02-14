@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class VCOElm : ChipElm {
 		
-		public VCOElm(CirSim s) : base(s) {
+		public VCOElm() : base() {
 			
 		}
 
@@ -31,7 +31,7 @@ namespace Circuits {
 			return true;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			// output pin
 			sim.stampVoltageSource(0, nodes[1], pins[1].voltSource);
 			// attach Vi to R1 pin so its current is proportional to Vi
@@ -49,7 +49,7 @@ namespace Circuits {
 		public double cCurrent;
 		public int cDir;
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double vc = volts[3] - volts[2];
 			double vo = volts[1];
 			int dir = (vo < 2.5) ? 1 : -1;

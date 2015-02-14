@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// 0 = switch
 	// 1 = switch end 1
@@ -94,8 +94,8 @@ namespace Circuits {
 		private double _onCurrent;
 		private int _poleCount;
 
-		public ElementLead[] coilPosts;
-		private ElementLead[][] swposts;
+		//public ElementLead[] coilPosts;
+		//private ElementLead[][] swposts;
 
 		private double coilCurrent, coilCurCount;
 		private double[] switchCurrent, switchCurCount;
@@ -106,8 +106,8 @@ namespace Circuits {
 		private int nSwitch2 = 2;
 		private int nCoil1, nCoil2, nCoil3;
 
-		public RelayElm(CirSim s) : base(s) {
-			ind = new Inductor(sim);
+		public RelayElm() : base() {
+			ind = new Inductor();
 			inductance = 0.2;
 			ind.setup(inductance, 0, true);
 			onCurrent = 0.02;

@@ -22,11 +22,11 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[1], voltSource);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double v0 = volts[1];
 			double @out = volts[0] > 2.5 ? 0 : 5;
 			double maxStep = slewRate * sim.timeStep * 1e9;

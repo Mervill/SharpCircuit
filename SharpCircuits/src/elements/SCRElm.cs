@@ -43,7 +43,7 @@ namespace SharpCircuit {
 		private double lastvag;
 
 		public SCRElm() {
-			diode = new Diode(sim);
+			diode = new Diode();
 			diode.setup(0.8, 0);
 			cresistance = 50;
 			holdingI = 0.0082;
@@ -74,16 +74,16 @@ namespace SharpCircuit {
 
 		public double aresistance;
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[anode]);
 			sim.stampNonLinear(nodes[cnode]);
 			sim.stampNonLinear(nodes[gnode]);
 			sim.stampNonLinear(nodes[inode]);
 			sim.stampResistor(nodes[gnode], nodes[cnode], cresistance);
-			diode.stamp(nodes[inode], nodes[gnode]);
+			diode.stamp(sim, nodes[inode], nodes[gnode]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double vac = volts[anode] - volts[cnode]; // typically negative
 			double vag = volts[anode] - volts[gnode]; // typically positive
 			if (Math.Abs(vac - lastvac) > .01 || Math.Abs(vag - lastvag) > .01) {
@@ -91,7 +91,7 @@ namespace SharpCircuit {
 			}
 			lastvac = vac;
 			lastvag = vag;
-			diode.doStep(volts[inode] - volts[gnode]);
+			diode.doStep(sim, volts[inode] - volts[gnode]);
 			double icmult = 1 / triggerI;
 			double iamult = 1 / holdingI - icmult;
 			// System.out.println(icmult + " " + iamult);

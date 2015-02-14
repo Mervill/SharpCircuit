@@ -57,7 +57,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			double vd = volts[0] - volts[1];
 			if (Math.Abs(current) < holdCurrent) {
 				state = false;
@@ -68,7 +68,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			if (state) {
 				sim.stampResistor(nodes[0], nodes[1], onResistance);
 			} else {
@@ -76,7 +76,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}

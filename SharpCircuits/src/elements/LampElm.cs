@@ -56,7 +56,7 @@ namespace SharpCircuit {
 			// System.out.print(this + " res current set to " + current + "\n");
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}
@@ -65,7 +65,7 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			// based on http://www.intusoft.com/nlpdf/nl11.pdf
 			double nom_r = nom_v * nom_v / nom_pow;
 			// this formula doesn't work for values over 5390
@@ -75,13 +75,13 @@ namespace SharpCircuit {
 			double capw = cap * warmTime / .4;
 			double capc = cap * coolTime / .4;
 			// System.out.println(nom_r + " " + (resistance/nom_r));
-			temp += getPower() * sim.timeStep / capw;
+			temp += getPower() * timeStep / capw;
 			double cr = 2600 / nom_pow;
-			temp -= sim.timeStep * (temp - roomTemp) / (capc * cr);
+			temp -= timeStep * (temp - roomTemp) / (capc * cr);
 			// System.out.println(capw + " " + capc + " " + temp + " " +resistance);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			sim.stampResistor(nodes[0], nodes[1], resistance);
 		}
 

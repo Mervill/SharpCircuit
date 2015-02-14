@@ -42,12 +42,12 @@ namespace SharpCircuit {
 			return vnew;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double voltdiff = volts[0] - volts[1];
 			if (Math.Abs(voltdiff - lastvoltdiff) > 0.01) {
 				sim.converged = false;

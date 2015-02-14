@@ -52,9 +52,39 @@
     <Compile Include="src\elements\AnalogSwitch2Elm.cs" />
     <Compile Include="src\elements\AnalogSwitchElm.cs" />
     <Compile Include="src\elements\CapacitorElm.cs" />
+    <Compile Include="src\elements\ChipElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\chip\ADCElm.cs" />
+    <Compile Include="src\elements\chip\CC2Elm.cs" />
+    <Compile Include="src\elements\chip\CounterElm.cs" />
+    <Compile Include="src\elements\chip\DACElm.cs" />
+    <Compile Include="src\elements\chip\DecadeElm.cs" />
+    <Compile Include="src\elements\chip\DeMultiplexerElm.cs" />
+    <Compile Include="src\elements\chip\DFlipFlopElm.cs" />
+    <Compile Include="src\elements\chip\FullAdderElm.cs" />
+    <Compile Include="src\elements\chip\HalfAdderElm.cs" />
+    <Compile Include="src\elements\chip\JKFlipFlopElm.cs" />
+    <Compile Include="src\elements\chip\LatchElm.cs" />
+    <Compile Include="src\elements\chip\LEDMatrixElm.cs" />
+    <Compile Include="src\elements\chip\MultiplexerElm.cs" />
+    <Compile Include="src\elements\chip\PisoShiftElm.cs" />
+    <Compile Include="src\elements\chip\SeqGenElm.cs" />
+    <Compile Include="src\elements\chip\SevenSegDecoderElm.cs" />
+    <Compile Include="src\elements\chip\SevenSegElm.cs" />
+    <Compile Include="src\elements\chip\SipoShiftElm.cs" />
+    <Compile Include="src\elements\chip\SRAMElm.cs" />
+    <Compile Include="src\elements\chip\TFlipFlopElm.cs" />
+    <Compile Include="src\elements\chip\TimerElm.cs" />
     <Compile Include="src\elements\CurrentElm.cs" />
     <Compile Include="src\elements\DiacElm.cs" />
     <Compile Include="src\elements\DiodeElm.cs" />
+    <Compile Include="src\elements\diode\LEDElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\diode\ZenerElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\FMElm.cs" />
     <Compile Include="src\elements\GateElm.cs" />
     <Compile Include="src\elements\gate\AndGateElm.cs" />
@@ -70,6 +100,21 @@
     <Compile Include="src\elements\LogicInputElm.cs" />
     <Compile Include="src\elements\LogicOutputElm.cs" />
     <Compile Include="src\elements\MemristorElm.cs" />
+    <Compile Include="src\elements\MosfetElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\mosfet\JfetElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\mosfet\NJfetElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\mosfet\NMosfetElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\elements\mosfet\PMosfetElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\OpAmpElm.cs" />
     <Compile Include="src\elements\OpAmpSwapElm.cs" />
     <Compile Include="src\elements\OutputElm.cs" />
@@ -78,14 +123,17 @@
     <Compile Include="src\elements\ProbeElm.cs" />
     <Compile Include="src\elements\rail\ACRailElm.cs" />
     <Compile Include="src\elements\rail\AntennaElm.cs" />
-    <Compile Include="src\elements\rail\ClockElm.cs" />
+    <Compile Include="src\elements\rail\ClockElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\rail\SquareRailElm.cs" />
-    <Compile Include="src\elements\rail\VarRailElm.cs" />
+    <Compile Include="src\elements\rail\VarRailElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\ResistorElm.cs" />
     <Compile Include="src\elements\SchmittElm.cs" />
     <Compile Include="src\elements\SCRElm.cs" />
     <Compile Include="src\elements\SparkGapElm.cs" />
-    <Compile Include="src\elements\SweepElm.cs" />
     <Compile Include="src\elements\SwitchElm.cs" />
     <Compile Include="src\elements\TappedTransformerElm.cs" />
     <Compile Include="src\elements\ThermistorElm.cs" />
@@ -93,7 +141,6 @@
     <Compile Include="src\elements\TransistorElm.cs" />
     <Compile Include="src\elements\transistor\NPNTransistorElm.cs" />
     <Compile Include="src\elements\transistor\PNPTransistorElm.cs" />
-    <Compile Include="src\elements\TransLineElm.cs" />
     <Compile Include="src\elements\TriodeElm.cs" />
     <Compile Include="src\elements\TunnelDiodeElm.cs" />
     <Compile Include="src\elements\VoltageElm.cs" />

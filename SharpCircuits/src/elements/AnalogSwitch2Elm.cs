@@ -24,13 +24,13 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 			sim.stampNonLinear(nodes[2]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			open = (volts[3] < 2.5);
 			if (invert) {
 				open = !open;

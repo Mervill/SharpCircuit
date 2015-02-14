@@ -20,7 +20,7 @@ namespace SharpCircuit {
 			current = -c;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[0], voltSource, 0);
 		}
 

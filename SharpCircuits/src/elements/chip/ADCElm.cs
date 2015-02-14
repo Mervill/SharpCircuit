@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class ADCElm : ChipElm {
 		
-		public ADCElm(CirSim s) : base(s) {
+		public ADCElm() : base() {
 			
 		}
 
@@ -20,8 +20,7 @@ namespace Circuits {
 
 		public override void setupPins() {
 			pins = new Pin[getLeadCount()];
-			int i;
-			for (i = 0; i != bits; i++) {
+			for (int i = 0; i != bits; i++) {
 				pins[i] = new Pin("D"+i);
 				pins[i].output = true;
 			}
@@ -30,16 +29,14 @@ namespace Circuits {
 			allocNodes();
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			int imax = (1 << bits) - 1;
 			// if we round, the half-flash doesn't work
 			double val = imax * volts[bits] / volts[bits + 1]; // + .5;
 			int ival = (int) val;
 			ival = Math.Min(imax, Math.Max(0, ival));
-			int i;
-			for (i = 0; i != bits; i++) {
+			for (int i = 0; i != bits; i++)
 				pins[i].value = ((ival & (1 << i)) != 0);
-			}
 		}
 
 		public override int getVoltageSourceCount() {

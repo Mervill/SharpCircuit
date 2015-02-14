@@ -27,7 +27,7 @@ namespace SharpCircuit {
 			// System.out.print(this + " res current set to " + current + "\n");
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampResistor(nodes[0], nodes[1], resistance);
 		}
 

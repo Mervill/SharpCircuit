@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class DFlipFlopElm : ChipElm {
 
-		public bool hasResetPin { 
+		public bool hasResetPin {
 			get {
 				return _hasReset;
 			}
@@ -16,7 +16,7 @@ namespace Circuits {
 			}
 		}
 
-		public bool hasSetPin { 
+		public bool hasSetPin {
 			get {
 				return _hasSet;
 			}
@@ -29,10 +29,10 @@ namespace Circuits {
 		private bool _hasReset;
 		private bool _hasSet;
 
-		public DFlipFlopElm(CirSim s) : base(s) {
-			
+		public DFlipFlopElm() : base() {
+
 		}
-		
+
 		public override String getChipName() {
 			return "D flip-flop";
 		}
@@ -47,10 +47,9 @@ namespace Circuits {
 			pins[2].lineOver = true;
 			pins[3] = new Pin("");
 			pins[3].clock = true;
-			if (!hasSetPin) {
-				if (hasResetPin) {
+			if(!hasSetPin) {
+				if(hasResetPin)
 					pins[4] = new Pin("R");
-				}
 			} else {
 				pins[5] = new Pin("S");
 				pins[4] = new Pin("R");
@@ -71,21 +70,21 @@ namespace Circuits {
 			pins[2].value = true;
 		}
 
-		public override void execute() {
-			if (pins[3].value && !lastClock) {
+		public override void execute(CirSim sim) {
+			if(pins[3].value && !lastClock) {
 				pins[1].value = pins[0].value;
 				pins[2].value = !pins[0].value;
 			}
-			if (hasSetPin && pins[5].value) {
+			if(hasSetPin && pins[5].value) {
 				pins[1].value = true;
 				pins[2].value = false;
 			}
-			if (hasResetPin && pins[4].value) {
+			if(hasResetPin && pins[4].value) {
 				pins[1].value = false;
 				pins[2].value = true;
 			}
 			lastClock = pins[3].value;
 		}
-		
+
 	}
 }

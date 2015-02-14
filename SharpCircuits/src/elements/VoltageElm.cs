@@ -26,29 +26,15 @@ namespace SharpCircuit {
 			set {
 				WaveType ow = _waveform;
 				_waveform = value;
-				if(_waveform == WaveType.DC && ow != WaveType.DC) {
+				if(_waveform == WaveType.DC && ow != WaveType.DC)
 					bias = 0;
-				}
 			}
 		}
 
 		/// <summary>
 		/// Frequency (Hz)
 		/// </summary>
-		public double frequency {
-			get {
-				return _frequency;
-			}
-			set {
-				double oldfreq = _frequency;
-				_frequency = value;
-				double maxfreq = 1 / (8 * sim.timeStep);
-				if(_frequency > maxfreq) {
-					_frequency = maxfreq;
-				}
-				freqTimeZero = sim.time - oldfreq * (sim.time - freqTimeZero) / _frequency;
-			}
-		}
+		public double frequency { get; set; }
 
 		/// <summary>
 		/// Phase Offset (degrees)
@@ -85,7 +71,7 @@ namespace SharpCircuit {
 		public double bias { get; set; }
 
 		private WaveType _waveform;
-		private double _frequency = 40;
+		private double _frequency;
 		private double _phaseShift;
 		private double _dutyCycle = 0.5;
 
@@ -94,6 +80,7 @@ namespace SharpCircuit {
 		public VoltageElm(WaveType wf) {
 			waveform = wf;
 			maxVoltage = 5;
+			frequency = 40;
 			reset();
 		}
 
@@ -101,29 +88,37 @@ namespace SharpCircuit {
 			freqTimeZero = 0;
 		}
 
+		protected void setFrequency(double newFreq, double timeStep, double time) {
+			double oldfreq = _frequency;
+			_frequency = newFreq;
+			double maxfreq = 1 / (8 * timeStep);
+			if(_frequency > maxfreq)
+				_frequency = maxfreq;
+			freqTimeZero = time - oldfreq * (time - freqTimeZero) / _frequency;
+		}
+
 		public double triangleFunc(double x) {
-			if(x < pi) {
+			if(x < pi)
 				return x * (2 / pi) - 1;
-			}
 			return 1 - (x - pi) * (2 / pi);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			if(waveform == WaveType.DC) {
-				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, getVoltage());
+				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, getVoltage(sim));
 			} else {
 				sim.stampVoltageSource(nodes[0], nodes[1], voltSource);
 			}
 		}
 
-		public override void doStep() {
-			if(waveform != WaveType.DC) {
-				sim.updateVoltageSource(nodes[0], nodes[1], voltSource, getVoltage());
-			}
+		public override void doStep(CirSim sim) {
+			if(waveform != WaveType.DC)
+				sim.updateVoltageSource(nodes[0], nodes[1], voltSource, getVoltage(sim));
 		}
 
-		public virtual double getVoltage() {
-			double w = 2 * pi * (sim.time - freqTimeZero) * frequency + _phaseShift;
+		public virtual double getVoltage(CirSim sim) {
+			setFrequency(frequency, sim.timeStep, sim.time);
+			double w = 2 * pi * (sim.time - freqTimeZero) * _frequency + _phaseShift;
 			switch(waveform) {
 				case WaveType.DC:
 					return maxVoltage + bias;
@@ -154,7 +149,7 @@ namespace SharpCircuit {
 			return volts[1] - volts[0];
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			switch(waveform) {
 				case WaveType.DC:
 				case WaveType.VAR:
@@ -185,12 +180,11 @@ namespace SharpCircuit {
 				if(bias != 0) {
 					arr[i++] = "Voff = " + getVoltageText(bias);
 				} else if(frequency > 500) {
-					arr[i++] = "wavelength = "
-							+ getUnitText(2.9979e8 / frequency, "m");
+					arr[i++] = "wavelength = " + getUnitText(2.9979e8 / frequency, "m");
 				}
 				arr[i++] = "P = " + getUnitText(getPower(), "W");
 			}
-		}
+		}*/
 
 	}
 }

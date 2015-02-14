@@ -24,17 +24,17 @@ namespace SharpCircuit {
 			return volts[0];
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			if (waveform == WaveType.DC) {
-				sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage());
+				sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage(sim));
 			} else {
 				sim.stampVoltageSource(0, nodes[0], voltSource);
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			if (waveform != WaveType.DC)
-				sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
+				sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage(sim));
 		}
 
 		public override bool hasGroundConnection(int n1) {

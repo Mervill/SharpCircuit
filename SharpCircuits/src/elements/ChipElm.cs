@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
-	
+namespace SharpCircuit {
+
 	public abstract class ChipElm : CircuitElement {
 
 		protected int bits;
@@ -16,49 +16,49 @@ namespace Circuits {
 			setupPins();
 		}
 
-		public virtual void setupPins(){ }
-		public virtual void execute(){ }
+		public virtual void setupPins() { }
+		public virtual void execute(CirSim sim) { }
 
 		public virtual bool needsBits() {
 			return false;
 		}
 
 		public override void setVoltageSource(int j, int vs) {
-			for (int i = 0; i != getLeadCount(); i++) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (p.output && j-- == 0)
+				if(p.output && j-- == 0)
 					p.voltSource = vs;
 			}
 			//System.out.println("setVoltageSource failed for " + this);
 		}
 
-		public override void stamp() {
-			for (int i = 0; i != getLeadCount(); i++) {
+		public override void stamp(CirSim sim) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (p.output)
+				if(p.output)
 					sim.stampVoltageSource(0, nodes[i], p.voltSource);
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			int i;
-			for (i = 0; i != getLeadCount(); i++) {
+			for(i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (!p.output)
+				if(!p.output)
 					p.value = volts[i] > 2.5;
 			}
 
-			execute();
+			execute(sim);
 
-			for (i = 0; i != getLeadCount(); i++) {
+			for(i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (p.output)
+				if(p.output)
 					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
 			}
 		}
 
 		public override void reset() {
-			for (int i = 0; i != getLeadCount(); i++) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				pins[i].value = false;
 				volts[i] = 0;
 			}
@@ -68,32 +68,32 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			arr[0] = getChipName();
 			int a = 1;
-			for (int i = 0; i != getLeadCount(); i++) {
+			for(int i = 0; i != getLeadCount(); i++) {
 
 				Pin p = pins[i];
-				if (arr[a] != null) {
+				if(arr[a] != null) {
 					arr[a] += "; ";
 				} else {
 					arr[a] = "";
 				}
 
 				String t = "";
-				if (p.lineOver)
+				if(p.lineOver)
 					t += '\'';
 
 
-				if (p.clock)
+				if(p.clock)
 					t = "Clk";
 
 				arr[a] += t + " = " + getVoltageText(volts[i]);
-				if (i % 2 == 1)
+				if(i % 2 == 1)
 					a++;
 			}
 		}
 
 		public override void setCurrent(int x, double c) {
-			for (int i = 0; i != getLeadCount(); i++) {
-				if (pins[i].output && pins[i].voltSource == x)
+			for(int i = 0; i != getLeadCount(); i++) {
+				if(pins[i].output && pins[i].voltSource == x)
 					pins[i].current = c;
 			}
 		}

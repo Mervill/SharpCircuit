@@ -62,13 +62,13 @@ namespace SharpCircuit {
 					+ getVoltageText(maxOut);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			int vn = sim.nodeCount + voltSource;
 			sim.stampNonLinear(vn);
 			sim.stampMatrix(nodes[2], vn, 1);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double vd = volts[1] - volts[0];
 			if (Math.Abs(lastvd - vd) > .1) {
 				sim.converged = false;

@@ -9,18 +9,14 @@ namespace SharpCircuit {
 		public double output { get; set; }
 
 		public VarRailElm() : base(WaveType.VAR) {
-
-		}
-
-		protected override void onGetSim() {
 			output = 1;
 			frequency = maxVoltage;
 			waveform = WaveType.VAR;
 		}
 
-		public override double getVoltage() {
+		public override double getVoltage(CirSim sim) {
 			frequency = output * (maxVoltage - bias) + bias;
-			return frequency;
+			return base.getVoltage(sim);
 		}
 
 	}

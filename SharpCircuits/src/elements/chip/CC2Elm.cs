@@ -2,17 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class CC2Elm : ChipElm {
 
 		private double gain;
 
-		public CC2Elm(CirSim s) : base(s) {
+		public CC2Elm() : base() {
 			gain = 1;
 		}
 
-		public CC2Elm( int g, CirSim s) : base(s) {
+		public CC2Elm(int g) : base() {
 			gain = g;
 		}
 
@@ -36,7 +36,7 @@ namespace Circuits {
 		}
 
 		// boolean nonLinear() { return true; }
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			// X voltage = Y voltage
 			sim.stampVoltageSource(0, nodes[0], pins[0].voltSource);
 			sim.stampVCVS(0, nodes[1], 1, pins[0].voltSource);
@@ -55,10 +55,10 @@ namespace Circuits {
 	}
 
 	class CC2NegElm : CC2Elm {
-		
-		public CC2NegElm( CirSim s) : base(s) {
-			
+
+		public CC2NegElm() : base() {
+
 		}
-		
+
 	}
 }

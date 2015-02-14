@@ -12,15 +12,15 @@ namespace SharpCircuit {
 			
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[0], voltSource);
 		}
 
-		public override void doStep() {
-			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
+		public override void doStep(CirSim sim) {
+			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage(sim));
 		}
 
-		public override double getVoltage() {
+		public override double getVoltage(CirSim sim) {
 			fmphase += 2 * pi * (2200 + Math.Sin(2 * pi * sim.time * 13) * 100) * sim.timeStep;
 			double fm = 3 * Math.Sin(fmphase);
 			return Math.Sin(2 * pi * sim.time * 3000)

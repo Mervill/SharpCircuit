@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class TriodeElm : CircuitElement {
 
 		//public ElementLead leadPlate 	{ get { return lead0; }}
@@ -37,31 +37,26 @@ namespace SharpCircuit {
 			return (volts[0] - volts[2]) * current;
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double[] vs = new double[3];
 			vs[0] = volts[0];
 			vs[1] = volts[1];
 			vs[2] = volts[2];
-			if (vs[1] > lastv1 + 0.5) {
+			if(vs[1] > lastv1 + 0.5)
 				vs[1] = lastv1 + 0.5;
-			}
-			if (vs[1] < lastv1 - 0.5) {
+			if(vs[1] < lastv1 - 0.5)
 				vs[1] = lastv1 - 0.5;
-			}
-			if (vs[2] > lastv2 + 0.5) {
+			if(vs[2] > lastv2 + 0.5)
 				vs[2] = lastv2 + 0.5;
-			}
-			if (vs[2] < lastv2 - 0.5) {
+			if(vs[2] < lastv2 - 0.5)
 				vs[2] = lastv2 - 0.5;
-			}
 			int grid = 1;
 			int cath = 2;
 			int plate = 0;
 			double vgk = vs[grid] - vs[cath];
 			double vpk = vs[plate] - vs[cath];
-			if (Math.Abs(lastv0 - vs[0]) > 0.01 || Math.Abs(lastv1 - vs[1]) > 0.01 || Math.Abs(lastv2 - vs[2]) > 0.01) {
+			if(Math.Abs(lastv0 - vs[0]) > 0.01 || Math.Abs(lastv1 - vs[1]) > 0.01 || Math.Abs(lastv2 - vs[2]) > 0.01)
 				sim.converged = false;
-			}
 			lastv0 = vs[0];
 			lastv1 = vs[1];
 			lastv2 = vs[2];
@@ -70,11 +65,11 @@ namespace SharpCircuit {
 			double Gds = 0;
 			double ival = vgk + vpk / mu;
 			currentg = 0;
-			if (vgk > .01) {
+			if(vgk > .01) {
 				sim.stampResistor(nodes[grid], nodes[cath], gridCurrentR);
 				currentg = vgk / gridCurrentR;
 			}
-			if (ival < 0) {
+			if(ival < 0) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
 				Gds = 1E-8;
@@ -102,7 +97,7 @@ namespace SharpCircuit {
 			sim.stampRightSide(nodes[cath], -rs);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 			sim.stampNonLinear(nodes[2]);

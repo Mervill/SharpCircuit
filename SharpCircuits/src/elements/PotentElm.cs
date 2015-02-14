@@ -38,7 +38,7 @@ namespace SharpCircuit {
 			current3 = -current1 - current2;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			resistance1 = maxResistance * position;
 			resistance2 = maxResistance * (1 - position);
 			sim.stampResistor(nodes[0], nodes[2], resistance1);

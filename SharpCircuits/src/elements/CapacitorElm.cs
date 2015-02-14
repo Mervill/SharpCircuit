@@ -50,7 +50,7 @@ namespace SharpCircuit {
 			voltdiff = 1E-3;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			// Capacitor companion model using trapezoidal approximation
 			// (Norton equivalent) consists of a current source in
 			// parallel with a resistor. Trapezoidal is more accurate
@@ -66,7 +66,7 @@ namespace SharpCircuit {
 			sim.stampRightSide(nodes[1]);
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			if(isTrapezoidal) {
 				curSourceValue = -voltdiff / compResistance - current;
 			} else {
@@ -78,14 +78,14 @@ namespace SharpCircuit {
 		public override void calculateCurrent() {
 			double voltdiff = volts[0] - volts[1];
 			// We check compResistance because this might get called
-			// before stamp(), which sets compResistance, causing
+			// before stamp(CirSim sim), which sets compResistance, causing
 			// infinite current
 			if(compResistance > 0) {
 				current = voltdiff / compResistance + curSourceValue;
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 		}
 

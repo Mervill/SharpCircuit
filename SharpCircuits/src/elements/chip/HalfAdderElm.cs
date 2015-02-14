@@ -2,18 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class HalfAdderElm : ChipElm {
-		
-		public HalfAdderElm(CirSim s) : base(s) {
-			
+
+		public HalfAdderElm() : base() {
+
 		}
-		
+
 		public bool hasReset() {
 			return false;
 		}
-		
+
 		public override String getChipName() {
 			return "Half Adder";
 		}
@@ -37,7 +37,7 @@ namespace Circuits {
 			return 2;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			pins[0].value = pins[2].value ^ pins[3].value;
 			pins[1].value = pins[2].value && pins[3].value;
 		}

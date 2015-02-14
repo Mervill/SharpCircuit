@@ -13,7 +13,7 @@ namespace SharpCircuit {
 		public bool isTernary		{ get; set; }
 		public bool isNumeric 		{ get; set; }
 
-		public LogicInputElm(CirSim s) : base(s) {
+		public LogicInputElm() : base() {
 			highVoltage = 5;
 			lowVoltage = 0;
 		}
@@ -26,7 +26,7 @@ namespace SharpCircuit {
 			current = -c;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			double v = (position == 0) ? lowVoltage : highVoltage;
 			if (isTernary)
 				v = position * 2.5;

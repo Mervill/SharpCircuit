@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class TransLineElm : CircuitElement {
 
 		/// <summary>
@@ -39,11 +39,11 @@ namespace SharpCircuit {
 			if(sim.timeStep == 0)
 				return;
 
-			lenSteps = (int) (delay / sim.timeStep);
+			lenSteps = (int)(delay / sim.timeStep);
 			//System.out.println(lenSteps + " steps");
-			if(lenSteps > 100000){
+			if(lenSteps > 100000) {
 				voltageL = voltageR = null;
-			}else{
+			} else {
 				voltageL = new double[lenSteps];
 				voltageR = new double[lenSteps];
 			}
@@ -52,31 +52,31 @@ namespace SharpCircuit {
 		}
 
 		public override void setVoltageSource(int n, int v) {
-			if(n == 0){
+			if(n == 0) {
 				voltSource1 = v;
-			}else{
+			} else {
 				voltSource2 = v;
 			}
 		}
 
 		public override void setCurrent(int v, double c) {
-			if(v == voltSource1){
+			if(v == voltSource1) {
 				current1 = c;
-			}else{
+			} else {
 				current2 = c;
 			}
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(nodes[4], nodes[0], voltSource1);
 			sim.stampVoltageSource(nodes[5], nodes[1], voltSource2);
 			sim.stampResistor(nodes[2], nodes[4], impedance);
 			sim.stampResistor(nodes[3], nodes[5], impedance);
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			// calculate voltages, currents sent over wire
-			if (voltageL == null) {
+			if(voltageL == null) {
 				sim.stop("Transmission line delay too large!", this);
 				return;
 			}
@@ -92,8 +92,8 @@ namespace SharpCircuit {
 			ptr = (ptr + 1) % lenSteps;
 		}
 
-		public override void doStep() {
-			if (voltageL == null) {
+		public override void doStep(CirSim sim) {
+			if(voltageL == null) {
 				sim.stop("Transmission line delay too large!", this);
 				return;
 			}
@@ -101,7 +101,7 @@ namespace SharpCircuit {
 			sim.updateVoltageSource(nodes[4], nodes[0], voltSource1, -voltageR[ptr]);
 			sim.updateVoltageSource(nodes[5], nodes[1], voltSource2, -voltageL[ptr]);
 
-			if(Math.Abs(volts[0]) > 1e-5 || Math.Abs(volts[1]) > 1e-5){
+			if(Math.Abs(volts[0]) > 1e-5 || Math.Abs(volts[1]) > 1e-5) {
 				sim.stop("Need to ground transmission line!", this);
 				return;
 			}

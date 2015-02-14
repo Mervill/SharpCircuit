@@ -8,7 +8,7 @@ namespace SharpCircuit {
 
 		public readonly static double pi = 3.14159265358979323846;
 
-		protected CirSim sim;
+		//protected CirSim sim;
 
 		protected int voltSource;
 		protected double current;
@@ -23,11 +23,6 @@ namespace SharpCircuit {
 			arr[1] = "I = " + getCurrentDText(current);
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			return 3;
-		}
-
-		public void setSim(CirSim s) {
-			sim = s;
-			onGetSim();
 		}
 
 		protected void allocNodes() {
@@ -50,11 +45,11 @@ namespace SharpCircuit {
 		#region //// Virtuals ////
 		public virtual void getInfo(String[] arr) { }
 
-		public virtual void startIteration() { }
-		public virtual void stamp() { }
-		public virtual void doStep() { }
+		public virtual void startIteration(double timeStep) { }
+		public virtual void stamp(CirSim sim) { }
+		public virtual void doStep(CirSim sim) { }
 
-		protected virtual void onGetSim() { }
+		//protected virtual void onGetSim() { }
 
 		public virtual void reset() {
 			for(int i = 0; i != getLeadCount() + getInternalNodeCount(); i++)

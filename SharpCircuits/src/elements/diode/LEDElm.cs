@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class LEDElm : DiodeElm {
 
-		public LEDElm() {
+		public LEDElm() : base() {
 			forwardDrop = 2.1024259;
 			setup();
 		}

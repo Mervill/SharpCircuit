@@ -2,20 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
 	public class DeMultiplexerElm : ChipElm {
-		
-		public DeMultiplexerElm(CirSim s) : base(s) {
+
+		public DeMultiplexerElm() : base() {
 
 		}
-		
+
 		bool hasReset() {
 			return false;
 		}
-		
+
 		public override String getChipName() {
 			return "Multiplexer";
 		}
@@ -47,19 +47,15 @@ namespace Circuits {
 			return 4;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			int selectedvalue = 0;
-			if (pins[4].value) {
+			if(pins[4].value)
 				selectedvalue++;
-			}
-			if (pins[5].value) {
+			if(pins[5].value)
 				selectedvalue += 2;
-			}
-			for (int i = 0; i < 4; i++) {
+			for(int i = 0; i < 4; i++)
 				pins[i].value = false;
-			}
 			pins[selectedvalue].value = pins[6].value;
-
 		}
 
 	}

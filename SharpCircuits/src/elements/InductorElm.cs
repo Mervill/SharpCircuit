@@ -27,12 +27,12 @@ namespace SharpCircuit {
 		private double _inductance;
 
 		public InductorElm() {
-			ind = new Inductor(sim);
+			ind = new Inductor();
 			inductance = 1;
 		}
 
 		public InductorElm(double induc) {
-			ind = new Inductor(sim);
+			ind = new Inductor();
 			inductance = induc;
 		}
 
@@ -41,11 +41,11 @@ namespace SharpCircuit {
 			ind.reset();
 		}
 
-		public override void stamp() {
-			ind.stamp(nodes[0], nodes[1]);
+		public override void stamp(CirSim sim) {
+			ind.stamp(sim, nodes[0], nodes[1]);
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			ind.startIteration(volts[0] - volts[1]);
 		}
 
@@ -58,9 +58,9 @@ namespace SharpCircuit {
 			current = ind.calculateCurrent(voltdiff);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double voltdiff = volts[0] - volts[1];
-			ind.doStep(voltdiff);
+			ind.doStep(sim, voltdiff);
 		}
 
 		public override void getInfo(String[] arr) {

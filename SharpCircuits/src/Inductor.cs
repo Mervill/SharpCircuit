@@ -9,15 +9,13 @@ namespace SharpCircuit {
 		public bool isTrapezoidal { get; set; }
 
 		public int[] nodes;
-		public CirSim sim;
 
 		public double inductance = 1;
 		public double compResistance;
 		public double current;
 		public double curSourceValue;
 
-		public Inductor(CirSim s) {
-			sim = s;
+		public Inductor() {
 			nodes = new int[2];
 		}
 
@@ -31,7 +29,7 @@ namespace SharpCircuit {
 			current = 0;
 		}
 
-		public void stamp(int n0, int n1) {
+		public void stamp(CirSim sim, int n0, int n1) {
 			// inductor companion model using trapezoidal or backward euler
 			// approximations (Norton equivalent) consists of a current
 			// source in parallel with a resistor. Trapezoidal is more
@@ -63,14 +61,14 @@ namespace SharpCircuit {
 
 		public double calculateCurrent(double voltdiff) {
 			// we check compResistance because this might get called
-			// before stamp(), which sets compResistance, causing
+			// before stamp(CirSim sim), which sets compResistance, causing
 			// infinite current
 			if(compResistance > 0)
 				current = voltdiff / compResistance + curSourceValue;
 			return current;
 		}
 
-		public void doStep(double voltdiff) {
+		public void doStep(CirSim sim, double voltdiff) {
 			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 		}
 	}

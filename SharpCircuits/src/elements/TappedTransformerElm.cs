@@ -43,7 +43,7 @@ namespace SharpCircuit {
 			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			// equations for transformer:
 			// v1 = L1 di1/dt + M1 di2/dt + M1 di3/dt
 			// v2 = M1 di1/dt + L2 di2/dt + M2 di3/dt
@@ -100,7 +100,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			voltdiff[0] = volts[0] - volts[1];
 			voltdiff[1] = volts[2] - volts[3];
 			voltdiff[2] = volts[3] - volts[4];
@@ -113,7 +113,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue[0]);
 			sim.stampCurrentSource(nodes[2], nodes[3], curSourceValue[1]);
 			sim.stampCurrentSource(nodes[3], nodes[4], curSourceValue[2]);

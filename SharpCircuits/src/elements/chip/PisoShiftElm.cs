@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
@@ -12,10 +12,10 @@ namespace Circuits {
 		private bool clockstate = false;
 		private bool modestate = false;
 
-		public PisoShiftElm(CirSim s) : base(s) {
+		public PisoShiftElm() : base() {
 
 		}
-		
+
 		bool hasReset() {
 			return false;
 		}
@@ -53,49 +53,39 @@ namespace Circuits {
 			return 1;
 		}
 
-		public override void execute() {
-			if (pins[0].value && !modestate) {
+		public override void execute(CirSim sim) {
+			if(pins[0].value && !modestate) {
 				modestate = true;
 				data = 0;
-				if (pins[2].value) {
+				if(pins[2].value)
 					data += 128;
-				}
-				if (pins[3].value) {
+				if(pins[3].value)
 					data += 64;
-				}
-				if (pins[4].value) {
+				if(pins[4].value)
 					data += 32;
-				}
-				if (pins[5].value) {
+				if(pins[5].value)
 					data += 16;
-				}
-				if (pins[6].value) {
+				if(pins[6].value)
 					data += 8;
-				}
-				if (pins[7].value) {
+				if(pins[7].value)
 					data += 4;
-				}
-				if (pins[8].value) {
+				if(pins[8].value)
 					data += 2;
-				}
-				if (pins[9].value) {
+				if(pins[9].value)
 					data += 1;
-				}
-			} else if (pins[1].value && !clockstate) {
+			} else if(pins[1].value && !clockstate) {
 				clockstate = true;
-				if ((data & 1) == 0) {
+				if((data & 1) == 0) {
 					pins[10].value = false;
 				} else {
 					pins[10].value = true;
 				}
-				data = (byte) (data >> 1);
+				data = (byte)(data >> 1);
 			}
-			if (!pins[0].value) {
+			if(!pins[0].value)
 				modestate = false;
-			}
-			if (!pins[1].value) {
+			if(!pins[1].value)
 				clockstate = false;
-			}
 		}
 
 	}

@@ -12,7 +12,7 @@ namespace SharpCircuit {
 
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double v0 = volts[1];
 			double @out;
 			if (state) {// Output is high

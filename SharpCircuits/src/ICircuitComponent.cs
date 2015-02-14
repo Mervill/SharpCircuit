@@ -17,9 +17,9 @@ namespace SharpCircuit {
 		bool isWire();
 		bool nonLinear();
 
-		void startIteration();
-		void doStep();
-		void stamp();
+		void startIteration(double timeStep);
+		void doStep(CirSim sim);
+		void stamp(CirSim sim);
 
 		double getPower();
 
@@ -38,7 +38,7 @@ namespace SharpCircuit {
 
 		// voltage
 		double getVoltageDiff();
-		int getVoltageSourceCount(); // { get; }
+		int getVoltageSourceCount();
 		void setVoltageSource(int n, int v);
 
 		// connection

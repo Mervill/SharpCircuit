@@ -2,15 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
 	public class SRAMElm : ChipElm {
-		
-		public SRAMElm(CirSim s) : base(s) {
+
+		public SRAMElm() : base() {
 			short i;
-			for (i = 0; i < 256; i++)
+			for(i = 0; i < 256; i++)
 				data[i] = 0;
 		}
 
@@ -61,122 +61,85 @@ namespace Circuits {
 			return 8;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			short index = 0;
-			if (pins[8].value || pins[9].value) {
-				if (pins[0].value) {
-					index += 128;
-				}
-				if (pins[1].value) {
-					index += 64;
-				}
-				if (pins[2].value) {
-					index += 32;
-				}
-				if (pins[3].value) {
-					index += 16;
-				}
-				if (pins[4].value) {
-					index += 8;
-				}
-				if (pins[5].value) {
-					index += 4;
-				}
-				if (pins[6].value) {
-					index += 2;
-				}
-				if (pins[7].value) {
-					index += 1;
-				}
-				if (pins[8].value) {
-					if ((data[index] & 128) > 0) {
+			if(pins[8].value || pins[9].value) {
+				if(pins[0].value) index += 128;
+				if(pins[1].value) index += 64;
+				if(pins[2].value) index += 32;
+				if(pins[3].value) index += 16;
+				if(pins[4].value) index += 8;
+				if(pins[5].value) index += 4;
+				if(pins[6].value) index += 2;
+				if(pins[7].value) index += 1;
+				if(pins[8].value) {
+					if((data[index] & 128) > 0) {
 						pins[10].value = true;
 					} else {
 						pins[10].value = false;
 					}
-					if ((data[index] & 64) > 0) {
+					if((data[index] & 64) > 0) {
 						pins[11].value = true;
 					} else {
 						pins[11].value = false;
 					}
-					if ((data[index] & 32) > 0) {
+					if((data[index] & 32) > 0) {
 						pins[12].value = true;
 					} else {
 						pins[12].value = false;
 					}
-					if ((data[index] & 16) > 0) {
+					if((data[index] & 16) > 0) {
 						pins[13].value = true;
 					} else {
 						pins[13].value = false;
 					}
-					if ((data[index] & 8) > 0) {
+					if((data[index] & 8) > 0) {
 						pins[14].value = true;
 					} else {
 						pins[14].value = false;
 					}
-					if ((data[index] & 4) > 0) {
+					if((data[index] & 4) > 0) {
 						pins[15].value = true;
 					} else {
 						pins[15].value = false;
 					}
-					if ((data[index] & 2) > 0) {
+					if((data[index] & 2) > 0) {
 						pins[16].value = true;
 					} else {
 						pins[16].value = false;
 					}
-					if ((data[index] & 1) > 0) {
+					if((data[index] & 1) > 0) {
 						pins[17].value = true;
 					} else {
 						pins[17].value = false;
 					}
 				} else {
 					data[index] = 0;
-					if (pins[10].value) {
-						data[index] += 128;
-					}
-					if (pins[11].value) {
-						data[index] += 64;
-					}
-					if (pins[12].value) {
-						data[index] += 32;
-					}
-					if (pins[13].value) {
-						data[index] += 16;
-					}
-					if (pins[14].value) {
-						data[index] += 8;
-					}
-					if (pins[15].value) {
-						data[index] += 4;
-					}
-					if (pins[16].value) {
-						data[index] += 2;
-					}
-					if (pins[17].value) {
-						data[index] += 1;
-					}
+					if(pins[10].value) data[index] += 128;
+					if(pins[11].value) data[index] += 64;
+					if(pins[12].value) data[index] += 32;
+					if(pins[13].value) data[index] += 16;
+					if(pins[14].value) data[index] += 8;
+					if(pins[15].value) data[index] += 4;
+					if(pins[16].value) data[index] += 2;
+					if(pins[17].value) data[index] += 1;
 				}
 			}
 		}
 
-		public override void doStep() {
-			int i;
-			for (i = 0; i != getLeadCount(); i++) {
+		public override void doStep(CirSim sim) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (p.output && pins[9].value) {
+				if(p.output && pins[9].value)
 					p.value = volts[i] > 2.5;
-				}
-				if (!p.output) {
+				if(!p.output)
 					p.value = volts[i] > 2.5;
-				}
 			}
-			execute();
-			for (i = 0; i != getLeadCount(); i++) {
+			execute(sim);
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
-				if (p.output && !pins[9].value) {
-					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5
-							: 0);
-				}
+				if(p.output && !pins[9].value)
+					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
 			}
 		}
 

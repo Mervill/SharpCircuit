@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class SevenSegDecoderElm : ChipElm {
 
@@ -24,15 +24,15 @@ namespace Circuits {
 				{ true, false, false, true, true, true, true },// E
 				{ true, false, false, false, true, true, true },// F
 		};
-		
-		public SevenSegDecoderElm(CirSim s) : base(s) {
+
+		public SevenSegDecoderElm() : base() {
 
 		}
 
 		public bool hasReset() {
 			return false;
 		}
-		
+
 		public override String getChipName() {
 			return "Seven Segment LED Decoder";
 		}
@@ -69,24 +69,18 @@ namespace Circuits {
 			return 7;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			int input = 0;
-			if (pins[7].value) {
+			if(pins[7].value)
 				input += 8;
-			}
-			if (pins[8].value) {
+			if(pins[8].value)
 				input += 4;
-			}
-			if (pins[9].value) {
+			if(pins[9].value)
 				input += 2;
-			}
-			if (pins[10].value) {
+			if(pins[10].value)
 				input += 1;
-			}
-
-			for (int i = 0; i < 7; i++) {
-				pins[i].value = symbols[input,i];
-			}
+			for(int i = 0; i < 7; i++)
+				pins[i].value = symbols[input, i];
 		}
 
 	}

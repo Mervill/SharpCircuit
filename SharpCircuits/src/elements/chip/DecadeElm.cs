@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class DecadeElm : ChipElm {
-		
-		public DecadeElm(CirSim s) : base(s) {
+
+		public DecadeElm() : base() {
 
 		}
 
@@ -23,8 +23,7 @@ namespace Circuits {
 			pins[0] = new Pin("");
 			pins[0].clock = true;
 			pins[1] = new Pin("R");
-			int i;
-			for (i = 0; i != bits; i++) {
+			for(int i = 0; i != bits; i++) {
 				int ii = i + 2;
 				pins[ii] = new Pin("Q" + i);
 				pins[ii].output = true;
@@ -40,28 +39,25 @@ namespace Circuits {
 			return bits;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			int i;
-			if (pins[0].value && !lastClock) {
-				for (i = 0; i != bits; i++) {
-					if (pins[i + 2].value) {
+			if(pins[0].value && !lastClock) {
+				for(i = 0; i != bits; i++) {
+					if(pins[i + 2].value)
 						break;
-					}
 				}
-				if (i < bits) {
+				if(i < bits)
 					pins[i++ + 2].value = false;
-				}
 				i %= bits;
 				pins[i + 2].value = true;
 			}
-			if (!pins[1].value) {
-				for (i = 1; i != bits; i++) {
+			if(!pins[1].value) {
+				for(i = 1; i != bits; i++)
 					pins[i + 2].value = false;
-				}
 				pins[2].value = true;
 			}
 			lastClock = pins[0].value;
 		}
-		
+
 	}
 }

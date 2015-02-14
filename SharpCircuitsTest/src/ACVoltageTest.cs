@@ -16,7 +16,7 @@ namespace SharpCircuitTest {
 		}
 
 		[TestCase(8E-5, 0.02427305)]
-		[TestCase(1E-5, 0.0177244)]
+		[TestCase(1E-5, 0.0177244 )]
 		[TestCase(1E-6, 0.00250066)]
 		public void CapacitorCapacitanceTest(double capacitance, double current) {
 			CirSim sim = new CirSim();
@@ -64,7 +64,6 @@ namespace SharpCircuitTest {
 				sim.update(x);
 
 			Assert.AreEqual(0.04, Math.Round(sim.time, 4));
-			Debug.Log(Math.Round(capScope.Max((f) => f.current), 8));
 			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 8));
 		}
 

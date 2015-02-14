@@ -14,13 +14,13 @@ namespace SharpCircuit {
 		// position 0 == closed, position 1 == open
 		protected int position, posCount;
 
-		public SwitchElm(CirSim s) {
+		public SwitchElm() {
 			momentary = false;
 			position = 0;
 			posCount = 2;
 		}
 
-		public SwitchElm(CirSim s,bool mm) {
+		public SwitchElm(bool mm) {
 			momentary = mm;
 			position = (mm) ? 1 : 0;
 			posCount = 2;
@@ -28,21 +28,24 @@ namespace SharpCircuit {
 
 		public virtual void toggle() {
 			position++;
-			if (position >= posCount) {
+			if (position >= posCount)
 				position = 0;
-			}
+		}
+
+		public virtual void setPosition(int pos) {
+			position = pos;
+			if(position >= posCount)
+				position = 0;
 		}
 
 		public override void calculateCurrent() {
-			if (position == 1) {
+			if (position == 1)
 				current = 0;
-			}
 		}
 
-		public override void stamp() {
-			if (position == 0) {
+		public override void stamp(CirSim sim) {
+			if (position == 0)
 				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
-			}
 		}
 
 		public override int getVoltageSourceCount() {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public abstract class GateElm : CircuitElement {
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace SharpCircuit {
 			arr[2] = "Iout = " + getCurrentText(current);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[inputCount], voltSource);
 		}
 
@@ -56,11 +56,10 @@ namespace SharpCircuit {
 			return volts[x] > 2.5;
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			bool f = calcFunction();
-			if (isInverting()) {
+			if(isInverting())
 				f = !f;
-			}
 			lastOutput = f;
 			double res = f ? 5 : 0;
 			sim.updateVoltageSource(0, nodes[inputCount], voltSource, res);

@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class CounterElm : ChipElm {
 
-		public bool hasEnable { 
+		public bool hasEnable {
 			get {
 				return _hasEnable;
 			}
@@ -20,8 +20,8 @@ namespace Circuits {
 
 		private bool _hasEnable;
 
-		public CounterElm(CirSim s) : base(s) {
-			
+		public CounterElm() : base() {
+
 		}
 
 		public override bool needsBits() {
@@ -37,22 +37,19 @@ namespace Circuits {
 			pins[0] = new Pin("");
 			pins[0].clock = true;
 			pins[1] = new Pin("R");
-			int i;
-			for (i = 0; i != bits; i++) {
+			for(int i = 0; i != bits; i++) {
 				int ii = i + 2;
 				pins[ii] = new Pin("Q" + (bits - i - 1));
 				pins[ii].output = true;
 			}
-			if (hasEnable) {
+			if(hasEnable)
 				pins[bits + 2] = new Pin("En");
-			}
 			allocNodes();
 		}
 
 		public override int getLeadCount() {
-			if (hasEnable) {
+			if(hasEnable)
 				return bits + 3;
-			}
 			return bits + 2;
 		}
 
@@ -60,30 +57,26 @@ namespace Circuits {
 			return bits;
 		}
 
-		public override void execute() {
+		public override void execute(CirSim sim) {
 			bool en = true;
-			if (hasEnable) {
+			if(hasEnable)
 				en = pins[bits + 2].value;
-			}
-			if (pins[0].value && !lastClock && en) {
-				int i;
-				for (i = bits - 1; i >= 0; i--) {
+			if(pins[0].value && !lastClock && en) {
+				for(int i = bits - 1; i >= 0; i--) {
 					int ii = i + 2;
-					if (!pins[ii].value) {
+					if(!pins[ii].value) {
 						pins[ii].value = true;
 						break;
 					}
 					pins[ii].value = false;
 				}
 			}
-			if (!pins[1].value == invertReset) {
-				int i;
-				for (i = 0; i != bits; i++) {
+			if(!pins[1].value == invertReset) {
+				for(int i = 0; i != bits; i++)
 					pins[i + 2].value = false;
-				}
 			}
 			lastClock = pins[0].value;
 		}
-		
+
 	}
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class JfetElm : MosfetElm {
 		
@@ -19,8 +19,8 @@ namespace Circuits {
 			return 0.00125;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			getFetInfo(arr, "JFET");
-		}
+		}*/
 	}
 }

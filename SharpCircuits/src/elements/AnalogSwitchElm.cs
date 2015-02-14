@@ -43,12 +43,12 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			open = (volts[2] < 2.5);
 			if (invert) {
 				open = !open;

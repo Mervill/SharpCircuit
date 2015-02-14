@@ -50,18 +50,18 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[0], voltSource);
 		}
 
-		public override void doStep() {
-			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
+		public override void doStep(CirSim sim) {
+			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage(sim.time));
 		}
 
-		private double getVoltage() {
-			double deltaT = sim.time - lasttime;
-			lasttime = sim.time;
-			double signalamplitude = Math.Sin((2 * pi * (sim.time - freqTimeZero)) * signalfreq);
+		private double getVoltage(double time) {
+			double deltaT = time - lasttime;
+			lasttime = time;
+			double signalamplitude = Math.Sin((2 * pi * (time - freqTimeZero)) * signalfreq);
 			funcx += deltaT * (carrierfreq + (signalamplitude * deviation));
 			double w = 2 * pi * funcx;
 			return Math.Sin(w) * maxVoltage;

@@ -23,13 +23,17 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			if(needsPullDown)
 				sim.stampResistor(nodes[0], 0, 1E6);
 		}
 
 		public override double getVoltageDiff() {
 			return volts[0];
+		}
+
+		public bool isHigh() {
+			return (volts[0] < threshold) ? false : true;
 		}
 
 		public override void getInfo(String[] arr) {

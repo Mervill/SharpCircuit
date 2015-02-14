@@ -18,7 +18,7 @@ namespace SharpCircuit {
 			currentVoltage = 0.01;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			current = currentVoltage;
 			sim.stampCurrentSource(nodes[0], nodes[1], current);
 		}

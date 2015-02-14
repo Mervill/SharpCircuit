@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class LEDMatrixElm : ChipElm {
 
@@ -13,7 +13,7 @@ namespace Circuits {
 		public double colorG { get; set; }
 		public double colorB { get; set; }
 
-		public LEDMatrixElm(CirSim s) : base(s) {
+		public LEDMatrixElm() : base() {
 			colorR = 1;
 		}
 

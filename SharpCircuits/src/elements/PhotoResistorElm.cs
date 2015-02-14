@@ -39,17 +39,17 @@ namespace SharpCircuit {
 			current = vd / resistance;
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			// FIXME set resistance as appropriate, using slider.getValue()
 			resistance = minresistance;
 			// System.out.print(this + " res current set to " + current + "\n");
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			sim.stampResistor(nodes[0], nodes[1], resistance);
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}

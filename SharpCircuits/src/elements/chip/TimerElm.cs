@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	public class TimerElm : ChipElm {
 
-		public bool hasResetPin { 
+		public bool hasResetPin {
 			get {
 				return _hasReset;
 			}
@@ -29,10 +29,10 @@ namespace Circuits {
 
 		private bool setOut, @out;
 
-		public TimerElm(CirSim s) : base(s) {
+		public TimerElm() : base() {
 
 		}
-		
+
 		public override String getChipName() {
 			return "555 Timer";
 		}
@@ -54,7 +54,7 @@ namespace Circuits {
 			return true;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			// stamp voltage divider to put ctl pin at 2/3 V
 			sim.stampResistor(nodes[N_VIN], nodes[N_CTL], 5000);
 			sim.stampResistor(nodes[N_CTL], 0, 10000);
@@ -72,29 +72,26 @@ namespace Circuits {
 			pins[N_DIS].current = (!@out && !setOut) ? -volts[N_DIS] / 10 : 0;
 		}
 
-		public override void startIteration() {
+		public override void startIteration(double timeStep) {
 			@out = volts[N_OUT] > volts[N_VIN] / 2;
 			setOut = false;
 			// check comparators
-			if (volts[N_CTL] / 2 > volts[N_TRIG]) {
+			if(volts[N_CTL] / 2 > volts[N_TRIG])
 				setOut = @out = true;
-			}
-			if (volts[N_THRES] > volts[N_CTL] || (hasResetPin && volts[N_RST] < .7)) {
+			if(volts[N_THRES] > volts[N_CTL] || (hasResetPin && volts[N_RST] < .7))
 				@out = false;
-			}
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			// if output is low, discharge pin 0. we use a small
 			// resistor because it's easier, and sometimes people tie
 			// the discharge pin to the trigger and threshold pins.
 			// We check setOut to properly emulate the case where
 			// trigger is low and threshold is high.
-			if (!@out && !setOut) {
+			if(!@out && !setOut)
 				sim.stampResistor(nodes[N_DIS], 0, 10);
-			}
 			// output
-			sim.updateVoltageSource(0, nodes[N_OUT], pins[N_OUT].voltSource,@out ? volts[N_VIN] : 0);
+			sim.updateVoltageSource(0, nodes[N_OUT], pins[N_OUT].voltSource, @out ? volts[N_VIN] : 0);
 		}
 
 		public override int getLeadCount() {

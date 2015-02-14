@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
-	
+namespace SharpCircuit {
+
 	public class MosfetElm : CircuitElement {
 
 		//public ElementLead leadBase 	{ get { return lead0; }}
@@ -64,40 +64,36 @@ namespace Circuits {
 			return 3;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampNonLinear(nodes[1]);
 			sim.stampNonLinear(nodes[2]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			double[] vs = new double[3];
 			vs[0] = volts[0];
 			vs[1] = volts[1];
 			vs[2] = volts[2];
-			if (vs[1] > lastv1 + .5) {
+			if(vs[1] > lastv1 + .5)
 				vs[1] = lastv1 + .5;
-			}
-			if (vs[1] < lastv1 - .5) {
+			if(vs[1] < lastv1 - .5)
 				vs[1] = lastv1 - .5;
-			}
-			if (vs[2] > lastv2 + .5) {
+			if(vs[2] > lastv2 + .5)
 				vs[2] = lastv2 + .5;
-			}
-			if (vs[2] < lastv2 - .5) {
+			if(vs[2] < lastv2 - .5)
 				vs[2] = lastv2 - .5;
-			}
 			int source = 1;
 			int drain = 2;
-			if ((pnp ? -1 : 1) * vs[1] > (pnp ? -1 : 1) * vs[2]) {
+			if((pnp ? -1 : 1) * vs[1] > (pnp ? -1 : 1) * vs[2]) {
 				source = 2;
 				drain = 1;
 			}
 			int gate = 0;
 			double vgs = vs[gate] - vs[source];
 			double vds = vs[drain] - vs[source];
-			if (Math.Abs(lastv1 - vs[1]) > .01 || Math.Abs(lastv2 - vs[2]) > .01) {
+			if(Math.Abs(lastv1 - vs[1]) > .01 || Math.Abs(lastv2 - vs[2]) > .01)
 				sim.converged = false;
-			}
+
 			lastv1 = vs[1];
 			lastv2 = vs[2];
 			double realvgs = vgs;
@@ -108,17 +104,17 @@ namespace Circuits {
 			gm = 0;
 			double Gds = 0;
 			double beta = getBeta();
-			if (vgs > .5 && this is JfetElm) {
+			if(vgs > .5 && this is JfetElm) {
 				sim.stop("JFET is reverse biased!", this);
 				return;
 			}
-			if (vgs < _threshold) {
+			if(vgs < _threshold) {
 				// should be all zero, but that causes a singular matrix,
 				// so instead we treat it as a large resistor
 				Gds = 1e-8;
 				ids = vds * Gds;
 				mode = 0;
-			} else if (vds < vgs - _threshold) {
+			} else if(vds < vgs - _threshold) {
 				// linear
 				ids = beta * ((vgs - _threshold) * vds - vds * vds * .5);
 				gm = beta * vds;
@@ -133,9 +129,7 @@ namespace Circuits {
 				mode = 2;
 			}
 			double rs = -(pnp ? -1 : 1) * ids + Gds * realvds + gm * realvgs;
-			// System.out.println("M " + vds + " " + vgs + " " + ids + " " + gm +
-			// " "+ Gds + " " + volts[0] + " " + volts[1] + " " + volts[2] + " " +
-			// source + " " + rs + " " + this);
+
 			sim.stampMatrix(nodes[drain], nodes[drain], Gds);
 			sim.stampMatrix(nodes[drain], nodes[source], -Gds - gm);
 			sim.stampMatrix(nodes[drain], nodes[gate], gm);
@@ -146,7 +140,7 @@ namespace Circuits {
 
 			sim.stampRightSide(nodes[drain], rs);
 			sim.stampRightSide(nodes[source], -rs);
-			if (source == 2 && (pnp ? -1 : 1) == 1 || source == 1 && (pnp ? -1 : 1) == -1) {
+			if(source == 2 && (pnp ? -1 : 1) == 1 || source == 1 && (pnp ? -1 : 1) == -1) {
 				ids = -ids;
 			}
 		}
@@ -164,10 +158,6 @@ namespace Circuits {
 		public override void getInfo(String[] arr) {
 			getFetInfo(arr, "MOSFET");
 		}
-
-		/*public override bool canViewInScope() {
-			return true;
-		}*/
 
 		public override double getVoltageDiff() {
 			return volts[2] - volts[1];
