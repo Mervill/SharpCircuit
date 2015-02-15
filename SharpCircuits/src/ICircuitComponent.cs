@@ -18,8 +18,8 @@ namespace SharpCircuit {
 		bool nonLinear();
 
 		void startIteration(double timeStep);
-		void doStep(CirSim sim);
-		void stamp(CirSim sim);
+		void doStep(Circuit sim);
+		void stamp(Circuit sim);
 
 		double getPower();
 
@@ -28,8 +28,8 @@ namespace SharpCircuit {
 
 		// leads
 		int getLeadCount();
-		double getLeadVoltage(int x);
-		void setLeadVoltage(int n, double c);
+		double getLeadVoltage(int ndx);
+		void setLeadVoltage(int ndx, double voltage);
 
 		// current
 		double getCurrent();
@@ -45,7 +45,7 @@ namespace SharpCircuit {
 		bool getConnection(int n1, int n2);
 		bool hasGroundConnection(int n1);
 
-		int getInternalNodeCount();
+		int getInternalLeadCount();
 	}
 
 	public static class ICircuitComponentExtensions {

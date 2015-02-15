@@ -5,47 +5,43 @@ using System.Collections.Generic;
 namespace SharpCircuit {
 
 	// Unfinished
-	
+
 	public class AnalogSwitch2Elm : AnalogSwitchElm {
-
-		public AnalogSwitch2Elm(CirSim s) {
-
-		}
 
 		public override int getLeadCount() {
 			return 4;
 		}
 
 		public override void calculateCurrent() {
-			if (open) {
-				current = (volts[0] - volts[2]) / r_on;
+			if(open) {
+				current = (lead_volt[0] - lead_volt[2]) / r_on;
 			} else {
-				current = (volts[0] - volts[1]) / r_on;
+				current = (lead_volt[0] - lead_volt[1]) / r_on;
 			}
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[0]);
-			sim.stampNonLinear(nodes[1]);
-			sim.stampNonLinear(nodes[2]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[0]);
+			sim.stampNonLinear(lead_node[1]);
+			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(CirSim sim) {
-			open = (volts[3] < 2.5);
-			if (invert) {
+		public override void doStep(Circuit sim) {
+			open = (lead_volt[3] < 2.5);
+			if(invert) {
 				open = !open;
 			}
-			if (open) {
-				sim.stampResistor(nodes[0], nodes[2], r_on);
-				sim.stampResistor(nodes[0], nodes[1], r_off);
+			if(open) {
+				sim.stampResistor(lead_node[0], lead_node[2], r_on);
+				sim.stampResistor(lead_node[0], lead_node[1], r_off);
 			} else {
-				sim.stampResistor(nodes[0], nodes[1], r_on);
-				sim.stampResistor(nodes[0], nodes[2], r_off);
+				sim.stampResistor(lead_node[0], lead_node[1], r_on);
+				sim.stampResistor(lead_node[0], lead_node[2], r_off);
 			}
 		}
 
 		public override bool getConnection(int n1, int n2) {
-			if (n1 == 3 || n2 == 3) {
+			if(n1 == 3 || n2 == 3) {
 				return false;
 			}
 			return true;

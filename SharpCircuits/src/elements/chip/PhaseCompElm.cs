@@ -28,16 +28,16 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			int vn = sim.nodeCount + pins[2].voltSource;
 			sim.stampNonLinear(vn);
 			sim.stampNonLinear(0);
-			sim.stampNonLinear(nodes[2]);
+			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(CirSim sim) {
-			bool v1 = volts[0] > 2.5;
-			bool v2 = volts[1] > 2.5;
+		public override void doStep(Circuit sim) {
+			bool v1 = lead_volt[0] > 2.5;
+			bool v2 = lead_volt[1] > 2.5;
 			if(v1 && !pins[0].value)
 				ff1 = true;
 			if(v2 && !pins[1].value)
@@ -47,7 +47,7 @@ namespace SharpCircuit {
 			double @out = (ff1) ? 5 : (ff2) ? 0 : -1;
 			// System.out.println(out + " " + v1 + " " + v2);
 			if(@out != -1) {
-				sim.stampVoltageSource(0, nodes[2], pins[2].voltSource, @out);
+				sim.stampVoltageSource(0, lead_node[2], pins[2].voltSource, @out);
 			} else {
 				// tie current through output pin to 0
 				int vn = sim.nodeCount + pins[2].voltSource;

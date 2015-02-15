@@ -12,7 +12,7 @@ namespace SharpCircuit {
 
 		static void Main(string[] args) {
 
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 			var transistor = sim.Create<PNPTransistorElm>();
 
 			var baseVoltage = sim.Create<RailElm>();
@@ -49,11 +49,12 @@ namespace SharpCircuit {
 			Debug.Log(Math.Round(collectorWire.getCurrent(), 8));
 			Debug.Log(Math.Round(emitterWire.getCurrent(), 8));
 
-			//string js_out = JsonSerializer.SerializeToString(sim);
-			//System.IO.File.WriteAllText("./out.json", js_out);
+			JsConfig.ExcludeTypes.Add(typeof(Circuit.Lead));
+			string js_out = JsonSerializer.SerializeToString(sim);
+			System.IO.File.WriteAllText("./out.json", js_out);
 
 			string js_in = System.IO.File.ReadAllText("./out.json");
-			sim = JsonSerializer.DeserializeFromString<CirSim>(js_in);
+			sim = JsonSerializer.DeserializeFromString<Circuit>(js_in);
 			sim.needAnalyze();
 			sim.update(1);
 

@@ -3,15 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class ProbeElm : CircuitElement {
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
-
-		public ProbeElm() {
-
-		}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "scope probe";

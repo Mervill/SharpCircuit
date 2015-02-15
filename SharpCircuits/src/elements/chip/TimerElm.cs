@@ -13,7 +13,7 @@ namespace SharpCircuit {
 			set {
 				_hasReset = value;
 				setupPins();
-				allocNodes();
+				allocLeads();
 			}
 		}
 
@@ -54,44 +54,44 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			// stamp voltage divider to put ctl pin at 2/3 V
-			sim.stampResistor(nodes[N_VIN], nodes[N_CTL], 5000);
-			sim.stampResistor(nodes[N_CTL], 0, 10000);
+			sim.stampResistor(lead_node[N_VIN], lead_node[N_CTL], 5000);
+			sim.stampResistor(lead_node[N_CTL], 0, 10000);
 			// output pin
-			sim.stampVoltageSource(0, nodes[N_OUT], pins[N_OUT].voltSource);
+			sim.stampVoltageSource(0, lead_node[N_OUT], pins[N_OUT].voltSource);
 			// discharge pin
-			sim.stampNonLinear(nodes[N_DIS]);
+			sim.stampNonLinear(lead_node[N_DIS]);
 		}
 
 		public override void calculateCurrent() {
 			// need current for V, discharge, control; output current is
 			// calculated for us, and other pins have no current
-			pins[N_VIN].current = (volts[N_CTL] - volts[N_VIN]) / 5000;
-			pins[N_CTL].current = -volts[N_CTL] / 10000 - pins[N_VIN].current;
-			pins[N_DIS].current = (!@out && !setOut) ? -volts[N_DIS] / 10 : 0;
+			pins[N_VIN].current = (lead_volt[N_CTL] - lead_volt[N_VIN]) / 5000;
+			pins[N_CTL].current = -lead_volt[N_CTL] / 10000 - pins[N_VIN].current;
+			pins[N_DIS].current = (!@out && !setOut) ? -lead_volt[N_DIS] / 10 : 0;
 		}
 
 		public override void startIteration(double timeStep) {
-			@out = volts[N_OUT] > volts[N_VIN] / 2;
+			@out = lead_volt[N_OUT] > lead_volt[N_VIN] / 2;
 			setOut = false;
 			// check comparators
-			if(volts[N_CTL] / 2 > volts[N_TRIG])
+			if(lead_volt[N_CTL] / 2 > lead_volt[N_TRIG])
 				setOut = @out = true;
-			if(volts[N_THRES] > volts[N_CTL] || (hasResetPin && volts[N_RST] < .7))
+			if(lead_volt[N_THRES] > lead_volt[N_CTL] || (hasResetPin && lead_volt[N_RST] < .7))
 				@out = false;
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			// if output is low, discharge pin 0. we use a small
 			// resistor because it's easier, and sometimes people tie
 			// the discharge pin to the trigger and threshold pins.
 			// We check setOut to properly emulate the case where
 			// trigger is low and threshold is high.
 			if(!@out && !setOut)
-				sim.stampResistor(nodes[N_DIS], 0, 10);
+				sim.stampResistor(lead_node[N_DIS], 0, 10);
 			// output
-			sim.updateVoltageSource(0, nodes[N_OUT], pins[N_OUT].voltSource, @out ? volts[N_VIN] : 0);
+			sim.updateVoltageSource(0, lead_node[N_OUT], pins[N_OUT].voltSource, @out ? lead_volt[N_VIN] : 0);
 		}
 
 		public override int getLeadCount() {

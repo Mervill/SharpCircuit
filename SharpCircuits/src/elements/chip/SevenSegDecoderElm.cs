@@ -69,7 +69,7 @@ namespace SharpCircuit {
 			return 7;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			int input = 0;
 			if(pins[7].value)
 				input += 8;

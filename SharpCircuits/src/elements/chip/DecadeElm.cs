@@ -28,7 +28,7 @@ namespace SharpCircuit {
 				pins[ii] = new Pin("Q" + i);
 				pins[ii].output = true;
 			}
-			allocNodes();
+			allocLeads();
 		}
 
 		public override int getLeadCount() {
@@ -39,7 +39,7 @@ namespace SharpCircuit {
 			return bits;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			int i;
 			if(pins[0].value && !lastClock) {
 				for(i = 0; i != bits; i++) {

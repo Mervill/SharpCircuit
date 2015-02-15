@@ -5,11 +5,11 @@ using System.Collections.Generic;
 namespace SharpCircuit {
 
 	// Contributed by Edward Calver.
-	
+
 	public class InvertingSchmittElm : CircuitElement {
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		/// <summary>
 		/// Slew Rate (V/ns)
@@ -28,7 +28,7 @@ namespace SharpCircuit {
 
 		protected bool state;
 
-		public InvertingSchmittElm() {
+		public InvertingSchmittElm() : base() {
 			slewRate = 0.5;
 			state = false;
 			lowerTrigger = 1.66;
@@ -39,26 +39,26 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(0, nodes[1], voltSource);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(0, lead_node[1], voltSource);
 		}
 
-		public override void doStep(CirSim sim) {
-			double v0 = volts[1];
+		public override void doStep(Circuit sim) {
+			double v0 = lead_volt[1];
 			double @out;
-			if (state) {// Output is high
-				if (volts[0] > upperTrigger)// Input voltage high enough to set
-											// output low
-				{
+			if(state) {
+				// Output is high
+				if(lead_volt[0] > upperTrigger) {
+					// Input voltage high enough to set output low
 					state = false;
 					@out = 0;
 				} else {
 					@out = 5;
 				}
-			} else {// Output is low
-				if (volts[0] < lowerTrigger)// Input voltage low enough to set
-											// output high
-				{
+			} else {
+				// Output is low
+				if(lead_volt[0] < lowerTrigger) {
+					// Input voltage low enough to set output high
 					state = true;
 					@out = 5;
 				} else {
@@ -68,17 +68,17 @@ namespace SharpCircuit {
 
 			double maxStep = slewRate * sim.timeStep * 1e9;
 			@out = Math.Max(Math.Min(v0 + maxStep, @out), v0 - maxStep);
-			sim.updateVoltageSource(0, nodes[1], voltSource, @out);
+			sim.updateVoltageSource(0, lead_node[1], voltSource, @out);
 		}
 
 		public override double getVoltageDiff() {
-			return volts[0];
+			return lead_volt[0];
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "InvertingSchmitt";
-			arr[1] = "Vi = " + getVoltageText(volts[0]);
-			arr[2] = "Vo = " + getVoltageText(volts[1]);
+			arr[1] = "Vi = " + getVoltageText(lead_volt[0]);
+			arr[2] = "Vo = " + getVoltageText(lead_volt[1]);
 		}
 
 		// There is no current path through the InvertingSchmitt input, but there

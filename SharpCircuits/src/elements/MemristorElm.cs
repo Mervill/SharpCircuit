@@ -6,8 +6,8 @@ namespace SharpCircuit {
 	
 	public class MemristorElm : CircuitElement {
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		/// <summary>
 		/// Max Resistance (ohms)
@@ -61,7 +61,7 @@ namespace SharpCircuit {
 
 		private double resistance;
 
-		public MemristorElm() {
+		public MemristorElm() : base() {
 			r_on = 100;
 			r_off = 160 * r_on;
 			_dopeWidth = 0;
@@ -75,7 +75,7 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
+			current = (lead_volt[0] - lead_volt[1]) / resistance;
 		}
 
 		public override void reset() {
@@ -85,28 +85,26 @@ namespace SharpCircuit {
 		public override void startIteration(double timeStep) {
 			double wd = _dopeWidth / _totalWidth;
 			_dopeWidth += timeStep * _mobility * r_on * current / _totalWidth;
-			if (_dopeWidth < 0) {
+			if (_dopeWidth < 0)
 				_dopeWidth = 0;
-			}
-			if (_dopeWidth > _totalWidth) {
+			if (_dopeWidth > _totalWidth)
 				_dopeWidth = _totalWidth;
-			}
 			resistance = r_on * wd + r_off * (1 - wd);
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[0]);
-			sim.stampNonLinear(nodes[1]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[0]);
+			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.stampResistor(nodes[0], nodes[1], resistance);
+		public override void doStep(Circuit sim) {
+			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "memristor";
 			getBasicInfo(arr);
-			arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
+			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 

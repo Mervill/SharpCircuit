@@ -19,16 +19,16 @@ namespace SharpCircuitTest {
 		[Test]
 		public void HalfWaveRectifierTest(){
 
-			string nm = TestContext.CurrentContext.Test.Name;
+			/*string nm = TestContext.CurrentContext.Test.Name;
 			string js = System.IO.File.ReadAllText(string.Format("./{0}.json", nm));
-			CirSim sim = JsonSerializer.DeserializeFromString<CirSim>(js);
+			Circuit sim = JsonSerializer.DeserializeFromString<Circuit>(js);
 			sim.needAnalyze();
 
 			var source0 = sim.getElm(0) as VoltageElm;
 			var sourceScope = sim.Watch(sim.getElm(0));
-			var resScope = sim.Watch(sim.getElm(2));
+			var resScope = sim.Watch(sim.getElm(2));*/
 
-			/*CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 			
 			sim.speed = 200;
 
@@ -43,7 +43,7 @@ namespace SharpCircuitTest {
 			sim.Connect(wire0, 1, source0, 0);
 
 			var sourceScope = sim.Watch(source0);
-			var resScope = sim.Watch(res0);*/
+			var resScope = sim.Watch(res0);
 
 			int steps = 208 * 4;
 			for(int x = 1; x <= steps; x++)

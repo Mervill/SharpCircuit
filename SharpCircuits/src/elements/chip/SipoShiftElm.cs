@@ -59,7 +59,7 @@ namespace SharpCircuit {
 			return 8;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(pins[1].value && !clockstate) {
 				clockstate = true;
 				data = (short)(data >> 1);

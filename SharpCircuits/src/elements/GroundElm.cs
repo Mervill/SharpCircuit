@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class GroundElm : CircuitElement {
 
-		//public ElementLead leadIn { get { return lead0; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
 
-		public GroundElm() {
+		public GroundElm() : base() {
 
 		}
 
@@ -20,8 +20,8 @@ namespace SharpCircuit {
 			current = -c;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(0, nodes[0], voltSource, 0);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(0, lead_node[0], voltSource, 0);
 		}
 
 		public override double getVoltageDiff() {

@@ -98,25 +98,24 @@ namespace SharpCircuit {
 		}
 
 		public double triangleFunc(double x) {
-			if(x < pi)
-				return x * (2 / pi) - 1;
+			if(x < pi) return x * (2 / pi) - 1;
 			return 1 - (x - pi) * (2 / pi);
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			if(waveform == WaveType.DC) {
-				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, getVoltage(sim));
+				sim.stampVoltageSource(lead_node[0], lead_node[1], voltSource, getVoltage(sim));
 			} else {
-				sim.stampVoltageSource(nodes[0], nodes[1], voltSource);
+				sim.stampVoltageSource(lead_node[0], lead_node[1], voltSource);
 			}
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			if(waveform != WaveType.DC)
-				sim.updateVoltageSource(nodes[0], nodes[1], voltSource, getVoltage(sim));
+				sim.updateVoltageSource(lead_node[0], lead_node[1], voltSource, getVoltage(sim));
 		}
 
-		public virtual double getVoltage(CirSim sim) {
+		public virtual double getVoltage(Circuit sim) {
 			setFrequency(frequency, sim.timeStep, sim.time);
 			double w = 2 * pi * (sim.time - freqTimeZero) * _frequency + _phaseShift;
 			switch(waveform) {
@@ -139,7 +138,7 @@ namespace SharpCircuit {
 		}
 
 		public override double getVoltageDiff() {
-			return volts[1] - volts[0];
+			return lead_volt[1] - lead_volt[0];
 		}
 
 		/*public override void getInfo(String[] arr) {

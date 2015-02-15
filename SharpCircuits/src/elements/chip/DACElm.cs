@@ -25,17 +25,17 @@ namespace SharpCircuit {
 			pins[bits] = new Pin("O");
 			pins[bits].output = true;
 			pins[bits + 1] = new Pin("V+");
-			allocNodes();
+			allocLeads();
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			int ival = 0;
 			for(int i = 0; i != bits; i++)
-				if(volts[i] > 2.5)
+				if(lead_volt[i] > 2.5)
 					ival |= 1 << i;
 			int ivalmax = (1 << bits) - 1;
-			double v = ival * volts[bits + 1] / ivalmax;
-			sim.updateVoltageSource(0, nodes[bits], pins[bits].voltSource, v);
+			double v = ival * lead_volt[bits + 1] / ivalmax;
+			sim.updateVoltageSource(0, lead_node[bits], pins[bits].voltSource, v);
 		}
 
 		public override int getVoltageSourceCount() {

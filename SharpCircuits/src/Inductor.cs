@@ -29,7 +29,7 @@ namespace SharpCircuit {
 			current = 0;
 		}
 
-		public void stamp(CirSim sim, int n0, int n1) {
+		public void stamp(Circuit sim, int n0, int n1) {
 			// inductor companion model using trapezoidal or backward euler
 			// approximations (Norton equivalent) consists of a current
 			// source in parallel with a resistor. Trapezoidal is more
@@ -68,7 +68,7 @@ namespace SharpCircuit {
 			return current;
 		}
 
-		public void doStep(CirSim sim, double voltdiff) {
+		public void doStep(Circuit sim, double voltdiff) {
 			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 		}
 	}

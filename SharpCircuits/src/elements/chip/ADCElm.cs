@@ -26,13 +26,13 @@ namespace SharpCircuit {
 			}
 			pins[bits] = new Pin("In");
 			pins[bits + 1] = new Pin("V+");
-			allocNodes();
+			allocLeads();
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			int imax = (1 << bits) - 1;
 			// if we round, the half-flash doesn't work
-			double val = imax * volts[bits] / volts[bits + 1]; // + .5;
+			double val = imax * lead_volt[bits] / lead_volt[bits + 1]; // + .5;
 			int ival = (int) val;
 			ival = Math.Min(imax, Math.Max(0, ival));
 			for (int i = 0; i != bits; i++)

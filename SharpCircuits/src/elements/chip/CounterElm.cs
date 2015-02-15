@@ -44,7 +44,7 @@ namespace SharpCircuit {
 			}
 			if(hasEnable)
 				pins[bits + 2] = new Pin("En");
-			allocNodes();
+			allocLeads();
 		}
 
 		public override int getLeadCount() {
@@ -57,7 +57,7 @@ namespace SharpCircuit {
 			return bits;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			bool en = true;
 			if(hasEnable)
 				en = pins[bits + 2].value;

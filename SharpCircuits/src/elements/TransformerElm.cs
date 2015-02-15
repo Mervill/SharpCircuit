@@ -28,7 +28,7 @@ namespace SharpCircuit {
 		private double a1, a2, a3, a4;
 		private double curSourceValue1, curSourceValue2;
 
-		public TransformerElm( CirSim s) {
+		public TransformerElm() : base() {
 			isTrapezoidal = true;
 			inductance = 4;
 			ratio = 1;
@@ -41,10 +41,10 @@ namespace SharpCircuit {
 		}
 
 		public override void reset() {
-			current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = 0;
+			current[0] = current[1] = lead_volt[0] = lead_volt[1] = lead_volt[2] = lead_volt[3] = 0;
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			// equations for transformer:
 			// v1 = L1 di1/dt + M di2/dt
 			// v2 = M di1/dt + L2 di2/dt
@@ -82,20 +82,20 @@ namespace SharpCircuit {
 			a2 = -m * deti * ts;
 			a3 = -m * deti * ts;
 			a4 = l1 * deti * ts;
-			sim.stampConductance(nodes[0], nodes[2], a1);
-			sim.stampVCCurrentSource(nodes[0], nodes[2], nodes[1], nodes[3], a2);
-			sim.stampVCCurrentSource(nodes[1], nodes[3], nodes[0], nodes[2], a3);
-			sim.stampConductance(nodes[1], nodes[3], a4);
-			sim.stampRightSide(nodes[0]);
-			sim.stampRightSide(nodes[1]);
-			sim.stampRightSide(nodes[2]);
-			sim.stampRightSide(nodes[3]);
+			sim.stampConductance(lead_node[0], lead_node[2], a1);
+			sim.stampVCCurrentSource(lead_node[0], lead_node[2], lead_node[1], lead_node[3], a2);
+			sim.stampVCCurrentSource(lead_node[1], lead_node[3], lead_node[0], lead_node[2], a3);
+			sim.stampConductance(lead_node[1], lead_node[3], a4);
+			sim.stampRightSide(lead_node[0]);
+			sim.stampRightSide(lead_node[1]);
+			sim.stampRightSide(lead_node[2]);
+			sim.stampRightSide(lead_node[3]);
 		}
 
 		public override void startIteration(double timeStep) {
-			double voltdiff1 = volts[0] - volts[2];
-			double voltdiff2 = volts[1] - volts[3];
-			if (isTrapezoidal) {
+			double voltdiff1 = lead_volt[0] - lead_volt[2];
+			double voltdiff2 = lead_volt[1] - lead_volt[3];
+			if(isTrapezoidal) {
 				curSourceValue1 = voltdiff1 * a1 + voltdiff2 * a2 + current[0];
 				curSourceValue2 = voltdiff1 * a3 + voltdiff2 * a4 + current[1];
 			} else {
@@ -104,14 +104,14 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.stampCurrentSource(nodes[0], nodes[2], curSourceValue1);
-			sim.stampCurrentSource(nodes[1], nodes[3], curSourceValue2);
+		public override void doStep(Circuit sim) {
+			sim.stampCurrentSource(lead_node[0], lead_node[2], curSourceValue1);
+			sim.stampCurrentSource(lead_node[1], lead_node[3], curSourceValue2);
 		}
 
 		public override void calculateCurrent() {
-			double voltdiff1 = volts[0] - volts[2];
-			double voltdiff2 = volts[1] - volts[3];
+			double voltdiff1 = lead_volt[0] - lead_volt[2];
+			double voltdiff2 = lead_volt[1] - lead_volt[3];
 			current[0] = voltdiff1 * a1 + voltdiff2 * a2 + curSourceValue1;
 			current[1] = voltdiff1 * a3 + voltdiff2 * a4 + curSourceValue2;
 		}
@@ -120,19 +120,15 @@ namespace SharpCircuit {
 			arr[0] = "transformer";
 			arr[1] = "L = " + getUnitText(inductance, "H");
 			arr[2] = "Ratio = 1:" + ratio;
-			arr[3] = "Vd1 = " + getVoltageText(volts[0] - volts[2]);
-			arr[4] = "Vd2 = " + getVoltageText(volts[1] - volts[3]);
+			arr[3] = "Vd1 = " + getVoltageText(lead_volt[0] - lead_volt[2]);
+			arr[4] = "Vd2 = " + getVoltageText(lead_volt[1] - lead_volt[3]);
 			arr[5] = "I1 = " + getCurrentText(current[0]);
 			arr[6] = "I2 = " + getCurrentText(current[1]);
 		}
 
 		public override bool getConnection(int n1, int n2) {
-			if (comparePair(n1, n2, 0, 2)) {
-				return true;
-			}
-			if (comparePair(n1, n2, 1, 3)) {
-				return true;
-			}
+			if(comparePair(n1, n2, 0, 2)) return true;
+			if(comparePair(n1, n2, 1, 3)) return true;
 			return false;
 		}
 

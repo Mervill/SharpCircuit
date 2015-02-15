@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace SharpCircuit {
 
 	// Contributed by Edward Calver.
-	
+
 	public class TriStateElm : CircuitElement {
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace SharpCircuit {
 		//public ElementLead lead2;
 		//public ElementLead lead3;
 
-		public TriStateElm() {
+		public TriStateElm() : base() {
 			//lead2 = new ElementLead(this,2);
 			//lead3 = new ElementLead(this,3);
 			r_on = 0.1;
@@ -39,7 +39,7 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
+			current = (lead_volt[0] - lead_volt[1]) / resistance;
 		}
 
 		// we need this to be able to change the matrix for each step
@@ -47,17 +47,17 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(0, nodes[3], voltSource);
-			sim.stampNonLinear(nodes[3]);
-			sim.stampNonLinear(nodes[1]);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(0, lead_node[3], voltSource);
+			sim.stampNonLinear(lead_node[3]);
+			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(CirSim sim) {
-			open = (volts[2] < 2.5);
+		public override void doStep(Circuit sim) {
+			open = (lead_volt[2] < 2.5);
 			resistance = (open) ? r_off : r_on;
-			sim.stampResistor(nodes[3], nodes[1], resistance);
-			sim.updateVoltageSource(0, nodes[3], voltSource, volts[0] > 2.5 ? 5 : 0);
+			sim.stampResistor(lead_node[3], lead_node[1], resistance);
+			sim.updateVoltageSource(0, lead_node[3], voltSource, lead_volt[0] > 2.5 ? 5 : 0);
 		}
 
 		public override int getLeadCount() {
@@ -73,7 +73,7 @@ namespace SharpCircuit {
 			arr[1] = open ? "open" : "closed";
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[3] = "I = " + getCurrentDText(current);
-			arr[4] = "Vc = " + getVoltageText(volts[2]);
+			arr[4] = "Vc = " + getVoltageText(lead_volt[2]);
 		}
 
 		// we have to just assume current will flow either way, even though that

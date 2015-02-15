@@ -13,9 +13,9 @@ namespace SharpCircuit {
 
 	public class SCRElm : CircuitElement {
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
-		//public ElementLead leadGate { get { return leads[2]; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
+		public Circuit.Lead leadGate { get { return new Circuit.Lead(this, 2); } }
 
 		/// <summary>
 		/// Gate-Cathode Resistance (ohms)
@@ -42,7 +42,7 @@ namespace SharpCircuit {
 		private double lastvac;
 		private double lastvag;
 
-		public SCRElm() {
+		public SCRElm() : base() {
 			diode = new Diode();
 			diode.setup(0.8, 0);
 			cresistance = 50;
@@ -55,7 +55,7 @@ namespace SharpCircuit {
 		}
 
 		public override void reset() {
-			volts[anode] = volts[cnode] = volts[gnode] = 0;
+			lead_volt[anode] = lead_volt[cnode] = lead_volt[gnode] = 0;
 			diode.reset();
 			lastvag = lastvac = 0;
 		}
@@ -64,49 +64,44 @@ namespace SharpCircuit {
 			return 3;
 		}
 
-		public override int getInternalNodeCount() {
+		public override int getInternalLeadCount() {
 			return 1;
 		}
 
 		public override double getPower() {
-			return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
+			return (lead_volt[anode] - lead_volt[gnode]) * ia + (lead_volt[cnode] - lead_volt[gnode]) * ic;
 		}
 
 		public double aresistance;
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[anode]);
-			sim.stampNonLinear(nodes[cnode]);
-			sim.stampNonLinear(nodes[gnode]);
-			sim.stampNonLinear(nodes[inode]);
-			sim.stampResistor(nodes[gnode], nodes[cnode], cresistance);
-			diode.stamp(sim, nodes[inode], nodes[gnode]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[anode]);
+			sim.stampNonLinear(lead_node[cnode]);
+			sim.stampNonLinear(lead_node[gnode]);
+			sim.stampNonLinear(lead_node[inode]);
+			sim.stampResistor(lead_node[gnode], lead_node[cnode], cresistance);
+			diode.stamp(sim, lead_node[inode], lead_node[gnode]);
 		}
 
-		public override void doStep(CirSim sim) {
-			double vac = volts[anode] - volts[cnode]; // typically negative
-			double vag = volts[anode] - volts[gnode]; // typically positive
-			if (Math.Abs(vac - lastvac) > .01 || Math.Abs(vag - lastvag) > .01) {
+		public override void doStep(Circuit sim) {
+			double vac = lead_volt[anode] - lead_volt[cnode]; // typically negative
+			double vag = lead_volt[anode] - lead_volt[gnode]; // typically positive
+			if(Math.Abs(vac - lastvac) > .01 || Math.Abs(vag - lastvag) > .01)
 				sim.converged = false;
-			}
 			lastvac = vac;
 			lastvag = vag;
-			diode.doStep(sim, volts[inode] - volts[gnode]);
+			diode.doStep(sim, lead_volt[inode] - lead_volt[gnode]);
 			double icmult = 1 / triggerI;
 			double iamult = 1 / holdingI - icmult;
-			// System.out.println(icmult + " " + iamult);
 			aresistance = (-icmult * ic + ia * iamult > 1) ? .0105 : 10e5;
-			// System.out.println(vac + " " + vag + " " + sim.converged + " " + ic +
-			// " " + ia + " " + aresistance + " " + volts[inode] + " " +
-			// volts[gnode] + " " + volts[anode]);
-			sim.stampResistor(nodes[anode], nodes[inode], aresistance);
+			sim.stampResistor(lead_node[anode], lead_node[inode], aresistance);
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "SCR";
-			double vac = volts[anode] - volts[cnode];
-			double vag = volts[anode] - volts[gnode];
-			double vgc = volts[gnode] - volts[cnode];
+			double vac = lead_volt[anode] - lead_volt[cnode];
+			double vag = lead_volt[anode] - lead_volt[gnode];
+			double vgc = lead_volt[gnode] - lead_volt[cnode];
 			arr[1] = "Ia = " + getCurrentText(ia);
 			arr[2] = "Ig = " + getCurrentText(ig);
 			arr[3] = "Vac = " + getVoltageText(vac);
@@ -115,8 +110,8 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			ic = (volts[cnode] - volts[gnode]) / cresistance;
-			ia = (volts[anode] - volts[inode]) / aresistance;
+			ic = (lead_volt[cnode] - lead_volt[gnode]) / cresistance;
+			ia = (lead_volt[anode] - lead_volt[inode]) / aresistance;
 			ig = -ic - ia;
 		}
 

@@ -170,7 +170,7 @@ namespace SharpCircuit {
 			position++;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(oneshot) {
 				if(sim.time - lastchangetime > 0.005) {
 					if(position <= 8)

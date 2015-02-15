@@ -6,7 +6,7 @@ namespace SharpCircuit {
 	
 	public class RailElm : VoltageElm {
 
-		//public ElementLead leadOut 	{ get { return lead0; }}
+		public Circuit.Lead leadOut { get { return lead0; } }
 
 		public RailElm() : base(WaveType.DC) {
 
@@ -21,20 +21,20 @@ namespace SharpCircuit {
 		}
 
 		public override double getVoltageDiff() {
-			return volts[0];
+			return lead_volt[0];
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			if (waveform == WaveType.DC) {
-				sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage(sim));
+				sim.stampVoltageSource(0, lead_node[0], voltSource, getVoltage(sim));
 			} else {
-				sim.stampVoltageSource(0, nodes[0], voltSource);
+				sim.stampVoltageSource(0, lead_node[0], voltSource);
 			}
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			if (waveform != WaveType.DC)
-				sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage(sim));
+				sim.updateVoltageSource(0, lead_node[0], voltSource, getVoltage(sim));
 		}
 
 		public override bool hasGroundConnection(int n1) {

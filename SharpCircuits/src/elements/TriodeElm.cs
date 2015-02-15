@@ -6,9 +6,9 @@ namespace SharpCircuit {
 
 	public class TriodeElm : CircuitElement {
 
-		//public ElementLead leadPlate 	{ get { return lead0; }}
-		//public ElementLead leadGrid 	{ get { return lead1; }}
-		//public ElementLead leadCath 	{ get { return leads[2]; }}
+		public Circuit.Lead leadPlate { get { return lead0; } }
+		public Circuit.Lead leadGrid { get { return lead1; } }
+		public Circuit.Lead leadCath { get { return new Circuit.Lead(this, 2); } }
 
 		public double currentp, currentg, currentc;
 
@@ -16,7 +16,7 @@ namespace SharpCircuit {
 		private double gridCurrentR = 6000;
 		private double lastv0, lastv1, lastv2;
 
-		public TriodeElm() {
+		public TriodeElm() : base() {
 			mu = 93;
 			kg1 = 680;
 		}
@@ -26,7 +26,7 @@ namespace SharpCircuit {
 		}
 
 		public override void reset() {
-			volts[0] = volts[1] = volts[2] = 0;
+			lead_volt[0] = lead_volt[1] = lead_volt[2] = 0;
 		}
 
 		public override int getLeadCount() {
@@ -34,22 +34,18 @@ namespace SharpCircuit {
 		}
 
 		public override double getPower() {
-			return (volts[0] - volts[2]) * current;
+			return (lead_volt[0] - lead_volt[2]) * current;
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			double[] vs = new double[3];
-			vs[0] = volts[0];
-			vs[1] = volts[1];
-			vs[2] = volts[2];
-			if(vs[1] > lastv1 + 0.5)
-				vs[1] = lastv1 + 0.5;
-			if(vs[1] < lastv1 - 0.5)
-				vs[1] = lastv1 - 0.5;
-			if(vs[2] > lastv2 + 0.5)
-				vs[2] = lastv2 + 0.5;
-			if(vs[2] < lastv2 - 0.5)
-				vs[2] = lastv2 - 0.5;
+			vs[0] = lead_volt[0];
+			vs[1] = lead_volt[1];
+			vs[2] = lead_volt[2];
+			if(vs[1] > lastv1 + 0.5) vs[1] = lastv1 + 0.5;
+			if(vs[1] < lastv1 - 0.5) vs[1] = lastv1 - 0.5;
+			if(vs[2] > lastv2 + 0.5) vs[2] = lastv2 + 0.5;
+			if(vs[2] < lastv2 - 0.5) vs[2] = lastv2 - 0.5;
 			int grid = 1;
 			int cath = 2;
 			int plate = 0;
@@ -66,7 +62,7 @@ namespace SharpCircuit {
 			double ival = vgk + vpk / mu;
 			currentg = 0;
 			if(vgk > .01) {
-				sim.stampResistor(nodes[grid], nodes[cath], gridCurrentR);
+				sim.stampResistor(lead_node[grid], lead_node[cath], gridCurrentR);
 				currentg = vgk / gridCurrentR;
 			}
 			if(ival < 0) {
@@ -85,29 +81,29 @@ namespace SharpCircuit {
 			currentp = ids;
 			currentc = ids + currentg;
 			double rs = -ids + Gds * vpk + gm * vgk;
-			sim.stampMatrix(nodes[plate], nodes[plate], Gds);
-			sim.stampMatrix(nodes[plate], nodes[cath], -Gds - gm);
-			sim.stampMatrix(nodes[plate], nodes[grid], gm);
+			sim.stampMatrix(lead_node[plate], lead_node[plate], Gds);
+			sim.stampMatrix(lead_node[plate], lead_node[cath], -Gds - gm);
+			sim.stampMatrix(lead_node[plate], lead_node[grid], gm);
 
-			sim.stampMatrix(nodes[cath], nodes[plate], -Gds);
-			sim.stampMatrix(nodes[cath], nodes[cath], Gds + gm);
-			sim.stampMatrix(nodes[cath], nodes[grid], -gm);
+			sim.stampMatrix(lead_node[cath], lead_node[plate], -Gds);
+			sim.stampMatrix(lead_node[cath], lead_node[cath], Gds + gm);
+			sim.stampMatrix(lead_node[cath], lead_node[grid], -gm);
 
-			sim.stampRightSide(nodes[plate], rs);
-			sim.stampRightSide(nodes[cath], -rs);
+			sim.stampRightSide(lead_node[plate], rs);
+			sim.stampRightSide(lead_node[cath], -rs);
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[0]);
-			sim.stampNonLinear(nodes[1]);
-			sim.stampNonLinear(nodes[2]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[0]);
+			sim.stampNonLinear(lead_node[1]);
+			sim.stampNonLinear(lead_node[2]);
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "triode";
-			double vbc = volts[0] - volts[1];
-			double vbe = volts[0] - volts[2];
-			double vce = volts[1] - volts[2];
+			double vbc = lead_volt[0] - lead_volt[1];
+			double vbe = lead_volt[0] - lead_volt[2];
+			double vce = lead_volt[1] - lead_volt[2];
 			arr[1] = "Vbe = " + getVoltageText(vbe);
 			arr[2] = "Vbc = " + getVoltageText(vbc);
 			arr[3] = "Vce = " + getVoltageText(vce);

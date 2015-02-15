@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace SharpCircuit {
 
 	// Contributed by Edward Calver
-	
+
 	public class FMElm : CircuitElement {
 
-		//public ElementLead leadOut { get { return lead0; }}
+		public Circuit.Lead leadOut { get { return lead0; } }
 
 		/// <summary>
 		/// Carrier Frequency (Hz)
@@ -34,7 +34,7 @@ namespace SharpCircuit {
 		private double lasttime = 0;
 		private double funcx = 0;
 
-		public FMElm() {
+		public FMElm() : base() {
 			deviation = 200;
 			maxVoltage = 5;
 			carrierfreq = 800;
@@ -50,12 +50,12 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(0, nodes[0], voltSource);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(0, lead_node[0], voltSource);
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage(sim.time));
+		public override void doStep(Circuit sim) {
+			sim.updateVoltageSource(0, lead_node[0], voltSource, getVoltage(sim.time));
 		}
 
 		private double getVoltage(double time) {
@@ -68,7 +68,7 @@ namespace SharpCircuit {
 		}
 
 		public override double getVoltageDiff() {
-			return volts[0];
+			return lead_volt[0];
 		}
 
 		public override bool hasGroundConnection(int n1) {

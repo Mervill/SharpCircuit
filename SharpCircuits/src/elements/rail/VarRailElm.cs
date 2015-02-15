@@ -14,7 +14,7 @@ namespace SharpCircuit {
 			waveform = WaveType.VAR;
 		}
 
-		public override double getVoltage(CirSim sim) {
+		public override double getVoltage(Circuit sim) {
 			frequency = output * (maxVoltage - bias) + bias;
 			return base.getVoltage(sim);
 		}

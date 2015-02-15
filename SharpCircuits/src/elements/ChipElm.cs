@@ -10,14 +10,14 @@ namespace SharpCircuit {
 		protected Pin[] pins;
 		protected bool lastClock;
 
-		public ChipElm() {
+		public ChipElm() : base() {
 			if(needsBits())
 				bits = (this is DecadeElm) ? 10 : 4;
 			setupPins();
 		}
 
 		public virtual void setupPins() { }
-		public virtual void execute(CirSim sim) { }
+		public virtual void execute(Circuit sim) { }
 
 		public virtual bool needsBits() {
 			return false;
@@ -32,20 +32,20 @@ namespace SharpCircuit {
 			//System.out.println("setVoltageSource failed for " + this);
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(p.output)
-					sim.stampVoltageSource(0, nodes[i], p.voltSource);
+					sim.stampVoltageSource(0, lead_node[i], p.voltSource);
 			}
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			int i;
 			for(i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(!p.output)
-					p.value = volts[i] > 2.5;
+					p.value = lead_volt[i] > 2.5;
 			}
 
 			execute(sim);
@@ -53,14 +53,14 @@ namespace SharpCircuit {
 			for(i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(p.output)
-					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
+					sim.updateVoltageSource(0, lead_node[i], p.voltSource, p.value ? 5 : 0);
 			}
 		}
 
 		public override void reset() {
 			for(int i = 0; i != getLeadCount(); i++) {
 				pins[i].value = false;
-				volts[i] = 0;
+				lead_volt[i] = 0;
 			}
 			lastClock = false;
 		}
@@ -85,7 +85,7 @@ namespace SharpCircuit {
 				if(p.clock)
 					t = "Clk";
 
-				arr[a] += t + " = " + getVoltageText(volts[i]);
+				arr[a] += t + " = " + getVoltageText(lead_volt[i]);
 				if(i % 2 == 1)
 					a++;
 			}

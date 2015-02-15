@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class LampElm : CircuitElement {
 
 		public static readonly double roomTemp = 300;
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		/// <summary>
 		/// Tempature
@@ -38,7 +38,7 @@ namespace SharpCircuit {
 
 		private double resistance;
 
-		public LampElm() {
+		public LampElm() : base() {
 			temp = roomTemp;
 			nom_pow = 100;
 			nom_v = 120;
@@ -52,13 +52,13 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
+			current = (lead_volt[0] - lead_volt[1]) / resistance;
 			// System.out.print(this + " res current set to " + current + "\n");
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[0]);
-			sim.stampNonLinear(nodes[1]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[0]);
+			sim.stampNonLinear(lead_node[1]);
 		}
 
 		public override bool nonLinear() {
@@ -81,16 +81,16 @@ namespace SharpCircuit {
 			// System.out.println(capw + " " + capc + " " + temp + " " +resistance);
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.stampResistor(nodes[0], nodes[1], resistance);
+		public override void doStep(Circuit sim) {
+			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "lamp";
 			getBasicInfo(arr);
-			arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
+			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
-			arr[5] = "T = " + ((int) temp) + " K";
+			arr[5] = "T = " + ((int)temp) + " K";
 		}
 
 	}

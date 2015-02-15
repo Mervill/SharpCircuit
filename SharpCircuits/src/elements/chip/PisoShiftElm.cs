@@ -53,7 +53,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(pins[0].value && !modestate) {
 				modestate = true;
 				data = 0;

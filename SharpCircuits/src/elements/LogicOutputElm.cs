@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class LogicOutputElm : CircuitElement {
 
-		//public ElementLead leadIn { get { return lead0; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
 
 		/// <summary>
 		/// The Threshold Voltage.
@@ -15,7 +15,7 @@ namespace SharpCircuit {
 
 		public bool needsPullDown { get; set; }
 
-		public LogicOutputElm() {
+		public LogicOutputElm() : base() {
 			threshold = 2.5;
 		}
 
@@ -23,23 +23,23 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			if(needsPullDown)
-				sim.stampResistor(nodes[0], 0, 1E6);
+				sim.stampResistor(lead_node[0], 0, 1E6);
 		}
 
 		public override double getVoltageDiff() {
-			return volts[0];
+			return lead_volt[0];
 		}
 
 		public bool isHigh() {
-			return (volts[0] < threshold) ? false : true;
+			return (lead_volt[0] < threshold) ? false : true;
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "logic output";
-			arr[1] = (volts[0] < threshold) ? "low" : "high";
-			arr[2] = "V = " + getVoltageText(volts[0]);
+			arr[1] = (lead_volt[0] < threshold) ? "low" : "high";
+			arr[2] = "V = " + getVoltageText(lead_volt[0]);
 		}
 
 	}

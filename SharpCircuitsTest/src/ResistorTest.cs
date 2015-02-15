@@ -13,7 +13,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void OhmsLawTest() {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
 			var volt0 = sim.Create<RailElm>();
 			var res0 = sim.Create<ResistorElm>( 100);
@@ -35,7 +35,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void VoltageDividerTest() {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
 			var volt0 = sim.Create<DCVoltageElm>();
 			volt0.maxVoltage = 10;
@@ -86,7 +86,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void WheatstoneBridgeTest() {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
 			var volt0 = sim.Create<DCVoltageElm>();
 

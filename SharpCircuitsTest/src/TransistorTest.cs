@@ -12,7 +12,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void NPNTransistorTest() {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 			var transistor = sim.Create<NPNTransistorElm>();
 
 			var baseVoltage = sim.Create<RailElm>();
@@ -49,7 +49,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void PNPTransistorTest() {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 			var transistor = sim.Create<PNPTransistorElm>();
 
 			var baseVoltage = sim.Create<RailElm>();

@@ -66,11 +66,11 @@ namespace SharpCircuit {
 
 		public override void reset() {
 			base.reset();
-			volts[2] = 5;
+			lead_volt[2] = 5;
 			pins[2].value = true;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(pins[3].value && !lastClock) {
 				pins[1].value = pins[0].value;
 				pins[2].value = !pins[0].value;

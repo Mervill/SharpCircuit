@@ -6,8 +6,8 @@ namespace SharpCircuit {
 
 	public class ResistorElm : CircuitElement {
 
-		//public ElementLead leadIn	{ get { return lead0; }}
-		//public ElementLead leadOut	{ get { return lead1; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		/// <summary>
 		/// Resistance (ohms)
@@ -18,23 +18,22 @@ namespace SharpCircuit {
 			resistance = 100;
 		}
 
-		public ResistorElm(double r) {
+		public ResistorElm(double r) : base() {
 			resistance = r;
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
-			// System.out.print(this + " res current set to " + current + "\n");
+			current = (lead_volt[0] - lead_volt[1]) / resistance;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampResistor(nodes[0], nodes[1], resistance);
+		public override void stamp(Circuit sim) {
+			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
 		public override void getInfo(String[] arr) {
 			arr[0] = "resistor";
 			getBasicInfo(arr);
-			arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
+			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 		}
 

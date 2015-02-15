@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class AnalogSwitchElm : CircuitElement {
 
-		//public ElementLead leadIn 		{ get { return lead0; }}
-		//public ElementLead leadOut 		{ get { return lead1; }}
-		//public ElementLead leadSwitch 	{ get { return leads[2]; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
+		public Circuit.Lead leadSwitch { get { return new Circuit.Lead(this, 2); } }
 
 		/// <summary>
 		/// Normally closed
@@ -29,13 +29,13 @@ namespace SharpCircuit {
 
 		private double resistance;
 
-		public AnalogSwitchElm() {
+		public AnalogSwitchElm() : base() {
 			r_on = 20;
 			r_off = 1E10;
 		}
 
 		public override void calculateCurrent() {
-			current = (volts[0] - volts[1]) / resistance;
+			current = (lead_volt[0] - lead_volt[1]) / resistance;
 		}
 
 		// we need this to be able to change the matrix for each step
@@ -43,18 +43,18 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampNonLinear(nodes[0]);
-			sim.stampNonLinear(nodes[1]);
+		public override void stamp(Circuit sim) {
+			sim.stampNonLinear(lead_node[0]);
+			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(CirSim sim) {
-			open = (volts[2] < 2.5);
-			if (invert) {
+		public override void doStep(Circuit sim) {
+			open = (lead_volt[2] < 2.5);
+			if(invert) {
 				open = !open;
 			}
 			resistance = (open) ? r_off : r_on;
-			sim.stampResistor(nodes[0], nodes[1], resistance);
+			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
 		public override int getLeadCount() {
@@ -66,16 +66,13 @@ namespace SharpCircuit {
 			arr[1] = open ? "open" : "closed";
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[3] = "I = " + getCurrentDText(current);
-			arr[4] = "Vc = " + getVoltageText(volts[2]);
+			arr[4] = "Vc = " + getVoltageText(lead_volt[2]);
 		}
 
 		// we have to just assume current will flow either way, even though that
 		// might cause singular matrix errors
 		public override bool getConnection(int n1, int n2) {
-			if (n1 == 2 || n2 == 2) {
-				return false;
-			}
-			return true;
+			return !(n1 == 2 || n2 == 2);
 		}
 
 	}

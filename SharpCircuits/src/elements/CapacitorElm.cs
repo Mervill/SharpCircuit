@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class CapacitorElm : CircuitElement {
 
-		//public ElementLead leadIn { get { return lead0; } }
-		//public ElementLead leadOut { get { return lead1; } }
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		/// <summary>
 		/// Capacitance (F)
@@ -30,18 +30,18 @@ namespace SharpCircuit {
 		private double voltdiff;
 		private double curSourceValue;
 
-		public CapacitorElm() {
+		public CapacitorElm() : base() {
 			isTrapezoidal = true;
 		}
 
-		public CapacitorElm(double c) {
+		public CapacitorElm(double c) : base() {
 			capacitance = c;
 			isTrapezoidal = true;
 		}
 
 		public override void setLeadVoltage(int n, double c) {
 			base.setLeadVoltage(n, c);
-			voltdiff = volts[0] - volts[1];
+			voltdiff = lead_volt[0] - lead_volt[1];
 		}
 
 		public override void reset() {
@@ -50,7 +50,7 @@ namespace SharpCircuit {
 			voltdiff = 1E-3;
 		}
 
-		public override void stamp(CirSim sim) {
+		public override void stamp(Circuit sim) {
 			// Capacitor companion model using trapezoidal approximation
 			// (Norton equivalent) consists of a current source in
 			// parallel with a resistor. Trapezoidal is more accurate
@@ -61,9 +61,9 @@ namespace SharpCircuit {
 			} else {
 				compResistance = sim.timeStep / capacitance;
 			}
-			sim.stampResistor(nodes[0], nodes[1], compResistance);
-			sim.stampRightSide(nodes[0]);
-			sim.stampRightSide(nodes[1]);
+			sim.stampResistor(lead_node[0], lead_node[1], compResistance);
+			sim.stampRightSide(lead_node[0]);
+			sim.stampRightSide(lead_node[1]);
 		}
 
 		public override void startIteration(double timeStep) {
@@ -76,17 +76,16 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			double voltdiff = volts[0] - volts[1];
+			double voltdiff = lead_volt[0] - lead_volt[1];
 			// We check compResistance because this might get called
 			// before stamp(CirSim sim), which sets compResistance, causing
 			// infinite current
-			if(compResistance > 0) {
+			if(compResistance > 0)
 				current = voltdiff / compResistance + curSourceValue;
-			}
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
+		public override void doStep(Circuit sim) {
+			sim.stampCurrentSource(lead_node[0], lead_node[1], curSourceValue);
 		}
 
 		public override void getInfo(String[] arr) {

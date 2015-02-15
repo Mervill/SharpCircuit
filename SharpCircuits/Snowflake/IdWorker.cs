@@ -62,7 +62,7 @@ namespace Snowflake
             internal set { _sequence = value; }
         }
 
-        // def get_timestamp() = System.currentTimeMillis
+        // def get_timestamp(CirSim sim) = System.currentTimeMillis
 
         readonly object _lock = new Object();
 	

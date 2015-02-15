@@ -14,7 +14,7 @@ namespace SharpCircuitTest {
 		[TestCase(1E-5, 0.0177244 )]
 		[TestCase(1E-6, 0.00250066)]
 		public void CapacitorCapacitanceTest(double capacitance, double current) {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
 			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
 			source0.frequency = 80;
@@ -40,7 +40,7 @@ namespace SharpCircuitTest {
 		[TestCase(40, 0.02074225)]
 		[TestCase(80, 0.02372003)]
 		public void CapacitorFrequencyTest(double frequency, double current) {
-			CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
 			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
 			source0.frequency = frequency;

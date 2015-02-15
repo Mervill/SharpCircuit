@@ -8,15 +8,16 @@ namespace SharpCircuit {
 
 		public readonly static double pi = 3.14159265358979323846;
 
-		//protected CirSim sim;
+		protected Circuit.Lead lead0 { get { return new Circuit.Lead(this, 0); } }
+		protected Circuit.Lead lead1 { get { return new Circuit.Lead(this, 1); } }
 
 		protected int voltSource;
 		protected double current;
-		protected int[] nodes;
-		protected double[] volts;
+		protected int[]    lead_node;
+		protected double[] lead_volt;
 
 		public CircuitElement() {
-			allocNodes();
+			allocLeads();
 		}
 
 		public int getBasicInfo(String[] arr) {
@@ -25,37 +26,60 @@ namespace SharpCircuit {
 			return 3;
 		}
 
-		protected void allocNodes() {
-			nodes = new int[getLeadCount() + getInternalNodeCount()];
-			volts = new double[getLeadCount() + getInternalNodeCount()];
+		protected void allocLeads() {
+			lead_node = new int[getLeadCount() + getInternalLeadCount()];
+			lead_volt = new double[getLeadCount() + getInternalLeadCount()];
 		}
 
-		public int getNode(int n) {
-			if(nodes == null) allocNodes();
-			return nodes[n];
+		public int getLeadNode(int ndx) {
+			if(lead_node == null) allocLeads();
+			return lead_node[ndx];
 		}
 
-		public void setNode(int lead, int node) {
-			if(nodes == null) allocNodes();
-			nodes[lead] = node;
+		public void setLeadNode(int ndx, int node_ndx) {
+			if(lead_node == null) allocLeads();
+			lead_node[ndx] = node_ndx;
 		}
 
-		public double getLeadVoltage(int x) {
-			return volts[x];
+		#region //// Interface ////
+
+		public virtual bool isWire() {
+			return false;
 		}
 
-		#region //// Virtuals ////
-		public virtual void getInfo(String[] arr) { }
+		public virtual bool nonLinear() {
+			return false;
+		}
 
 		public virtual void startIteration(double timeStep) { }
-		public virtual void stamp(CirSim sim) { }
-		public virtual void doStep(CirSim sim) { }
-		public virtual void calculateCurrent() { }
-		
-		public virtual void reset() {
-			for(int i = 0; i != getLeadCount() + getInternalNodeCount(); i++)
-				volts[i] = 0;
+		public virtual void doStep(Circuit sim) { }
+		public virtual void stamp(Circuit sim) { }
+
+		public virtual double getPower() {
+			return getVoltageDiff() * current;
 		}
+
+		public virtual void getInfo(String[] arr) { }
+
+		public virtual void reset() {
+			for(int i = 0; i != getLeadCount() + getInternalLeadCount(); i++)
+				lead_volt[i] = 0;
+		}
+
+
+		public virtual int getLeadCount() {
+			return 2;
+		}
+
+		public virtual double getLeadVoltage(int ndx) {
+			return lead_volt[ndx];
+		}
+
+		public virtual void setLeadVoltage(int ndx, double voltage) {
+			lead_volt[ndx] = voltage;
+			calculateCurrent();
+		}
+
 
 		public virtual double getCurrent() {
 			return current;
@@ -65,13 +89,11 @@ namespace SharpCircuit {
 			current = c;
 		}
 
-		public virtual int getLeadCount() {
-			return 2;
-		}
+		public virtual void calculateCurrent() { }
 
-		public virtual void setLeadVoltage(int n, double c) {
-			volts[n] = c;
-			calculateCurrent();
+
+		public virtual double getVoltageDiff() {
+			return lead_volt[0] - lead_volt[1];
 		}
 
 		public virtual int getVoltageSourceCount() {
@@ -82,17 +104,6 @@ namespace SharpCircuit {
 			voltSource = v;
 		}
 
-		public virtual int getInternalNodeCount() {
-			return 0;
-		}
-
-		public virtual double getVoltageDiff() {
-			return volts[0] - volts[1];
-		}
-
-		public virtual double getPower() {
-			return getVoltageDiff() * current;
-		}
 
 		public virtual bool getConnection(int n1, int n2) {
 			return true;
@@ -102,12 +113,9 @@ namespace SharpCircuit {
 			return false;
 		}
 
-		public virtual bool isWire() {
-			return false;
-		}
 
-		public virtual bool nonLinear() {
-			return false;
+		public virtual int getInternalLeadCount() {
+			return 0;
 		}
 		#endregion
 
@@ -137,7 +145,7 @@ namespace SharpCircuit {
 			if(va < 1e-14) return "0 " + u;
 			if(va < 1e-9 ) return v * 1e12 + " p" + u;
 			if(va < 1e-6 ) return v * 1e9  + " n" + u;
-			if(va < 1e-3 ) return v * 1e6  + " " + CirSim.muString + u;
+			if(va < 1e-3 ) return v * 1e6  + " " + Circuit.muString + u;
 			if(va < 1    ) return v * 1e3  + " m" + u;
 			if(va < 1e3  ) return v + " "  + u;
 			if(va < 1e6  ) return v * 1e-3 + " k" + u;
@@ -150,7 +158,7 @@ namespace SharpCircuit {
 			if(va < 1e-13) return null;
 			if(va < 1e-9 ) return v * 1e12 + "p" + u;
 			if(va < 1e-6 ) return v * 1e9  + "n" + u;
-			if(va < 1e-3 ) return v * 1e6  + CirSim.muString + u;
+			if(va < 1e-3 ) return v * 1e6  + Circuit.muString + u;
 			if(va < 1    ) return v * 1e3  + "m" + u;
 			if(va < 1e3  ) return v + u;
 			if(va < 1e6  ) return v * 1e-3 + "k" + u;

@@ -61,7 +61,7 @@ namespace SharpCircuit {
 			return 8;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			short index = 0;
 			if(pins[8].value || pins[9].value) {
 				if(pins[0].value) index += 128;
@@ -127,19 +127,19 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void doStep(Circuit sim) {
 			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(p.output && pins[9].value)
-					p.value = volts[i] > 2.5;
+					p.value = lead_volt[i] > 2.5;
 				if(!p.output)
-					p.value = volts[i] > 2.5;
+					p.value = lead_volt[i] > 2.5;
 			}
 			execute(sim);
 			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(p.output && !pins[9].value)
-					sim.updateVoltageSource(0, nodes[i], p.voltSource, p.value ? 5 : 0);
+					sim.updateVoltageSource(0, lead_node[i], p.voltSource, p.value ? 5 : 0);
 			}
 		}
 

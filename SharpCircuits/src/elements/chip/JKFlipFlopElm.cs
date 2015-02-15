@@ -13,7 +13,7 @@ namespace SharpCircuit {
 			set {
 				_hasReset = value;
 				setupPins();
-				allocNodes();
+				allocLeads();
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace SharpCircuit {
 			return 2;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(!pins[1].value && lastClock) {
 				bool q = pins[3].value;
 				if(pins[0].value) {

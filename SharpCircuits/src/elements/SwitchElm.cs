@@ -14,7 +14,7 @@ namespace SharpCircuit {
 		// position 0 == closed, position 1 == open
 		protected int position, posCount;
 
-		public SwitchElm() {
+		public SwitchElm() : base() {
 			momentary = false;
 			position = 0;
 			posCount = 2;
@@ -28,7 +28,7 @@ namespace SharpCircuit {
 
 		public virtual void toggle() {
 			position++;
-			if (position >= posCount)
+			if(position >= posCount)
 				position = 0;
 		}
 
@@ -39,13 +39,13 @@ namespace SharpCircuit {
 		}
 
 		public override void calculateCurrent() {
-			if (position == 1)
+			if(position == 1)
 				current = 0;
 		}
 
-		public override void stamp(CirSim sim) {
-			if (position == 0)
-				sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
+		public override void stamp(Circuit sim) {
+			if(position == 0)
+				sim.stampVoltageSource(lead_node[0], lead_node[1], voltSource, 0);
 		}
 
 		public override int getVoltageSourceCount() {
@@ -54,12 +54,12 @@ namespace SharpCircuit {
 
 		public override void getInfo(String[] arr) {
 			arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
-			if (position == 1) {
+			if(position == 1) {
 				arr[1] = "open";
 				arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			} else {
 				arr[1] = "closed";
-				arr[2] = "V = " + getVoltageText(volts[0]);
+				arr[2] = "V = " + getVoltageText(lead_volt[0]);
 				arr[3] = "I = " + getCurrentDText(current);
 			}
 		}

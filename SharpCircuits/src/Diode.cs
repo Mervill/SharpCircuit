@@ -37,7 +37,7 @@ namespace SharpCircuit {
 			lastvoltdiff = 0;
 		}
 
-		public double limitStep(CirSim sim, double vnew, double vold) {
+		public double limitStep(Circuit sim, double vnew, double vold) {
 			double arg;
 			// check new voltage; has current changed by factor of e^2?
 			if(vnew > vcrit && Math.Abs(vnew - vold) > (vt + vt)) {
@@ -87,14 +87,14 @@ namespace SharpCircuit {
 			return vnew;
 		}
 
-		public void stamp(CirSim sim, int n0, int n1) {
+		public void stamp(Circuit sim, int n0, int n1) {
 			nodes[0] = n0;
 			nodes[1] = n1;
 			sim.stampNonLinear(nodes[0]);
 			sim.stampNonLinear(nodes[1]);
 		}
 
-		public void doStep(CirSim sim, double voltdiff) {
+		public void doStep(Circuit sim, double voltdiff) {
 			// used to have .1 here, but needed .01 for peak detector
 			if(Math.Abs(voltdiff - lastvoltdiff) > 0.01)
 				sim.converged = false;

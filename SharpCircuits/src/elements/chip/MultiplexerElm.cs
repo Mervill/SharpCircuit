@@ -44,7 +44,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			int selectedvalue = 0;
 			if(pins[4].value)
 				selectedvalue++;

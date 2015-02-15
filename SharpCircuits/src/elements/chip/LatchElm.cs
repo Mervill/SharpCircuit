@@ -30,10 +30,10 @@ namespace SharpCircuit {
 				pins[i + bits].output = true;
 			}
 			pins[loadPin = bits * 2] = new Pin("Ld");
-			allocNodes();
+			allocLeads();
 		}
 
-		public override void execute(CirSim sim) {
+		public override void execute(Circuit sim) {
 			if(pins[loadPin].value && !lastLoad)
 				for(int i = 0; i != bits; i++)
 					pins[i + bits].value = pins[i].value;

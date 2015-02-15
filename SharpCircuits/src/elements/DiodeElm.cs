@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class DiodeElm : CircuitElement {
 
-		//public ElementLead leadIn 	{ get { return lead0; }}
-		//public ElementLead leadOut 	{ get { return lead1; }}
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadOut { get { return lead1; } }
 
 		protected Diode diode;
 
@@ -15,10 +15,10 @@ namespace SharpCircuit {
 		/// Fwd Voltage @ 1A
 		/// </summary>
 		public double forwardDrop {
-			get{
+			get {
 				return _forwardDrop;
 			}
-			set{
+			set {
 				_forwardDrop = value;
 				setup();
 			}
@@ -28,10 +28,10 @@ namespace SharpCircuit {
 		/// Zener Voltage @ 5mA
 		/// </summary>
 		public double zvoltage {
-			get{
+			get {
 				return _zvoltage;
 			}
-			set{
+			set {
 				_zvoltage = value;
 				setup();
 			}
@@ -59,19 +59,19 @@ namespace SharpCircuit {
 
 		public override void reset() {
 			diode.reset();
-			volts[0] = volts[1] = 0;
+			lead_volt[0] = lead_volt[1] = 0;
 		}
 
-		public override void stamp(CirSim sim) {
-			diode.stamp(sim, nodes[0], nodes[1]);
+		public override void stamp(Circuit sim) {
+			diode.stamp(sim, lead_node[0], lead_node[1]);
 		}
 
-		public override void doStep(CirSim sim) {
-			diode.doStep(sim, volts[0] - volts[1]);
+		public override void doStep(Circuit sim) {
+			diode.doStep(sim, lead_volt[0] - lead_volt[1]);
 		}
 
 		public override void calculateCurrent() {
-			current = diode.calculateCurrent(volts[0] - volts[1]);
+			current = diode.calculateCurrent(lead_volt[0] - lead_volt[1]);
 		}
 
 		public override void getInfo(String[] arr) {

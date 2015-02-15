@@ -6,9 +6,7 @@ namespace SharpCircuit {
 
 	public class OpAmpSwapElm : OpAmpElm {
 
-		public OpAmpSwapElm() {
-
-		}
+		// ???
 
 	}
 }

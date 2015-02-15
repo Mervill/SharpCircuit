@@ -45,8 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\CircuitElement.cs" />
-    <Compile Include="src\CircuitException.cs" />
-    <Compile Include="src\CirSim.cs" />
+    <Compile Include="src\Circuit.cs" />
     <Compile Include="src\Diode.cs" />
     <Compile Include="src\elements\AMElm.cs" />
     <Compile Include="src\elements\AnalogSwitch2Elm.cs" />
