@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SharpCircuit;
+using ServiceStack.Text;
 using NUnit.Framework;
 
 namespace SharpCircuitTest {
@@ -18,7 +19,17 @@ namespace SharpCircuitTest {
 		[Test]
 		public void HalfWaveRectifierTest(){
 
-			CirSim sim = new CirSim();
+			string nm = TestContext.CurrentContext.Test.Name;
+			string js = System.IO.File.ReadAllText(string.Format("./{0}.json", nm));
+			CirSim sim = JsonSerializer.DeserializeFromString<CirSim>(js);
+			sim.needAnalyze();
+
+			var source0 = sim.getElm(0) as VoltageElm;
+			var sourceScope = sim.Watch(sim.getElm(0));
+			var resScope = sim.Watch(sim.getElm(2));
+
+			/*CirSim sim = new CirSim();
+			
 			sim.speed = 200;
 
 			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
@@ -32,7 +43,7 @@ namespace SharpCircuitTest {
 			sim.Connect(wire0, 1, source0, 0);
 
 			var sourceScope = sim.Watch(source0);
-			var resScope = sim.Watch(res0);
+			var resScope = sim.Watch(res0);*/
 
 			int steps = 208 * 4;
 			for(int x = 1; x <= steps; x++)
@@ -79,7 +90,11 @@ namespace SharpCircuitTest {
 				Assert.AreEqual(voltageHighNdx, currentHighNdx, "Voltage and current do not reach max value on the same frame.");
 			}
 
-
+			/*string js = JsonSerializer.SerializeToString(sim);
+			string nm = TestContext.CurrentContext.Test.Name;
+			Debug.Log(nm);
+			Debug.Log(js);
+			System.IO.File.WriteAllText(string.Format("./{0}.json", nm), js);*/
 		}
 
 		[Test]

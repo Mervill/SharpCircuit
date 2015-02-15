@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Circuits {
+namespace SharpCircuit {
 
 	// Contributed by Edward Calver.
 	
@@ -31,7 +31,7 @@ namespace Circuits {
 		//public ElementLead lead2;
 		//public ElementLead lead3;
 
-		public TriStateElm(CirSim s) {
+		public TriStateElm() {
 			//lead2 = new ElementLead(this,2);
 			//lead3 = new ElementLead(this,3);
 			r_on = 0.1;
@@ -47,13 +47,13 @@ namespace Circuits {
 			return true;
 		}
 
-		public override void stamp() {
+		public override void stamp(CirSim sim) {
 			sim.stampVoltageSource(0, nodes[3], voltSource);
 			sim.stampNonLinear(nodes[3]);
 			sim.stampNonLinear(nodes[1]);
 		}
 
-		public override void doStep() {
+		public override void doStep(CirSim sim) {
 			open = (volts[2] < 2.5);
 			resistance = (open) ? r_off : r_on;
 			sim.stampResistor(nodes[3], nodes[1], resistance);
@@ -66,10 +66,6 @@ namespace Circuits {
 
 		public override int getVoltageSourceCount() {
 			return 1;
-		}
-
-		public override ElementLead getLead(int n) {
-			return (n == 0) ? lead0 : (n == 1) ? lead1 : (n == 2) ? lead2 : lead3;
 		}
 
 		public override void getInfo(String[] arr) {
@@ -88,10 +84,7 @@ namespace Circuits {
 		// 2
 
 		public override bool getConnection(int n1, int n2) {
-			if ((n1 == 1 && n2 == 3) || (n1 == 3 && n2 == 1)) {
-				return true;
-			}
-			return false;
+			return (n1 == 1 && n2 == 3) || (n1 == 3 && n2 == 1);
 		}
 	}
 }

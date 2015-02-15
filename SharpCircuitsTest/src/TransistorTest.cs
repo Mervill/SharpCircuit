@@ -12,7 +12,6 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void NPNTransistorTest() {
-			
 			CirSim sim = new CirSim();
 			var transistor = sim.Create<NPNTransistorElm>();
 
@@ -50,7 +49,6 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void PNPTransistorTest() {
-
 			CirSim sim = new CirSim();
 			var transistor = sim.Create<PNPTransistorElm>();
 

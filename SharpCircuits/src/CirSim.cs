@@ -18,10 +18,10 @@ namespace SharpCircuit {
 		public readonly static String ohmString = "ohm";
 
 		public bool stopped = false;
-		public double time { get; private set; }
-		public double timeStep = 5.0E-6;
 
-		public int speed = 172; // Math.Log(10 * 14.3) * 24 + 61.5; // 14.3
+		public double time { get; private set; }
+		public double timeStep { get; set; }
+		public int speed { get; set; } // 172 // Math.Log(10 * 14.3) * 24 + 61.5;
 
 		public List<CircuitElement> elements { get; set; }
 		public List<long[]> nodeMesh { get; set; }
@@ -62,6 +62,10 @@ namespace SharpCircuit {
 		Dictionary<ICircuitComponent, List<ScopeFrame>> scopeMap;
 
 		public CirSim() {
+			time = 0;
+			timeStep = 5.0E-6;
+			speed = 172;
+
 			elements = new List<CircuitElement>();
 			nodeMesh = new List<long[]>();
 			snowflake = new IdWorker(1, 1);

@@ -68,6 +68,9 @@
     <Compile Include="src\elements\chip\LatchElm.cs" />
     <Compile Include="src\elements\chip\LEDMatrixElm.cs" />
     <Compile Include="src\elements\chip\MultiplexerElm.cs" />
+    <Compile Include="src\elements\chip\PhaseCompElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\chip\PisoShiftElm.cs" />
     <Compile Include="src\elements\chip\SeqGenElm.cs" />
     <Compile Include="src\elements\chip\SevenSegDecoderElm.cs" />
@@ -76,6 +79,9 @@
     <Compile Include="src\elements\chip\SRAMElm.cs" />
     <Compile Include="src\elements\chip\TFlipFlopElm.cs" />
     <Compile Include="src\elements\chip\TimerElm.cs" />
+    <Compile Include="src\elements\chip\VCOElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\CurrentElm.cs" />
     <Compile Include="src\elements\DiacElm.cs" />
     <Compile Include="src\elements\DiodeElm.cs" />
@@ -142,6 +148,9 @@
     <Compile Include="src\elements\transistor\NPNTransistorElm.cs" />
     <Compile Include="src\elements\transistor\PNPTransistorElm.cs" />
     <Compile Include="src\elements\TriodeElm.cs" />
+    <Compile Include="src\elements\TriStateElm.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\elements\TunnelDiodeElm.cs" />
     <Compile Include="src\elements\VoltageElm.cs" />
     <Compile Include="src\elements\voltage\ACVoltageElm.cs" />

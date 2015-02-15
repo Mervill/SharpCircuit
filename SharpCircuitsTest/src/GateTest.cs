@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SharpCircuit;
+using ServiceStack.Text;
 using NUnit.Framework;
 
 namespace SharpCircuitTest {
@@ -16,7 +17,14 @@ namespace SharpCircuitTest {
 		[TestCase(true , true , true )]
 		public void AndGateTest(bool volt0, bool volt1, bool isHigh) {
 
-			CirSim sim = new CirSim();
+			string js = System.IO.File.ReadAllText(string.Format("./{0}.json", "AndGateTest"));
+			CirSim sim = JsonSerializer.DeserializeFromString<CirSim>(js);
+
+			var voltage0 = sim.getElm(0) as LogicInputElm;
+			var voltage1 = sim.getElm(1) as LogicInputElm;
+			var logicOut = sim.getElm(2) as LogicOutputElm;
+
+			/*CirSim sim = new CirSim();
 
 			var voltage0 = sim.Create<LogicInputElm>();
 			var voltage1 = sim.Create<LogicInputElm>();
@@ -26,9 +34,12 @@ namespace SharpCircuitTest {
 
 			sim.Connect(voltage0, 0, gate, 0);
 			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);
+			sim.Connect(logicOut, 0, gate, 2);*/
 
 			sim.update(1);
+
+			//string js = JsonSerializer.SerializeToString(sim);
+			//System.IO.File.WriteAllText(string.Format("./{0}.json", "AndGateTest"), js);
 
 			if(volt1) voltage1.toggle();
 			if(volt0) voltage0.toggle();
@@ -75,7 +86,6 @@ namespace SharpCircuitTest {
 		[TestCase(false, true , true )]
 		[TestCase(true , true , true )]
 		public void OrGateTest(bool volt0, bool volt1, bool isHigh) {
-
 			CirSim sim = new CirSim();
 
 			var voltage0 = sim.Create<LogicInputElm>();
@@ -100,7 +110,6 @@ namespace SharpCircuitTest {
 		[TestCase(false, true , true )]
 		[TestCase(true , true , false)]
 		public void NandGateTest(bool volt0, bool volt1, bool isHigh) {
-
 			CirSim sim = new CirSim();
 
 			var voltage0 = sim.Create<LogicInputElm>();
@@ -125,7 +134,6 @@ namespace SharpCircuitTest {
 		[TestCase(false, true , false)]
 		[TestCase(true , true , false)]
 		public void NorGateTest(bool volt0, bool volt1, bool isHigh) {
-
 			CirSim sim = new CirSim();
 
 			var voltage0 = sim.Create<LogicInputElm>();
@@ -150,7 +158,6 @@ namespace SharpCircuitTest {
 		[TestCase(false, true , true )]
 		[TestCase(true , true , false)]
 		public void XorGateTest(bool volt0, bool volt1, bool isHigh) {
-
 			CirSim sim = new CirSim();
 
 			var voltage0 = sim.Create<LogicInputElm>();

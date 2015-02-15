@@ -9,7 +9,7 @@ namespace SharpCircuit {
 		//public ElementLead leadIn 	{ get { return lead0; }}
 		//public ElementLead leadOut	{ get { return lead1; }}
 
-		public WireElm() {
+		public WireElm() : base() {
 
 		}
 

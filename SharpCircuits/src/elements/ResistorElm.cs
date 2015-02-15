@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SharpCircuit {
-	
+
 	public class ResistorElm : CircuitElement {
 
 		//public ElementLead leadIn	{ get { return lead0; }}
@@ -14,7 +14,7 @@ namespace SharpCircuit {
 		/// </summary>
 		public double resistance { get; set; }
 
-		public ResistorElm(){
+		public ResistorElm() : base() {
 			resistance = 100;
 		}
 

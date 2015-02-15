@@ -77,7 +77,7 @@ namespace SharpCircuit {
 
 		protected double freqTimeZero;
 
-		public VoltageElm(WaveType wf) {
+		public VoltageElm(WaveType wf) : base() {
 			waveform = wf;
 			maxVoltage = 5;
 			frequency = 40;
@@ -120,20 +120,13 @@ namespace SharpCircuit {
 			setFrequency(frequency, sim.timeStep, sim.time);
 			double w = 2 * pi * (sim.time - freqTimeZero) * _frequency + _phaseShift;
 			switch(waveform) {
-				case WaveType.DC:
-					return maxVoltage + bias;
-				case WaveType.AC:
-					return Math.Sin(w) * maxVoltage + bias;
-				case WaveType.SQUARE:
-					return bias + ((w % (2 * pi) > (2 * pi * _dutyCycle)) ? -maxVoltage : maxVoltage);
-				case WaveType.TRIANGLE:
-					return bias + triangleFunc(w % (2 * pi)) * maxVoltage;
-				case WaveType.SAWTOOTH:
-					return bias + (w % (2 * pi)) * (maxVoltage / pi) - maxVoltage;
-				case WaveType.PULSE:
-					return ((w % (2 * pi)) < 1) ? maxVoltage + bias : bias;
-				default:
-					return 0;
+				case WaveType.DC:       return maxVoltage + bias;
+				case WaveType.AC:       return Math.Sin(w) * maxVoltage + bias;
+				case WaveType.SQUARE:   return bias + ((w % (2 * pi) > (2 * pi * _dutyCycle)) ? -maxVoltage : maxVoltage);
+				case WaveType.TRIANGLE: return bias + triangleFunc(w % (2 * pi)) * maxVoltage;
+				case WaveType.SAWTOOTH: return bias + (w % (2 * pi)) * (maxVoltage / pi) - maxVoltage;
+				case WaveType.PULSE:    return ((w % (2 * pi)) < 1) ? maxVoltage + bias : bias;
+				default: return 0;
 			}
 		}
 

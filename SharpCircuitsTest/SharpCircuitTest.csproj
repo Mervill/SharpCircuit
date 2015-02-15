@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>NUnit\pnunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +59,7 @@
     <Compile Include="src\ACVoltageTest.cs" />
     <Compile Include="src\DiodeTest.cs" />
     <Compile Include="src\GateTest.cs" />
+    <Compile Include="src\ResistorTest.cs" />
     <Compile Include="src\TransistorTest.cs" />
   </ItemGroup>
   <ItemGroup>

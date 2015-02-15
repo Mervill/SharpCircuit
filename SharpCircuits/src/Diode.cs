@@ -66,7 +66,6 @@ namespace SharpCircuit {
 				// for Zener breakdown, use the same logic but translate the values
 				vnew = -vnew - zoffset;
 				vold = -vold - zoffset;
-
 				if(vnew > vcrit && Math.Abs(vnew - vold) > (vt + vt)) {
 					if(vold > 0) {
 						arg = 1 + (vnew - vold) / vt;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 
 using ServiceStack.Text;
 
@@ -47,8 +49,13 @@ namespace SharpCircuit {
 			Debug.Log(Math.Round(collectorWire.getCurrent(), 8));
 			Debug.Log(Math.Round(emitterWire.getCurrent(), 8));
 
-			string json = JsonSerializer.SerializeToString(sim);
-			sim.PrintDump();
+			//string js_out = JsonSerializer.SerializeToString(sim);
+			//System.IO.File.WriteAllText("./out.json", js_out);
+
+			string js_in = System.IO.File.ReadAllText("./out.json");
+			sim = JsonSerializer.DeserializeFromString<CirSim>(js_in);
+			sim.needAnalyze();
+			sim.update(1);
 
 			Console.WriteLine("program complete");
 			Console.ReadLine();

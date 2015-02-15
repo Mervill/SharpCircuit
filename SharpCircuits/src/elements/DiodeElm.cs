@@ -42,7 +42,7 @@ namespace SharpCircuit {
 
 		protected double defaultdrop = 0.805904783;
 
-		public DiodeElm() {
+		public DiodeElm() : base() {
 			diode = new Diode();
 			forwardDrop = defaultdrop;
 			zvoltage = 0;

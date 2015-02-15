@@ -10,11 +10,6 @@ namespace SharpCircuitTest {
 	[TestFixture]
 	public class ACVoltageTest {
 
-		[Test]
-		public void OhmsLawTest() {
-			Assert.Fail();
-		}
-
 		[TestCase(8E-5, 0.02427305)]
 		[TestCase(1E-5, 0.0177244 )]
 		[TestCase(1E-6, 0.00250066)]

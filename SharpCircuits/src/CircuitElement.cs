@@ -31,10 +31,12 @@ namespace SharpCircuit {
 		}
 
 		public int getNode(int n) {
+			if(nodes == null) allocNodes();
 			return nodes[n];
 		}
 
 		public void setNode(int lead, int node) {
+			if(nodes == null) allocNodes();
 			nodes[lead] = node;
 		}
 
@@ -48,9 +50,8 @@ namespace SharpCircuit {
 		public virtual void startIteration(double timeStep) { }
 		public virtual void stamp(CirSim sim) { }
 		public virtual void doStep(CirSim sim) { }
-
-		//protected virtual void onGetSim() { }
-
+		public virtual void calculateCurrent() { }
+		
 		public virtual void reset() {
 			for(int i = 0; i != getLeadCount() + getInternalNodeCount(); i++)
 				volts[i] = 0;
@@ -67,8 +68,6 @@ namespace SharpCircuit {
 		public virtual int getLeadCount() {
 			return 2;
 		}
-
-		public virtual void calculateCurrent() { }
 
 		public virtual void setLeadVoltage(int n, double c) {
 			volts[n] = c;
