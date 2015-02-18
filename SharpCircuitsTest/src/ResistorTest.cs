@@ -22,11 +22,10 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0.leadOut, res1.leadIn);
 			sim.Connect(res1.leadOut, ground0.leadIn);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual(0.050, ground0.getCurrent());
+			TestUtils.Compare(ground0.getCurrent(), 0.05, 8);
 		}
 
 		[Test]
@@ -44,12 +43,11 @@ namespace SharpCircuitTest {
 			sim.Connect(res0,  1, ground0, 0);
 			sim.Connect(res1,  1, ground1, 0);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 			
-			Assert.AreEqual(0.050, ground0.getCurrent());
-			Assert.AreEqual(0.005, ground1.getCurrent());
+			TestUtils.Compare(ground0.getCurrent(), 0.05, 8);
+			TestUtils.Compare(ground1.getCurrent(), 0.005, 8);
 		}
 
 		[Test]
@@ -87,21 +85,20 @@ namespace SharpCircuitTest {
 			sim.Connect(out2, 0, res3, 1);
 			sim.Connect(out3, 0, res4, 1);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual(5.0, res0.getVoltageDiff());
-			Assert.AreEqual(5.0, res1.getVoltageDiff());
-			Assert.AreEqual(2.5, res2.getVoltageDiff());
-			Assert.AreEqual(2.5, res3.getVoltageDiff());
-			Assert.AreEqual(2.5, res4.getVoltageDiff());
-			Assert.AreEqual(2.5, res5.getVoltageDiff());
+			TestUtils.Compare(res0.getVoltageDiff(), 5.0, 8);
+			TestUtils.Compare(res1.getVoltageDiff(), 5.0, 8);
+			TestUtils.Compare(res2.getVoltageDiff(), 2.5, 8);
+			TestUtils.Compare(res3.getVoltageDiff(), 2.5, 8);
+			TestUtils.Compare(res4.getVoltageDiff(), 2.5, 8);
+			TestUtils.Compare(res5.getVoltageDiff(), 2.5, 8);
 
-			Assert.AreEqual(5.0, out0.getVoltageDiff());
-			Assert.AreEqual(7.5, out1.getVoltageDiff());
-			Assert.AreEqual(5.0, out2.getVoltageDiff());
-			Assert.AreEqual(2.5, out3.getVoltageDiff());
+			TestUtils.Compare(out0.getVoltageDiff(), 5.0, 8);
+			TestUtils.Compare(out1.getVoltageDiff(), 7.5, 8);
+			TestUtils.Compare(out2.getVoltageDiff(), 5.0, 8);
+			TestUtils.Compare(out3.getVoltageDiff(), 2.5, 8);
 		}
 
 		[Test]
@@ -130,16 +127,15 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0, 0, res2, 1);
 			sim.Connect(volt0, 0, resX, 1);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual(0.025, Math.Round(volt0.getCurrent(), 8));
+			TestUtils.Compare(0.025, volt0.getCurrent(), 3);
 
-			Assert.AreEqual(0.01666667, Math.Round(res0.getCurrent(), 8));
-			Assert.AreEqual(0.00833333, Math.Round(res1.getCurrent(), 8));
-			Assert.AreEqual(0.01666667, Math.Round(res2.getCurrent(), 8));
-			Assert.AreEqual(0.00833333, Math.Round(resX.getCurrent(), 8));
+			TestUtils.Compare(res0.getCurrent(), 0.01666667, 8);
+			TestUtils.Compare(res1.getCurrent(), 0.00833334, 8);
+			TestUtils.Compare(res2.getCurrent(), 0.01666667, 8);
+			TestUtils.Compare(resX.getCurrent(), 0.00833334, 8);
 
 			Assert.AreEqual(0, wire0.getCurrent());
 		}

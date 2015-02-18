@@ -35,7 +35,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			bool v1 = lead_volt[0] > 2.5;
 			bool v2 = lead_volt[1] > 2.5;
 			if(v1 && !pins[0].value)

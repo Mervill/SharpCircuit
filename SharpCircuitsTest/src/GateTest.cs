@@ -41,9 +41,8 @@ namespace SharpCircuitTest {
 			logicIn1.setPosition(in1);
 			sim.analyze();
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 
@@ -384,8 +383,7 @@ namespace SharpCircuitTest {
 			if(logicOut1.isHigh()) i += 3;
 			if(logicOut2.isHigh()) i += 2;
 			if(logicOut3.isHigh()) i += 1;
-
-			Debug.Log(in0, in1, i);
+			
 			Assert.AreEqual(i0, i);
 		}
 
@@ -444,9 +442,8 @@ namespace SharpCircuitTest {
 			logicIn2.setPosition(in2);
 			sim.analyze();
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}

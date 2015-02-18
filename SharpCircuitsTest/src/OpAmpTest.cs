@@ -27,12 +27,11 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0.leadOut, opAmp0.leadNeg);
 			sim.Connect(volt1.leadOut, opAmp0.leadPos);
 			sim.Connect(opAmp0.leadOut, analogOut0.leadIn);
-			
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
 
-			Assert.AreEqual(15, Math.Round(analogOut0.getVoltageDiff(), 2));
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
+
+			TestUtils.Compare(analogOut0.getVoltageDiff(), 15, 2);
 		}
 
 		[Test]
@@ -47,11 +46,10 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0.leadOut, opAmp0.leadPos);
 			sim.Connect(analogOut0.leadIn, opAmp0.leadOut);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual(5, Math.Round(analogOut0.getVoltageDiff(), 4));
+			TestUtils.Compare(analogOut0.getVoltageDiff(), 5, 2);
 		}
 
 	}

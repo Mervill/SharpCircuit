@@ -36,13 +36,12 @@ namespace SharpCircuitTest {
 			sim.Connect(ground.leadIn, emitterWire.leadIn);
 			sim.Connect(emitterWire.leadOut, transistor.leadEmitter);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual( 0.00158254, Math.Round(baseWire.getCurrent(), 8));
-			Assert.AreEqual( 0.15825359, Math.Round(collectorWire.getCurrent(), 8));
-			Assert.AreEqual(-0.15983612, Math.Round(emitterWire.getCurrent(), 8));
+			TestUtils.Compare(baseWire.getCurrent(), 0.00158254, 8);
+			TestUtils.Compare(collectorWire.getCurrent(), 0.15825359, 8);
+			TestUtils.Compare(emitterWire.getCurrent(), -0.15983612, 8);
 		}
 
 		[Test]
@@ -72,13 +71,12 @@ namespace SharpCircuitTest {
 			sim.Connect(emitterVoltage.leadOut, emitterWire.leadIn);
 			sim.Connect(emitterWire.leadOut, transistor.leadEmitter);
 
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
+			for(int x = 1; x <= 100; x++)
+				sim.update(sim.timeStep);
 
-			Assert.AreEqual(-0.07374479, Math.Round(baseWire.getCurrent(), 8));
-			Assert.AreEqual( 0.00143194, Math.Round(collectorWire.getCurrent(), 8));
-			Assert.AreEqual( 0.07231285, Math.Round(emitterWire.getCurrent(), 8));
+			TestUtils.Compare(baseWire.getCurrent(), -0.07374479, 8);
+			TestUtils.Compare(collectorWire.getCurrent(), 0.00143194, 8);
+			TestUtils.Compare(emitterWire.getCurrent(), 0.07231284, 8);
 		}
 
 	}

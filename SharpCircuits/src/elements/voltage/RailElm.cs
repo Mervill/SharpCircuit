@@ -32,7 +32,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			if (waveform != WaveType.DC)
 				sim.updateVoltageSource(0, lead_node[0], voltSource, getVoltage(sim));
 		}

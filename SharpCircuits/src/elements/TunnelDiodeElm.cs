@@ -39,7 +39,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double voltdiff = lead_volt[0] - lead_volt[1];
 			if(Math.Abs(voltdiff - lastvoltdiff) > 0.01)
 				sim.converged = false;

@@ -37,7 +37,7 @@ namespace SharpCircuit {
 			return (lead_volt[0] - lead_volt[2]) * current;
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double[] vs = new double[3];
 			vs[0] = lead_volt[0];
 			vs[1] = lead_volt[1];

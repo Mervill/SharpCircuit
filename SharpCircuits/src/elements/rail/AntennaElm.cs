@@ -16,7 +16,7 @@ namespace SharpCircuit {
 			sim.stampVoltageSource(0, lead_node[0], voltSource);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			sim.updateVoltageSource(0, lead_node[0], voltSource, getVoltage(sim));
 		}
 

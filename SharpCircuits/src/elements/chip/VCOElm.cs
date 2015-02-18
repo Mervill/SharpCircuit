@@ -49,7 +49,7 @@ namespace SharpCircuit {
 		public double cCurrent;
 		public int cDir;
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double vc = lead_volt[3] - lead_volt[2];
 			double vo = lead_volt[1];
 			int dir = (vo < 2.5) ? 1 : -1;

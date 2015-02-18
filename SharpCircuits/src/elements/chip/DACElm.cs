@@ -28,7 +28,7 @@ namespace SharpCircuit {
 			allocLeads();
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			int ival = 0;
 			for(int i = 0; i != bits; i++)
 				if(lead_volt[i] > 2.5)

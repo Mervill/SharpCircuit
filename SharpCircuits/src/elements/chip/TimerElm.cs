@@ -72,7 +72,7 @@ namespace SharpCircuit {
 			pins[N_DIS].current = (!@out && !setOut) ? -lead_volt[N_DIS] / 10 : 0;
 		}
 
-		public override void startIteration(double timeStep) {
+		public override void beginStep(Circuit sim) {
 			@out = lead_volt[N_OUT] > lead_volt[N_VIN] / 2;
 			setOut = false;
 			// check comparators
@@ -82,7 +82,7 @@ namespace SharpCircuit {
 				@out = false;
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			// if output is low, discharge pin 0. we use a small
 			// resistor because it's easier, and sometimes people tie
 			// the discharge pin to the trigger and threshold pins.
