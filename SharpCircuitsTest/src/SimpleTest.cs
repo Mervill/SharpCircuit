@@ -9,8 +9,12 @@ namespace SharpCircuitTest {
 
 	public class SimpleTest {
 
-		[Test]
-		public void CurrentElmTest() {
+		[TestCase(10)]
+		[TestCase(20)]
+		[TestCase(30)]
+		[TestCase(40)]
+		[TestCase(50)]
+		public void CurrentElmTest(double current) {
 			Circuit sim = new Circuit();
 
 			var source0 = sim.Create<CurrentElm>();
@@ -23,7 +27,7 @@ namespace SharpCircuitTest {
 				sim.update(sim.timeStep);
 
 			Assert.AreEqual(1, source0.getVoltageDiff());
-			Assert.AreEqual(0.01, res0.getCurrent());
+			Assert.AreEqual(current, res0.getCurrent());
 
 		}
 

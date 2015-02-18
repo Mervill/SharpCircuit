@@ -3,8 +3,6 @@ SharpCircuit
 
 This is a C# port of Paul Falstad's excellent [circuit simulator](http://www.falstad.com/circuit/) applet. 
 
-The library is in a very early stage. I've finished a first pass on all the original code, but there's still lots of work to be done so **expect changes to the core api**. 
-
 Most of the circuit elements are untested. Initial testing suggests that the majority of the circuits work exactly as they did in the applet, but until further notice, your mileage may vary.
 
 Licence: MIT/Boost C++
@@ -12,7 +10,11 @@ Licence: MIT/Boost C++
 ## ToDo
 
 - Test everything!
-- Momentary switches.
+- Is there a better way to handle elements resizing their lead array?
+- Is there a simpler way to model node relationships?.
+
+Testing priority:
+Voltage waves, SweepElm, MosfetElm, Chips
 
 ## Licence
 
