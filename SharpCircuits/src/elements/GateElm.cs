@@ -28,7 +28,6 @@ namespace SharpCircuit {
 		}
 
 		public abstract bool calcFunction();
-		public abstract String getGateName();
 
 		public virtual bool isInverting() {
 			return false;
@@ -43,7 +42,7 @@ namespace SharpCircuit {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = getGateName();
+			arr[0] = "Logic Gate";
 			arr[1] = "Vout = " + getVoltageText(lead_volt[inputCount]);
 			arr[2] = "Iout = " + getCurrentText(current);
 		}
@@ -65,11 +64,11 @@ namespace SharpCircuit {
 
 		// There is no current path through the gate inputs, but there
 		// is an indirect path through the output to ground.
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return (n1 == inputCount);
 		}
 	}

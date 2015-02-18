@@ -11,22 +11,13 @@ namespace SharpCircuit {
 
 	public class Circuit {
 
-		Random random;
-		IdWorker snowflake;
+		public readonly static String ohmString = "ohm";
 
 		public class Lead : Tuple<CircuitElement, Int32> {
-
 			public CircuitElement elem { get { return Item1; } }
 			public Int32 ndx { get { return Item2; } }
-
-			public Lead(CircuitElement c, Int32 i) : base(c, i) {
-
-			}
-
+			public Lead(CircuitElement c, Int32 i) : base(c, i) { }
 		}
-
-		public readonly static String muString = "u";
-		public readonly static String ohmString = "ohm";
 
 		public double time { get; private set; }
 		public double timeStep { get; set; }
@@ -35,14 +26,22 @@ namespace SharpCircuit {
 		public List<CircuitElement> elements { get; set; }
 		public List<long[]> nodeMesh { get; set; }
 
-		List<long> nodeList = new List<long>();
-		CircuitElement[] voltageSources;
+		public String errorMessage { get; private set; }
+		public CircuitElement errorElement { get; private set; }
 
 		public int nodeCount { get { return nodeList.Count; } }
 
-		bool _analyze;
+		public bool converged;
+		public int subIterations;
+
+		IdWorker snowflake;
 		
-		double[][] circuitMatrix;
+		bool _analyze;
+
+		List<long> nodeList = new List<long>();
+		CircuitElement[] voltageSources;
+
+		double[][] circuitMatrix; // contains circuit state
 		double[] circuitRightSide;
 		double[][] origMatrix;
 		double[] origRightSide;
@@ -60,13 +59,7 @@ namespace SharpCircuit {
 			 lastIterTime, 
 			 secTime;
 
-		public bool converged;
-		public int subIterations;
-
 		Dictionary<ICircuitComponent, List<ScopeFrame>> scopeMap;
-
-		public String stopMessage { get; private set; }
-		public CircuitElement stopElm { get; private set; }
 
 		public Circuit() {
 			
@@ -144,53 +137,11 @@ namespace SharpCircuit {
 				List<ScopeFrame> scope = new List<ScopeFrame>();
 				scopeMap.Add(component, scope);
 				return scope;
-			}
-			return null;
-		}
-
-		public List<ScopeFrame> GetWatch(ICircuitComponent component) {
-			if(scopeMap.ContainsKey(component))
+			} else {
 				return scopeMap[component];
-
-			return new List<ScopeFrame>();
-		}
-
-		public int getRand(int x) {
-			int q = random.Next();
-			if(q < 0)
-				q = -q;
-
-			return q % x;
-		}
-
-		/*public void toggleSwitch(int n) {
-			int i;
-			for (i = 0; i != elmList.Count; i++) {
-				CircuitElm ce = getElm(i);
-				if (ce is SwitchElm) {
-					n--;
-					if (n == 0) {
-						((SwitchElm) ce).toggle();
-						analyzeFlag = true;
-						return;
-					}
-				}
 			}
 		}
-
-		public bool doSwitch(int x, int y) {
-			if (mouseElm == null || !(mouseElm is SwitchElm)) {
-				return false;
-			}
-			SwitchElm se = (SwitchElm) mouseElm;
-			se.toggle();
-			if (se.momentary) {
-				heldSwitchElm = se;
-			}
-			needAnalyze();
-			return true;
-		}*/
-
+		
 		public void needAnalyze() {
 			_analyze = true;
 		}
@@ -200,16 +151,12 @@ namespace SharpCircuit {
 			stampRightSide(vn, v);
 		}
 
-		public long getCircuitNode(int n) {
-			return (n < nodeList.Count) ? nodeList[n] : 0;
+		public long getNodeId(int ndx) {
+			return (ndx < nodeList.Count) ? nodeList[ndx] : 0;
 		}
 
 		public CircuitElement getElm(int n) {
 			return (n < elements.Count) ? elements[n] : null;
-		}
-
-		public double getIterCount() {
-			return (speed != 0) ? 0.1 * Math.Exp((speed - 61) / 24.0) : 0;
 		}
 
 		public void update(long elapsedMilliseconds) {
@@ -229,7 +176,7 @@ namespace SharpCircuit {
 				kvp.Value.Add(kvp.Key.GetScopeFrame(elapsedMilliseconds));
 		}
 
-		private void run(long elapsedMilliseconds) {
+		void run(long elapsedMilliseconds) {
 			if(circuitMatrix == null || elements.Count == 0) {
 				circuitMatrix = null;
 				return;
@@ -244,10 +191,8 @@ namespace SharpCircuit {
 
 			for(int iter = 1; ; iter++) {
 				int subiter;
-				for(int i = 0; i != elements.Count; i++) {
-					CircuitElement ce = elements[i];
-					ce.startIteration(timeStep);
-				}
+				for(int i = 0; i != elements.Count; i++)
+					elements[i].startIteration(timeStep);
 				
 				int subiterCount = 5000;
 				for(subiter = 0; subiter != subiterCount; subiter++) {
@@ -265,25 +210,23 @@ namespace SharpCircuit {
 					for(int i = 0; i != elements.Count; i++)
 						elements[i].doStep(this);
 
-					if(stopMessage != null)
+					if(errorMessage != null)
 						return;
 
 					for(int j = 0; j != circuitMatrixSize; j++) {
 						for(int i = 0; i != circuitMatrixSize; i++) {
 							double x = circuitMatrix[i][j];
 							if(Double.IsNaN(x) || Double.IsInfinity(x)) {
-								stop("nan/infinite matrix!", null);
+								error("nan/infinite matrix!", null);
 								return;
 							}
 						}
 					}
 
 					if(circuitNonLinear) {
-						if(converged && subiter > 0)
-							break;
-
+						if(converged && subiter > 0) break;
 						if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
-							stop("Singular matrix!", null);
+							error("Singular matrix!", null);
 							return;
 						}
 					}
@@ -303,7 +246,7 @@ namespace SharpCircuit {
 							break;
 						}
 						if(j < nodeList.Count - 1) {
-							long node = getCircuitNode(j + 1);
+							long node = getNodeId(j + 1);
 							for(int k = 0; k != nodeMesh.Count; k++) {
 								CircuitElement elm = elements[k];
 								List<long> leads = new List<long>(nodeMesh[k]);
@@ -316,6 +259,7 @@ namespace SharpCircuit {
 							voltageSources[ji].setCurrent(ji, res);
 						}
 					}
+
 					if(!circuitNonLinear)
 						break;
 				}
@@ -324,7 +268,7 @@ namespace SharpCircuit {
 					System.out.print("converged after " + subiter + " iterations\n");
 				}*/
 				if(subiter == subiterCount) {
-					stop("Convergence failed!", null);
+					error("Convergence failed!", null);
 					break;
 				}
 
@@ -338,17 +282,18 @@ namespace SharpCircuit {
 			lastIterTime = lit;
 		}
 
+		double getIterCount() {
+			return (speed != 0) ? 0.1 * Math.Exp((speed - 61) / 24.0) : 0;
+		}
+
 		public void analyze() {
 
 			if(elements.Count == 0)
 				return;
 
-			stopMessage = null;
-			stopElm = null;
+			errorMessage = null;
+			errorElement = null;
 
-			int vscount = 0;
-			bool gotGround = false;
-			bool gotRail = false;
 			CircuitElement voltageElm = null;
 
 			nodeList.Clear();
@@ -361,6 +306,8 @@ namespace SharpCircuit {
 			};
 
 			#region //// Look for Voltage or Ground element ////
+			bool gotGround = false;
+			bool gotRail = false;
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement ce = elements[i];
 				if(ce is GroundElm) {
@@ -375,7 +322,7 @@ namespace SharpCircuit {
 					voltageElm = ce;
 			}
 
-			if(!gotGround && voltageElm != null && !gotRail) {
+			if(!gotGround && !gotRail && voltageElm != null) {
 				// If no ground, and no rails, then the voltage elm's first terminal is ground.
 				int elm_ndx = elements.IndexOf(voltageElm);
 				long[] ndxs = nodeMesh[elm_ndx];
@@ -386,24 +333,25 @@ namespace SharpCircuit {
 			#endregion
 
 			#region //// Nodes and Voltage Sources ////
+			int vscount = 0;
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement elm = elements[i];
 				int elmLeads = elm.getLeadCount();
 
 				// Populate the node list
-				for(int lead_ndx = 0; lead_ndx != elmLeads; lead_ndx++) {
+				for(int leadX = 0; leadX != elmLeads; leadX++) {
 					// Id of the node at lead_index
-					long leadNode = nodeMesh[i][lead_ndx];
+					long leadNode = nodeMesh[i][leadX];
 					int node_ndx = nodeList.IndexOf(leadNode);
 					if(node_ndx == -1) {
-						elm.setLeadNode(lead_ndx, nodeList.Count);
+						elm.setLeadNode(leadX, nodeList.Count);
 						pushNode(leadNode, false);
 					} else {
-						elm.setLeadNode(lead_ndx, node_ndx);
+						elm.setLeadNode(leadX, node_ndx);
 						// if it's the ground node, make sure the node voltage is 0,
 						// cause it may not get set later
 						if(leadNode == 0)
-							elm.setLeadVoltage(lead_ndx, 0);
+							elm.setLeadVoltage(leadX, 0);
 					}
 				}
 
@@ -426,35 +374,38 @@ namespace SharpCircuit {
 			circuitNonLinear = false;
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement ce = elements[i];
-				if(ce.nonLinear())
-					circuitNonLinear = true;
-
+				if(ce.nonLinear()) circuitNonLinear = true;
 				int ivs = ce.getVoltageSourceCount();
-				for(int lead_ndx = 0; lead_ndx != ivs; lead_ndx++) {
+				for(int leadX = 0; leadX != ivs; leadX++) {
 					voltageSources[vscount] = ce;
-					ce.setVoltageSource(lead_ndx, vscount++);
+					ce.setVoltageSource(leadX, vscount++);
 				}
 			}
 
 			#region //// Matrix setup ////
 			int matrixSize = nodeList.Count - 1 + vscount;
-			circuitMatrix = new double[matrixSize][]; //matrixSize
+
+			// setup circuitMatrix
+			circuitMatrix = new double[matrixSize][];
 			for(int z = 0; z < matrixSize; z++)
 				circuitMatrix[z] = new double[matrixSize];
 
+			circuitRightSide = new double[matrixSize];
+
+			// setup origMatrix
 			origMatrix = new double[matrixSize][];
 			for(int z = 0; z < matrixSize; z++)
 				origMatrix[z] = new double[matrixSize];
 
+			origRightSide = new double[matrixSize];
+
+			// setup circuitRowInfo
 			circuitRowInfo = new RowInfo[matrixSize];
 			for(int i = 0; i != matrixSize; i++)
 				circuitRowInfo[i] = new RowInfo();
 
-			circuitRightSide = new double[matrixSize];
-			origRightSide = new double[matrixSize];
 			circuitPermute = new int[matrixSize];
 			circuitMatrixSize = circuitMatrixFullSize = matrixSize;
-
 			circuitNeedsMap = false;
 			#endregion
 
@@ -472,20 +423,20 @@ namespace SharpCircuit {
 					CircuitElement ce = elements[i];
 					// loop through all ce's nodes to see if they are connected
 					// to other nodes not in closure
-					for(int lead_ndx = 0; lead_ndx < ce.getLeadCount(); lead_ndx++) {
-						if(!closure[ce.getLeadNode(lead_ndx)]) {
-							if(ce.hasGroundConnection(lead_ndx))
-								closure[ce.getLeadNode(lead_ndx)] = changed = true;
+					for(int leadX = 0; leadX < ce.getLeadCount(); leadX++) {
+						if(!closure[ce.getLeadNode(leadX)]) {
+							if(ce.leadIsGround(leadX))
+								closure[ce.getLeadNode(leadX)] = changed = true;
 
 							continue;
 						}
 
 						for(int k = 0; k != ce.getLeadCount(); k++) {
-							if(lead_ndx == k)
+							if(leadX == k)
 								continue;
 
 							int kn = ce.getLeadNode(k);
-							if(ce.getConnection(lead_ndx, k) && !closure[kn]) {
+							if(ce.leadsAreConnected(leadX, k) && !closure[kn]) {
 								closure[kn] = true;
 								changed = true;
 							}
@@ -507,7 +458,6 @@ namespace SharpCircuit {
 					}
 				}
 			}
-
 			#endregion
 
 			#region //// Sanity checks ////
@@ -528,7 +478,7 @@ namespace SharpCircuit {
 				if(ce is CurrentElm) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.INDUCT, ce, ce.getLeadNode(1));
 					if(!fpi.findPath(ce.getLeadNode(0))) {
-						stop("No path for current source!", ce);
+						error("No path for current source!", ce);
 						return;
 					}
 				}
@@ -537,7 +487,7 @@ namespace SharpCircuit {
 				if((ce is VoltageElm && ce.getLeadCount() == 2) || ce is WireElm) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.VOLTAGE, ce, ce.getLeadNode(1));
 					if(fpi.findPath(ce.getLeadNode(0))) {
-						stop("Voltage source/wire loop with no resistance!", ce);
+						error("Voltage source/wire loop with no resistance!", ce);
 						return;
 					}
 				}
@@ -551,7 +501,7 @@ namespace SharpCircuit {
 					} else {
 						fpi = new FindPathInfo(this, FindPathInfo.PathType.CAP_V, ce, ce.getLeadNode(1));
 						if(fpi.findPath(ce.getLeadNode(0))) {
-							stop("Capacitor loop with no resistance!", ce);
+							error("Capacitor loop with no resistance!", ce);
 							return;
 						}
 					}
@@ -559,7 +509,7 @@ namespace SharpCircuit {
 			}
 			#endregion
 
-			#region //// Simplify the Matrix ////
+			#region //// Simplify the matrix ////
 			for(int i = 0; i != matrixSize; i++) {
 				int qm = -1, qp = -1;
 				double qv = 0;
@@ -571,13 +521,13 @@ namespace SharpCircuit {
 				double rsadd = 0;
 
 				// look for rows that can be removed
-				int lead_ndx = 0;
-				for(; lead_ndx != matrixSize; lead_ndx++) {
+				int leadX = 0;
+				for(; leadX != matrixSize; leadX++) {
 
-					double q = circuitMatrix[i][lead_ndx];
-					if(circuitRowInfo[lead_ndx].type == RowInfo.ROW_CONST) {
+					double q = circuitMatrix[i][leadX];
+					if(circuitRowInfo[leadX].type == RowInfo.ROW_CONST) {
 						// keep a running total of const values that have been removed already
-						rsadd -= circuitRowInfo[lead_ndx].value * q;
+						rsadd -= circuitRowInfo[leadX].value * q;
 						continue;
 					}
 
@@ -585,23 +535,23 @@ namespace SharpCircuit {
 						continue;
 
 					if(qp == -1) {
-						qp = lead_ndx;
+						qp = leadX;
 						qv = q;
 						continue;
 					}
 
 					if(qm == -1 && q == -qv) {
-						qm = lead_ndx;
+						qm = leadX;
 						continue;
 					}
 
 					break;
 				}
 
-				if(lead_ndx == matrixSize) {
+				if(leadX == matrixSize) {
 
 					if(qp == -1) {
-						stop("Matrix error", null);
+						error("Matrix error", null);
 						return;
 					}
 
@@ -609,8 +559,7 @@ namespace SharpCircuit {
 					if(qm == -1) {
 						// we found a row with only one nonzero entry;
 						// that value is a constant
-						int k;
-						for(k = 0; elt.type == RowInfo.ROW_EQUAL && k < 100; k++) {
+						for(int k = 0; elt.type == RowInfo.ROW_EQUAL && k < 100; k++) {
 							// follow the chain
 							// System.out.println("following equal chain from " + i + " " + qp + " to " + elt.nodeEq);
 							qp = elt.nodeEq;
@@ -670,7 +619,7 @@ namespace SharpCircuit {
 				if(elt.type == RowInfo.ROW_EQUAL) {
 					RowInfo e2 = null;
 					// resolve chains of equality; 100 max steps to avoid loops
-					for(int lead_ndx = 0; lead_ndx != 100; lead_ndx++) {
+					for(int leadX = 0; leadX != 100; leadX++) {
 						e2 = circuitRowInfo[elt.nodeEq];
 						if(e2.type != RowInfo.ROW_EQUAL)
 							break;
@@ -694,17 +643,15 @@ namespace SharpCircuit {
 						elt.type = e2.type;
 						elt.value = e2.value;
 						elt.mapCol = -1;
-						// System.out.println(i + " = [late]const " + elt.value);
 					} else {
 						elt.mapCol = e2.mapCol;
-						// System.out.println(i + " maps to: " + e2.mapCol);
 					}
 				}
 			}
 
 			// == Make the new, simplified matrix.
 			int newsize = nn;
-			double[][] newmatx = new double[newsize][]; // newsize
+			double[][] newmatx = new double[newsize][];
 			for(int z = 0; z < newsize; z++)
 				newmatx[z] = new double[newsize];
 
@@ -719,54 +666,51 @@ namespace SharpCircuit {
 				newrs[ii] = circuitRightSide[i];
 				rri.mapRow = ii;
 				// System.out.println("Row " + i + " maps to " + ii);
-				for(int lead_ndx = 0; lead_ndx != matrixSize; lead_ndx++) {
-					RowInfo ri = circuitRowInfo[lead_ndx];
+				for(int leadX = 0; leadX != matrixSize; leadX++) {
+					RowInfo ri = circuitRowInfo[leadX];
 					if(ri.type == RowInfo.ROW_CONST) {
-						newrs[ii] -= ri.value * circuitMatrix[i][lead_ndx];
+						newrs[ii] -= ri.value * circuitMatrix[i][leadX];
 					} else {
-						newmatx[ii][ri.mapCol] += circuitMatrix[i][lead_ndx];
+						newmatx[ii][ri.mapCol] += circuitMatrix[i][leadX];
 					}
 				}
 				ii++;
 			}
 			#endregion
 
-			#region //// solve ////
+			#region //// Copy matrix to orig ////
 			circuitMatrix = newmatx;
 			circuitRightSide = newrs;
 			matrixSize = circuitMatrixSize = newsize;
 
+			// copy `rightSide` to `origRightSide`
 			for(int i = 0; i != matrixSize; i++)
 				origRightSide[i] = circuitRightSide[i];
 
+			// copy `matrix` to `origMatrix`
 			for(int i = 0; i != matrixSize; i++)
-				for(int lead_ndx = 0; lead_ndx != matrixSize; lead_ndx++)
-					origMatrix[i][lead_ndx] = circuitMatrix[i][lead_ndx];
-
-			circuitNeedsMap = true;
-
-			// if a matrix is linear, we can do the lu_factor here instead of
-			// needing to do it every frame
-			if(!circuitNonLinear) {
-				if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
-					stop("Singular matrix!", null);
-					return;
-				}
-			}
+				for(int leadX = 0; leadX != matrixSize; leadX++)
+					origMatrix[i][leadX] = circuitMatrix[i][leadX];
 			#endregion
 
+			circuitNeedsMap = true;
 			_analyze = false;
+
+			// If the matrix is linear, we can do the lu_factor here instead of
+			// needing to do it every frame.
+			if(!circuitNonLinear)
+				if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute))
+					error("Singular matrix!", null);
 		}
 
-		public void stop(String s, CircuitElement ce) {
+		public void error(String why, CircuitElement elm) {
 			circuitMatrix = null;
-			stopMessage = s;
-			stopElm = ce;
+			errorMessage = why;
+			errorElement = elm;
 			needAnalyze();
 		}
 
 		#region //// Stamp ////
-
 		// control voltage source vs with voltage from n1 to n2 
 		// (must also call stampVoltageSource())
 		public void stampVCVS(int n1, int n2, double coef, int vs) {
@@ -864,18 +808,17 @@ namespace SharpCircuit {
 			}
 		}
 
-		// indicate that the value on the right side of row i changes in doStep(CirSim sim)
+		// indicate that the value on the right side of row i changes in doStep()
 		public void stampRightSide(int i) {
 			if(i > 0)
 				circuitRowInfo[i - 1].rsChanges = true;
 		}
 
-		// indicate that the values on the left side of row i change in doStep(CirSim sim)
+		// indicate that the values on the left side of row i change in doStep()
 		public void stampNonLinear(int i) {
 			if(i > 0)
 				circuitRowInfo[i - 1].lsChanges = true;
 		}
-
 		#endregion
 
 		// Factors a matrix into upper and lower triangular matrices by
@@ -964,11 +907,10 @@ namespace SharpCircuit {
 			int i;
 			for(i = 0; i != n; i++) {
 				int row = ipvt[i];
-
 				double swap = b[row];
 				b[row] = b[i];
 				b[i] = swap;
-				if(swap != 0)
+				if(swap != 0) 
 					break;
 			}
 
@@ -1059,7 +1001,7 @@ namespace SharpCircuit {
 						// look for posts which have a ground connection;
 						// our path can go through ground
 						for(int z = 0; z != ce.getLeadCount(); z++) {
-							if(ce.hasGroundConnection(z) && findPath(ce.getLeadNode(z), depth)) {
+							if(ce.leadIsGround(z) && findPath(ce.getLeadNode(z), depth)) {
 								used[n1] = false;
 								return true;
 							}
@@ -1074,7 +1016,7 @@ namespace SharpCircuit {
 					if(j == ce.getLeadCount())
 						continue;
 
-					if(ce.hasGroundConnection(j) && findPath(0, depth)) {
+					if(ce.leadIsGround(j) && findPath(0, depth)) {
 						// System.out.println(ce + " has ground");
 						used[n1] = false;
 						return true;
@@ -1096,7 +1038,7 @@ namespace SharpCircuit {
 							continue;
 
 						// System.out.println(ce + " " + ce.getNode(j) + "-" + ce.getNode(k));
-						if(ce.getConnection(j, k) && findPath(ce.getLeadNode(k), depth)) {
+						if(ce.leadsAreConnected(j, k) && findPath(ce.getLeadNode(k), depth)) {
 							// System.out.println("got findpath " + n1);
 							used[n1] = false;
 							return true;

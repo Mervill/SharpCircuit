@@ -14,7 +14,7 @@ namespace SharpCircuit {
 			arr[1] = "Vd = " + getVoltageText(getVoltageDiff());
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 		}
 

@@ -126,7 +126,7 @@ namespace SharpCircuit {
 			arr[6] = "I2 = " + getCurrentText(current[1]);
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			if(comparePair(n1, n2, 0, 2)) return true;
 			if(comparePair(n1, n2, 1, 3)) return true;
 			return false;

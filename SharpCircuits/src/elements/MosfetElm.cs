@@ -100,7 +100,7 @@ namespace SharpCircuit {
 			double Gds = 0;
 			double beta = getBeta();
 			if(vgs > .5 && this is JfetElm) {
-				sim.stop("JFET is reverse biased!", this);
+				sim.error("JFET is reverse biased!", this);
 				return;
 			}
 			if(vgs < _threshold) {
@@ -154,7 +154,7 @@ namespace SharpCircuit {
 			return lead_volt[2] - lead_volt[1];
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return !(n1 == 0 || n2 == 0);
 		}
 	}

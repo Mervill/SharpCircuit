@@ -83,11 +83,11 @@ namespace SharpCircuit {
 
 		// There is no current path through the InvertingSchmitt input, but there
 		// is an indirect path through the output to ground.
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return (n1 == 1);
 		}
 	}

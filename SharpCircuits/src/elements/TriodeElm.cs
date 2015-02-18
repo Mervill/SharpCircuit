@@ -110,7 +110,7 @@ namespace SharpCircuit {
 		}
 
 		// grid not connected to other terminals
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return !(n1 == 1 || n2 == 1);
 		}
 	}

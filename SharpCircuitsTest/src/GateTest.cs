@@ -11,189 +11,187 @@ namespace SharpCircuitTest {
 	[TestFixture]
 	public class GateTest {
 
-		[TestCase(false, false, false)]
-		[TestCase(true , false, false)]
-		[TestCase(false, true , false)]
-		[TestCase(true , true , true )]
-		public void AndGateTest(bool volt0, bool volt1, bool isHigh) {
-
-			string js = System.IO.File.ReadAllText(string.Format("./{0}.json", "AndGateTest"));
+		[TestCase(0, 0, false)]
+		[TestCase(1, 0, false)]
+		[TestCase(0, 1, false)]
+		[TestCase(1, 1, true )]
+		public void AndGateTest(int in0, int in1, bool out0) {
+			/*string js = System.IO.File.ReadAllText(string.Format("./{0}.json", "AndGateTest"));
 			Circuit sim = JsonSerializer.DeserializeFromString<Circuit>(js);
-
 			var voltage0 = sim.getElm(0) as LogicInputElm;
 			var voltage1 = sim.getElm(1) as LogicInputElm;
-			var logicOut = sim.getElm(2) as LogicOutputElm;
+			var logicOut = sim.getElm(2) as LogicOutputElm;*/
 
-			/*CirSim sim = new CirSim();
+			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 			var logicOut = sim.Create<LogicOutputElm>();
 
 			var gate = sim.Create<AndGateElm>();
 
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);*/
-
-			sim.update(1);
+			sim.Connect(logicIn0, 0, gate, 0);
+			sim.Connect(logicIn1, 0, gate, 1);
+			sim.Connect(logicOut.leadIn, gate.leadOut);
 
 			//string js = JsonSerializer.SerializeToString(sim);
 			//System.IO.File.WriteAllText(string.Format("./{0}.json", "AndGateTest"), js);
 
-			if(volt1) voltage1.toggle();
-			if(volt0) voltage0.toggle();
-			sim.needAnalyze();
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
 
-			sim.update(2);
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
+
 		}
 
-		[Test]
-		public void AndGateVarTest() {
-			Tuple<bool, bool, bool>[] cases = new Tuple<bool, bool, bool>[] {
-				new Tuple<bool, bool, bool>(false, true , false),
-				new Tuple<bool, bool, bool>(false, true , true ),
-				new Tuple<bool, bool, bool>(true , false, false),
-				new Tuple<bool, bool, bool>(false, false, false)
-			};
-
+		[TestCase(0, 0, false)]
+		[TestCase(1, 0, true )]
+		[TestCase(0, 1, true )]
+		[TestCase(1, 1, true )]
+		public void OrGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 			var logicOut = sim.Create<LogicOutputElm>();
-
-			var gate = sim.Create<AndGateElm>();
-
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);
-
-			sim.update(1);
-			Debug.Log(logicOut.isHigh());
-
-			voltage0.toggle();
-			voltage1.toggle();
-			sim.update(2);
-			Debug.Log(logicOut.isHigh());
-
-			Assert.Fail();
-		}
-
-		[TestCase(false, false, false)]
-		[TestCase(true , false, true )]
-		[TestCase(false, true , true )]
-		[TestCase(true , true , true )]
-		public void OrGateTest(bool volt0, bool volt1, bool isHigh) {
-			Circuit sim = new Circuit();
-
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
-
-			if(volt1) voltage1.toggle();
-			if(volt0) voltage0.toggle();
 
 			var gate = sim.Create<OrGateElm>();
 
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);
+			sim.Connect(logicIn0, 0, gate, 0);
+			sim.Connect(logicIn1, 0, gate, 1);
+			sim.Connect(logicOut.leadIn, gate.leadOut);
 
-			int steps = 0;
-			sim.update(++steps);
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
 
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
-		[TestCase(false, false, true )]
-		[TestCase(true , false, true )]
-		[TestCase(false, true , true )]
-		[TestCase(true , true , false)]
-		public void NandGateTest(bool volt0, bool volt1, bool isHigh) {
+		[TestCase(0, 0, true )]
+		[TestCase(1, 0, true )]
+		[TestCase(0, 1, true )]
+		[TestCase(1, 1, false)]
+		public void NandGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 			var logicOut = sim.Create<LogicOutputElm>();
-
-			if(volt1) voltage1.toggle();
-			if(volt0) voltage0.toggle();
 
 			var gate = sim.Create<NandGateElm>();
 
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);
+			sim.Connect(logicIn0, 0, gate, 0);
+			sim.Connect(logicIn1, 0, gate, 1);
+			sim.Connect(logicOut.leadIn, gate.leadOut);
 
-			int steps = 0;
-			sim.update(++steps);
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
 
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
-		[TestCase(false, false, true )]
-		[TestCase(true , false, false)]
-		[TestCase(false, true , false)]
-		[TestCase(true , true , false)]
-		public void NorGateTest(bool volt0, bool volt1, bool isHigh) {
+		[TestCase(0, 0, true )]
+		[TestCase(1, 0, false)]
+		[TestCase(0, 1, false)]
+		[TestCase(1, 1, false)]
+		public void NorGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 			var logicOut = sim.Create<LogicOutputElm>();
-
-			if(volt1) voltage1.toggle();
-			if(volt0) voltage0.toggle();
 
 			var gate = sim.Create<NorGateElm>();
 
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
+			sim.Connect(logicIn0, 0, gate, 0);
+			sim.Connect(logicIn1, 0, gate, 1);
 			sim.Connect(logicOut, 0, gate, 2);
 
-			int steps = 0;
-			sim.update(++steps);
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
 
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
-		[TestCase(false, false, false)]
-		[TestCase(true , false, true )]
-		[TestCase(false, true , true )]
-		[TestCase(true , true , false)]
-		public void XorGateTest(bool volt0, bool volt1, bool isHigh) {
+		[TestCase(0, 0, false)]
+		[TestCase(1, 0, true )]
+		[TestCase(0, 1, true )]
+		[TestCase(1, 1, false)]
+		public void XorGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<LogicInputElm>();
-			var voltage1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 			var logicOut = sim.Create<LogicOutputElm>();
-
-			if(volt1) voltage1.toggle();
-			if(volt0) voltage0.toggle();
 
 			var gate = sim.Create<XorGateElm>();
 
-			sim.Connect(voltage0, 0, gate, 0);
-			sim.Connect(voltage1, 0, gate, 1);
-			sim.Connect(logicOut, 0, gate, 2);
+			sim.Connect(logicIn0, 0, gate, 0);
+			sim.Connect(logicIn1, 0, gate, 1);
+			sim.Connect(logicOut.leadIn, gate.leadOut);
 
-			int steps = 0;
-			sim.update(++steps);
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
 
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
-		[TestCase(false, false, false)]
-		[TestCase(true,  false, true )]
-		[TestCase(false, true,  true )]
-		[TestCase(true,  true,  false)]
-		public void ExclusiveOrTest(bool switch0, bool switch1, bool isHigh) {
+		[TestCase(1, false)]
+		[TestCase(0, true)]
+		public void InverterTest(int in0, bool out0) {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<LogicInputElm>();
-			var volt1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var invert0 = sim.Create<InverterElm>();
+			var logicOut = sim.Create<LogicOutputElm>();
+
+			sim.Connect(logicIn0.leadOut, invert0.leadIn);
+			sim.Connect(invert0.leadOut, logicOut.leadIn);
+
+			logicIn0.setPosition(in0);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
+		}
+
+		[TestCase(0, 0, false)]
+		[TestCase(1, 0, true )]
+		[TestCase(0, 1, true )]
+		[TestCase(1, 1, false)]
+		public void NandXorTest(int in0, int in1, bool out0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
 
 			var nand0 = sim.Create<NandGateElm>();
 			var nand1 = sim.Create<NandGateElm>();
@@ -202,16 +200,13 @@ namespace SharpCircuitTest {
 
 			var logicOut = sim.Create<LogicOutputElm>();
 
-			if(switch0) volt0.toggle();
-			if(switch1) volt1.toggle();
-
 			// upper input
-			sim.Connect(volt0, 0, nand1, 0);
-			sim.Connect(volt0, 0, nand0, 0);
+			sim.Connect(logicIn0, 0, nand1, 0);
+			sim.Connect(logicIn0, 0, nand0, 0);
 			
 			// lower input
-			sim.Connect(volt1, 0, nand0, 1);
-			sim.Connect(volt1, 0, nand2, 1);
+			sim.Connect(logicIn1, 0, nand0, 1);
+			sim.Connect(logicIn1, 0, nand2, 1);
 
 			// connect 0
 			sim.Connect(nand0, 2, nand1, 1);
@@ -223,11 +218,237 @@ namespace SharpCircuitTest {
 
 			sim.Connect(logicOut, 0, nand3, 2);
 
-			int steps = 0;
-			sim.update(++steps);
-			sim.update(++steps);
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
+		}
+
+		[TestCase(0, 0, 0)]
+		[TestCase(1, 0, 1)]
+		[TestCase(0, 1, 1)]
+		[TestCase(1, 1, 2)]
+		public void HalfAdderTest(int in0, int in1, int i0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
+
+			var andGate = sim.Create<AndGateElm>();
+			var xorGate = sim.Create<XorGateElm>();
+
+			var logicOut0 = sim.Create<LogicOutputElm>();
+			var logicOut1 = sim.Create<LogicOutputElm>();
+
+			sim.Connect(logicIn0, 0, andGate, 1);
+			sim.Connect(logicIn0, 0, xorGate, 1);
+
+			sim.Connect(logicIn1, 0, andGate, 0);
+			sim.Connect(logicIn1, 0, xorGate, 0);
+
+			sim.Connect(logicOut0.leadIn, andGate.leadOut);
+			sim.Connect(logicOut1.leadIn, xorGate.leadOut);
+
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			int i = 0;
+			if(logicOut0.isHigh()) i += 2;
+			if(logicOut1.isHigh()) i += 1;
+
+			Assert.AreEqual(i0, i);
+		}
+
+		[TestCase(0, 0, 0, 0)]
+		[TestCase(1, 0, 0, 1)]
+		[TestCase(0, 1, 0, 1)]
+		[TestCase(0, 0, 1, 1)]
+		[TestCase(1, 1, 0, 2)]
+		[TestCase(1, 0, 1, 2)]
+		[TestCase(0, 1, 1, 2)]
+		[TestCase(1, 1, 1, 3)]
+		public void FullAdderTest(int in0, int in1, int in2, int i0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn2 = sim.Create<LogicInputElm>();
+
+			var andGate0 = sim.Create<AndGateElm>();
+			var andGate1 = sim.Create<AndGateElm>();
 			
-			Assert.AreEqual(isHigh, logicOut.isHigh());
+			var orGate0 = sim.Create<OrGateElm>();
+
+			var xorGate0 = sim.Create<XorGateElm>();
+			var xorGate1 = sim.Create<XorGateElm>();
+
+			var logicOut0 = sim.Create<LogicOutputElm>();
+			var logicOut1 = sim.Create<LogicOutputElm>();
+
+			sim.Connect(logicIn0, 0, andGate1, 0);
+			sim.Connect(logicIn0, 0, xorGate1, 0);
+
+			sim.Connect(logicIn1, 0, andGate0, 0);
+			sim.Connect(logicIn1, 0, xorGate0, 0);
+
+			sim.Connect(logicIn2, 0, andGate0, 1);
+			sim.Connect(logicIn2, 0, xorGate0, 1);
+
+			sim.Connect(xorGate0, 2, andGate1, 1);
+			sim.Connect(xorGate0, 2, xorGate1, 1);
+
+			sim.Connect(orGate0, 0, andGate0, 2);
+			sim.Connect(orGate0, 1, andGate1, 2);
+
+			sim.Connect(logicOut0.leadIn, orGate0.leadOut);
+			sim.Connect(logicOut1.leadIn, xorGate1.leadOut);
+
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			logicIn2.setPosition(in2);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			int i = 0;
+			if(logicOut0.isHigh()) i += 2;
+			if(logicOut1.isHigh()) i += 1;
+
+			Assert.AreEqual(i0, i);
+		}
+
+		[TestCase(0, 0, 1)]
+		[TestCase(0, 1, 2)]
+		[TestCase(1, 0, 3)]
+		[TestCase(1, 1, 4)]
+		public void OneOfFourDecoderTest(int in0, int in1, int i0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
+
+			var invert0 = sim.Create<InverterElm>();
+			var invert1 = sim.Create<InverterElm>();
+
+			var and0 = sim.Create<AndGateElm>();
+			var and1 = sim.Create<AndGateElm>();
+			var and2 = sim.Create<AndGateElm>();
+			var and3 = sim.Create<AndGateElm>();
+
+			var logicOut0 = sim.Create<LogicOutputElm>();
+			var logicOut1 = sim.Create<LogicOutputElm>();
+			var logicOut2 = sim.Create<LogicOutputElm>();
+			var logicOut3 = sim.Create<LogicOutputElm>();
+
+			sim.Connect(logicIn0, 0, and0, 0);
+			sim.Connect(logicIn0, 0, and1, 0);
+
+			sim.Connect(logicIn0.leadOut, invert0.leadIn);
+			sim.Connect(invert0, 1, and2, 0);
+			sim.Connect(invert0, 1, and3, 0);
+
+			sim.Connect(logicIn1, 0, and0, 1);
+			sim.Connect(logicIn1, 0, and2, 1);
+
+			sim.Connect(logicIn1.leadOut, invert1.leadIn);
+			sim.Connect(invert1, 1, and1, 1);
+			sim.Connect(invert1, 1, and3, 1);
+
+			sim.Connect(and0.leadOut, logicOut0.leadIn);
+			sim.Connect(and1.leadOut, logicOut1.leadIn);
+			sim.Connect(and2.leadOut, logicOut2.leadIn);
+			sim.Connect(and3.leadOut, logicOut3.leadIn);
+
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			int i = 0;
+			if(logicOut0.isHigh()) i += 4;
+			if(logicOut1.isHigh()) i += 3;
+			if(logicOut2.isHigh()) i += 2;
+			if(logicOut3.isHigh()) i += 1;
+
+			Debug.Log(in0, in1, i);
+			Assert.AreEqual(i0, i);
+		}
+
+		[TestCase(0, 0, 0, false)]
+		[TestCase(0, 0, 1, false)]
+		[TestCase(1, 0,	0, true )]
+		[TestCase(1, 0, 1, false)]
+		[TestCase(1, 1, 0, true )]
+		[TestCase(1, 1, 1, true )]
+		[TestCase(0, 1, 0, false)]
+		[TestCase(0, 1, 1, true )]
+		public void TwoToOneMuxTest(bool in0, bool in1, bool in2, bool out0) {
+
+		}
+
+		[TestCase(0, 0, 0, false)]
+		[TestCase(1, 0, 0, false)]
+		[TestCase(0, 1, 0, false)]
+		[TestCase(0, 0, 1, false)]
+		[TestCase(1, 1, 0, true )]
+		[TestCase(1, 0, 1, true )]
+		[TestCase(0, 1, 1, true )]
+		[TestCase(1, 1, 1, true )]
+		public void MajorityLogicTest(int in0, int in1, int in2, bool out0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn2 = sim.Create<LogicInputElm>();
+			
+			var nand0 = sim.Create<NandGateElm>();
+			var nand1 = sim.Create<NandGateElm>();
+			var nand2 = sim.Create<NandGateElm>();
+			var nand3 = sim.Create<NandGateElm>();
+			nand3.inputCount = 3;
+
+			var logicOut = sim.Create<LogicOutputElm>();
+
+			sim.Connect(logicIn0, 0, nand0, 0);
+			sim.Connect(logicIn0, 0, nand2, 0);
+
+			sim.Connect(logicIn1, 0, nand0, 1);
+			sim.Connect(logicIn1, 0, nand2, 0);
+
+			sim.Connect(logicIn2, 0, nand1, 1);
+			sim.Connect(logicIn2, 0, nand2, 1);
+
+			sim.Connect(nand3, 0, nand0, 2);
+			sim.Connect(nand3, 1, nand1, 2);
+			sim.Connect(nand3, 2, nand2, 2);
+
+			sim.Connect(nand3, 4, logicOut, 0);
+
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			logicIn2.setPosition(in2);
+			sim.analyze();
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
 	}

@@ -59,7 +59,7 @@ namespace SharpCircuit {
 			return lead_volt[0];
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return true;
 		}
 

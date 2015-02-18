@@ -29,7 +29,6 @@ namespace SharpCircuit {
 				if(p.output && j-- == 0)
 					p.voltSource = vs;
 			}
-			//System.out.println("setVoltageSource failed for " + this);
 		}
 
 		public override void stamp(Circuit sim) {
@@ -41,8 +40,7 @@ namespace SharpCircuit {
 		}
 
 		public override void doStep(Circuit sim) {
-			int i;
-			for(i = 0; i != getLeadCount(); i++) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(!p.output)
 					p.value = lead_volt[i] > 2.5;
@@ -50,7 +48,7 @@ namespace SharpCircuit {
 
 			execute(sim);
 
-			for(i = 0; i != getLeadCount(); i++) {
+			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(p.output)
 					sim.updateVoltageSource(0, lead_node[i], p.voltSource, p.value ? 5 : 0);
@@ -78,13 +76,8 @@ namespace SharpCircuit {
 				}
 
 				String t = "";
-				if(p.lineOver)
-					t += '\'';
-
-
-				if(p.clock)
-					t = "Clk";
-
+				if(p.lineOver) t += '\'';
+				if(p.clock) t = "Clk";
 				arr[a] += t + " = " + getVoltageText(lead_volt[i]);
 				if(i % 2 == 1)
 					a++;
@@ -102,11 +95,11 @@ namespace SharpCircuit {
 			return "chip";
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return pins[n1].output;
 		}
 

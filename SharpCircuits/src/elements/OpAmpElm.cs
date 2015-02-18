@@ -6,9 +6,11 @@ namespace SharpCircuit {
 
 	public class OpAmpElm : CircuitElement {
 
-		public Circuit.Lead leadPos { get { return lead0; } }
-		public Circuit.Lead leadNeg { get { return lead1; } }
+		public Circuit.Lead leadNeg { get { return lead0; } }
+		public Circuit.Lead leadPos { get { return lead1; } }
 		public Circuit.Lead leadOut { get { return new Circuit.Lead(this, 2); } }
+
+		System.Random random = new Random();
 
 		/// <summary>
 		/// Max Output (V)
@@ -69,19 +71,19 @@ namespace SharpCircuit {
 
 		public override void doStep(Circuit sim) {
 			double vd = lead_volt[1] - lead_volt[0];
-			if(Math.Abs(lastvd - vd) > .1) {
+			if(Math.Abs(lastvd - vd) > 0.1) {
 				sim.converged = false;
-			} else if(lead_volt[2] > maxOut + .1 || lead_volt[2] < minOut - .1) {
+			} else if(lead_volt[2] > maxOut + 0.1 || lead_volt[2] < minOut - 0.1) {
 				sim.converged = false;
 			}
 			double x = 0;
 			int vn = sim.nodeCount + voltSource;
 			double dx = 0;
-			if(vd >= maxOut / gain && (lastvd >= 0 || sim.getRand(4) == 1)) {
-				dx = 1e-4;
+			if(vd >= maxOut / gain && (lastvd >= 0 || getRand(4) == 1)) {
+				dx = 1E-4;
 				x = maxOut - dx * maxOut / gain;
-			} else if(vd <= minOut / gain && (lastvd <= 0 || sim.getRand(4) == 1)) {
-				dx = 1e-4;
+			} else if(vd <= minOut / gain && (lastvd <= 0 || getRand(4) == 1)) {
+				dx = 1E-4;
 				x = minOut - dx * minOut / gain;
 			} else {
 				dx = gain;
@@ -96,13 +98,19 @@ namespace SharpCircuit {
 			lastvd = vd;
 		}
 
+		int getRand(int x) {
+			int q = random.Next();
+			if(q < 0) q = -q;
+			return q % x;
+		}
+
 		// there is no current path through the op-amp inputs, but there
 		// is an indirect path through the output to ground.
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return (n1 == 2);
 		}
 

@@ -9,43 +9,41 @@ namespace SharpCircuit {
 		public long time { get; set; }
 		public double current { get; set; }
 		public double voltage { get; set; }
-		public double power { get; set; }
 	}
 
 	public interface ICircuitComponent {
 
-		bool isWire();
-		bool nonLinear();
-
 		void startIteration(double timeStep);
 		void doStep(Circuit sim);
 		void stamp(Circuit sim);
-
-		double getPower();
-
-		void getInfo(String[] arr);
+		
 		void reset();
 
-		// leads
+		// lead count
 		int getLeadCount();
-		double getLeadVoltage(int ndx);
-		void setLeadVoltage(int ndx, double voltage);
+		int getInternalLeadCount();
+
+		// lead voltage
+		double getLeadVoltage(int leadX);
+		void setLeadVoltage(int leadX, double vValue);
 
 		// current
 		double getCurrent();
-		void setCurrent(int x, double c);
-		void calculateCurrent();
+		void setCurrent(int voltSourceNdx, double cValue);
 
 		// voltage
 		double getVoltageDiff();
 		int getVoltageSourceCount();
-		void setVoltageSource(int n, int v);
+		void setVoltageSource(int leadX, int voltSourceNdx);
 
 		// connection
-		bool getConnection(int n1, int n2);
-		bool hasGroundConnection(int n1);
+		bool leadsAreConnected(int leadX, int leadY);
+		bool leadIsGround(int leadX);
 
-		int getInternalLeadCount();
+		// state
+		bool isWire();
+		bool nonLinear();
+
 	}
 
 	public static class ICircuitComponentExtensions {
@@ -55,7 +53,6 @@ namespace SharpCircuit {
 				time = elapsedMilliseconds,
 				current = component.getCurrent(),
 				voltage = component.getVoltageDiff(),
-				power = component.getPower(),
 			};
 		}
 

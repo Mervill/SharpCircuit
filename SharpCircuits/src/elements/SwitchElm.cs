@@ -6,22 +6,15 @@ namespace SharpCircuit {
 
 	public class SwitchElm : CircuitElement {
 
-		/// <summary>
-		/// Momentary Switch TODO: Fixme
-		/// </summary>
-		public bool momentary { get; private set; }
-
 		// position 0 == closed, position 1 == open
 		protected int position, posCount;
 
 		public SwitchElm() : base() {
-			momentary = false;
 			position = 0;
 			posCount = 2;
 		}
 
 		public SwitchElm(bool mm) {
-			momentary = mm;
 			position = (mm) ? 1 : 0;
 			posCount = 2;
 		}
@@ -53,7 +46,7 @@ namespace SharpCircuit {
 		}
 
 		public override void getInfo(String[] arr) {
-			arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
+			arr[0] = string.Empty;
 			if(position == 1) {
 				arr[1] = "open";
 				arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
@@ -64,7 +57,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return position == 0;
 		}
 

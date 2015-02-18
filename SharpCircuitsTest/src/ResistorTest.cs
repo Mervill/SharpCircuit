@@ -12,6 +12,24 @@ namespace SharpCircuitTest {
 	public class ResistorTest {
 
 		[Test]
+		public void SimpleResistorTest() {
+			Circuit sim = new Circuit();
+
+			var volt0 = sim.Create<RailElm>();
+			var res1 = sim.Create<ResistorElm>();
+			var ground0 = sim.Create<GroundElm>();
+
+			sim.Connect(volt0.leadOut, res1.leadIn);
+			sim.Connect(res1.leadOut, ground0.leadIn);
+
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(0.050, ground0.getCurrent());
+		}
+
+		[Test]
 		public void OhmsLawTest() {
 			Circuit sim = new Circuit();
 
@@ -26,8 +44,9 @@ namespace SharpCircuitTest {
 			sim.Connect(res0,  1, ground0, 0);
 			sim.Connect(res1,  1, ground1, 0);
 
-			int steps = 0;
-			sim.update(++steps);
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
 			
 			Assert.AreEqual(0.050, ground0.getCurrent());
 			Assert.AreEqual(0.005, ground1.getCurrent());
@@ -68,8 +87,9 @@ namespace SharpCircuitTest {
 			sim.Connect(out2, 0, res3, 1);
 			sim.Connect(out3, 0, res4, 1);
 
-			int steps = 0;
-			sim.update(++steps);
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
 
 			Assert.AreEqual(5.0, res0.getVoltageDiff());
 			Assert.AreEqual(5.0, res1.getVoltageDiff());
@@ -110,8 +130,9 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0, 0, res2, 1);
 			sim.Connect(volt0, 0, resX, 1);
 
-			int steps = 0;
-			sim.update(++steps);
+			int steps = 100;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
 
 			Assert.AreEqual(0.025, Math.Round(volt0.getCurrent(), 8));
 

@@ -27,20 +27,18 @@ namespace SharpCircuitTest {
 			var collectorWire = sim.Create<WireElm>();
 			var emitterWire = sim.Create<WireElm>();
 
-			sim.Connect(baseVoltage, 0, baseWire, 0);
-			sim.Connect(baseWire, 1, transistor, 0);
+			sim.Connect(baseVoltage.leadOut, baseWire.leadIn);
+			sim.Connect(baseWire.leadOut, transistor.leadBase);
 			
-			sim.Connect(collectorVoltage, 0, collectorWire, 0);
-			sim.Connect(collectorWire, 1, transistor, 1);
+			sim.Connect(collectorVoltage.leadOut, collectorWire.leadIn);
+			sim.Connect(collectorWire.leadOut, transistor.leadCollector);
 
-			sim.Connect(ground, 0, emitterWire, 0);
-			sim.Connect(emitterWire, 1, transistor, 2);
+			sim.Connect(ground.leadIn, emitterWire.leadIn);
+			sim.Connect(emitterWire.leadOut, transistor.leadEmitter);
 
-			int steps = 1000;
+			int steps = 100;
 			for(int x = 1; x <= steps; x++)
 				sim.update(x);
-
-			Assert.AreEqual(0.01, Math.Round(sim.time, 4));
 
 			Assert.AreEqual( 0.00158254, Math.Round(baseWire.getCurrent(), 8));
 			Assert.AreEqual( 0.15825359, Math.Round(collectorWire.getCurrent(), 8));
@@ -65,20 +63,18 @@ namespace SharpCircuitTest {
 			var collectorWire = sim.Create<WireElm>();
 			var emitterWire = sim.Create<WireElm>();
 
-			sim.Connect(baseVoltage, 0, baseWire, 0);
-			sim.Connect(baseWire, 1, transistor, 0);
+			sim.Connect(baseVoltage.leadOut, baseWire.leadIn);
+			sim.Connect(baseWire.leadOut, transistor.leadBase);
 
-			sim.Connect(collectorVoltage, 0, collectorWire, 0);
-			sim.Connect(collectorWire, 1, transistor, 1);
+			sim.Connect(collectorVoltage.leadOut, collectorWire.leadIn);
+			sim.Connect(collectorWire.leadOut, transistor.leadCollector);
 
-			sim.Connect(emitterVoltage, 0, emitterWire, 0);
-			sim.Connect(emitterWire, 1, transistor, 2);
+			sim.Connect(emitterVoltage.leadOut, emitterWire.leadIn);
+			sim.Connect(emitterWire.leadOut, transistor.leadEmitter);
 
-			int steps = 1000;
+			int steps = 100;
 			for(int x = 1; x <= steps; x++)
 				sim.update(x);
-
-			Assert.AreEqual(0.01, Math.Round(sim.time, 4));
 
 			Assert.AreEqual(-0.07374479, Math.Round(baseWire.getCurrent(), 8));
 			Assert.AreEqual( 0.00143194, Math.Round(collectorWire.getCurrent(), 8));

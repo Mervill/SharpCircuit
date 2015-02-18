@@ -59,6 +59,7 @@
     <Compile Include="src\ACVoltageTest.cs" />
     <Compile Include="src\DiodeTest.cs" />
     <Compile Include="src\GateTest.cs" />
+    <Compile Include="src\OpAmpTest.cs" />
     <Compile Include="src\ResistorTest.cs" />
     <Compile Include="src\TransistorTest.cs" />
   </ItemGroup>

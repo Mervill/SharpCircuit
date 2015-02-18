@@ -39,8 +39,8 @@ namespace SharpCircuit {
 			isTrapezoidal = true;
 		}
 
-		public override void setLeadVoltage(int n, double c) {
-			base.setLeadVoltage(n, c);
+		public override void setLeadVoltage(int leadX, double vValue) {
+			base.setLeadVoltage(leadX, vValue);
 			voltdiff = lead_volt[0] - lead_volt[1];
 		}
 

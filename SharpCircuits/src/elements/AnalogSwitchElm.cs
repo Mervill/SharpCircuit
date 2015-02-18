@@ -71,7 +71,7 @@ namespace SharpCircuit {
 
 		// we have to just assume current will flow either way, even though that
 		// might cause singular matrix errors
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return !(n1 == 2 || n2 == 2);
 		}
 

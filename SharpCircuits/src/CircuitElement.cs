@@ -41,82 +41,63 @@ namespace SharpCircuit {
 			lead_node[ndx] = node_ndx;
 		}
 
+		public virtual void calculateCurrent() { }
+		public virtual double getPower() { return getVoltageDiff() * current; }
+		public virtual void getInfo(String[] arr) { }
+
 		#region //// Interface ////
-
-		public virtual bool isWire() {
-			return false;
-		}
-
-		public virtual bool nonLinear() {
-			return false;
-		}
 
 		public virtual void startIteration(double timeStep) { }
 		public virtual void doStep(Circuit sim) { }
 		public virtual void stamp(Circuit sim) { }
-
-		public virtual double getPower() {
-			return getVoltageDiff() * current;
-		}
-
-		public virtual void getInfo(String[] arr) { }
 
 		public virtual void reset() {
 			for(int i = 0; i != getLeadCount() + getInternalLeadCount(); i++)
 				lead_volt[i] = 0;
 		}
 
+		#region //// Lead count ////
+		public virtual int getLeadCount() { return 2; }
+		public virtual int getInternalLeadCount() { return 0; }
+		#endregion
 
-		public virtual int getLeadCount() {
-			return 2;
+		#region //// Lead voltage ////
+		public virtual double getLeadVoltage(int leadX) {
+			return lead_volt[leadX];
 		}
 
-		public virtual double getLeadVoltage(int ndx) {
-			return lead_volt[ndx];
-		}
-
-		public virtual void setLeadVoltage(int ndx, double voltage) {
-			lead_volt[ndx] = voltage;
+		public virtual void setLeadVoltage(int leadX, double vValue) {
+			lead_volt[leadX] = vValue;
 			calculateCurrent();
 		}
+		#endregion
 
+		#region //// Current ////
+		public virtual double getCurrent() { return current; }
+		
+		public virtual void setCurrent(int voltSourceNdx, double cValue) { current = cValue; }
+		#endregion
 
-		public virtual double getCurrent() {
-			return current;
-		}
+		#region //// Voltage ////
+		public virtual double getVoltageDiff() { return lead_volt[0] - lead_volt[1]; }
+		
+		public virtual int getVoltageSourceCount() { return 0; }
+		
+		public virtual void setVoltageSource(int leadX, int voltSourceNdx) { voltSource = voltSourceNdx; }
+		#endregion
 
-		public virtual void setCurrent(int x, double c) {
-			current = c;
-		}
+		#region //// Connection ////
+		public virtual bool leadsAreConnected(int leadX, int leadY) { return true; }
+		
+		public virtual bool leadIsGround(int leadX) { return false; }
+		#endregion
 
-		public virtual void calculateCurrent() { }
+		#region //// State ////
+		public virtual bool isWire() { return false; }
+		
+		public virtual bool nonLinear() { return false; }
+		#endregion
 
-
-		public virtual double getVoltageDiff() {
-			return lead_volt[0] - lead_volt[1];
-		}
-
-		public virtual int getVoltageSourceCount() {
-			return 0;
-		}
-
-		public virtual void setVoltageSource(int n, int v) {
-			voltSource = v;
-		}
-
-
-		public virtual bool getConnection(int n1, int n2) {
-			return true;
-		}
-
-		public virtual bool hasGroundConnection(int n1) {
-			return false;
-		}
-
-
-		public virtual int getInternalLeadCount() {
-			return 0;
-		}
 		#endregion
 
 		#region //// Static methods ////
@@ -140,30 +121,30 @@ namespace SharpCircuit {
 			return getUnitText(Math.Abs(i), "A");
 		}
 
+/*Debug.Log(CircuitElement.getUnitText(0.00000000000001, "V")); // 0.01pV
+  Debug.Log(CircuitElement.getUnitText(0.000000000001, "V")); // 1pV
+  Debug.Log(CircuitElement.getUnitText(0.000000001, "V")); // 1nP
+  Debug.Log(CircuitElement.getUnitText(0.000001, "V")); // 1uV
+  Debug.Log(CircuitElement.getUnitText(0.001, "V")); // 1mV
+  Debug.Log(CircuitElement.getUnitText(1, "V")); // 1V
+  Debug.Log(CircuitElement.getUnitText(1000, "V")); // 1KV
+  Debug.Log(CircuitElement.getUnitText(1000000, "V")); // 1MV
+  Debug.Log(CircuitElement.getUnitText(1000000000, "V")); // 1GV
+  Debug.Log(CircuitElement.getUnitText(1000000000000, "V")); // 1TV
+  Debug.Log(CircuitElement.getUnitText(1000000000000000, "V")); // 1000TV*/
+
 		public static string getUnitText(double v, string u) {
 			double va = Math.Abs(v);
-			if(va < 1e-14) return "0 " + u;
-			if(va < 1e-9 ) return v * 1e12 + " p" + u;
-			if(va < 1e-6 ) return v * 1e9  + " n" + u;
-			if(va < 1e-3 ) return v * 1e6  + " " + Circuit.muString + u;
-			if(va < 1    ) return v * 1e3  + " m" + u;
-			if(va < 1e3  ) return v + " "  + u;
-			if(va < 1e6  ) return v * 1e-3 + " k" + u;
-			if(va < 1e9  ) return v * 1e-6 + " M" + u;
-			return v * 1e-9 + " G" + u;
-		}
-
-		public static string getShortUnitText(double v, string u) {
-			double va = Math.Abs(v);
-			if(va < 1e-13) return null;
-			if(va < 1e-9 ) return v * 1e12 + "p" + u;
-			if(va < 1e-6 ) return v * 1e9  + "n" + u;
-			if(va < 1e-3 ) return v * 1e6  + Circuit.muString + u;
-			if(va < 1    ) return v * 1e3  + "m" + u;
-			if(va < 1e3  ) return v + u;
-			if(va < 1e6  ) return v * 1e-3 + "k" + u;
-			if(va < 1e9  ) return v * 1e-6 + "M" + u;
-			return v * 1e-9 + "G" + u;
+			if(va < 1E-14) return "0" + u;
+			if(va < 1E-9) return v * 1E12 + "p" + u; // pico
+			if(va < 1E-6) return v * 1E9  + "n" + u; // nano
+			if(va < 1E-3) return v * 1E6  + "u" + u; // micro
+			if(va < 1   ) return v * 1E3  + "m" + u; // milli
+			if(va < 1E3 ) return v + u;
+			if(va < 1E6 ) return v * 1E-3 + "K" + u; // kilo
+			if(va < 1E9 ) return v * 1E-6 + "M" + u; // mega
+			if(va < 1E12) return v * 1E-9 + "G" + u; // giga
+			return v * 1E-12 + "T" + u;              // tera
 		}
 		#endregion
 	}

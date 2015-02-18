@@ -37,7 +37,7 @@ namespace SharpCircuit {
 				sim.updateVoltageSource(0, lead_node[0], voltSource, getVoltage(sim));
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return true;
 		}
 

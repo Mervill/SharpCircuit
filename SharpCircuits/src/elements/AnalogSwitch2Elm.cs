@@ -40,7 +40,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			if(n1 == 3 || n2 == 3) {
 				return false;
 			}

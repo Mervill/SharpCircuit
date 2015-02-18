@@ -13,7 +13,22 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void SimpleDiodeTest() {
-			Assert.Fail();
+			Circuit sim = new Circuit();
+
+			var voltage0 = sim.Create<RailElm>();
+			var diode = sim.Create<DiodeElm>();
+			var ground = sim.Create<GroundElm>();
+
+			voltage0.maxVoltage = 0.75;
+
+			sim.Connect(voltage0.leadOut, diode.leadIn);
+			sim.Connect(diode.leadOut, ground.leadIn);
+
+			int steps = 1000;
+			for(int x = 1; x <= steps; x++)
+				sim.update(x);
+
+			Assert.AreEqual(0.10686474, Math.Round(ground.getCurrent(), 8));
 		}
 
 		[Test]

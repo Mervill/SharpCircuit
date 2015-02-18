@@ -12,52 +12,78 @@ namespace SharpCircuit {
 
 		static void Main(string[] args) {
 
+			// when speed = 172, {100 steps} => [T0.001]
+
 			Circuit sim = new Circuit();
-			var transistor = sim.Create<PNPTransistorElm>();
+			sim.timeStep = 1E-14;
 
-			var baseVoltage = sim.Create<RailElm>();
-			baseVoltage.maxVoltage = 1.3;
+			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			DiodeElm diode0 = sim.Create<DiodeElm>();
+			ResistorElm res0 = sim.Create<ResistorElm>(640);
+			WireElm wire0 = sim.Create<WireElm>();
 
-			var collectorVoltage = sim.Create<RailElm>();
-			collectorVoltage.maxVoltage = 2;
+			sim.Connect(source0, 1, diode0, 0);
+			sim.Connect(diode0, 1, res0, 0);
+			sim.Connect(res0, 1, wire0, 0);
+			sim.Connect(wire0, 1, source0, 0);
 
-			var emitterVoltage = sim.Create<RailElm>();
-			emitterVoltage.maxVoltage = 2;
+			var sourceScope = sim.Watch(source0);
+			var resScope = sim.Watch(res0);
 
-			var baseWire = sim.Create<WireElm>();
-			var collectorWire = sim.Create<WireElm>();
-			var emitterWire = sim.Create<WireElm>();
-
-			sim.Connect(baseVoltage, 0, baseWire, 0);
-			sim.Connect(baseWire, 1, transistor, 0);
-
-			sim.Connect(collectorVoltage, 0, collectorWire, 0);
-			sim.Connect(collectorWire, 1, transistor, 1);
-
-			sim.Connect(emitterVoltage, 0, emitterWire, 0);
-			sim.Connect(emitterWire, 1, transistor, 2);
-
-			int steps = 1000;
+			int steps = 5;
 			for(int x = 1; x <= steps; x++) {
 				sim.update(x);
 				string utime = CircuitElement.getUnitText(sim.time, "s");
 				Debug.LogF(" [{0,5}, {1,8}]", x, utime);
 			}
-			Debug.Log(Math.Round(sim.time, 4));
+				
 
-			Debug.Log(Math.Round(baseWire.getCurrent(), 8));
-			Debug.Log(Math.Round(collectorWire.getCurrent(), 8));
-			Debug.Log(Math.Round(emitterWire.getCurrent(), 8));
+			// A/C Voltage Source
+			{
+				double voltageHigh = sourceScope.Max((f) => f.voltage);
+				int voltageHighNdx = sourceScope.FindIndex((f) => f.voltage == voltageHigh);
+				Debug.Log(Math.Round(voltageHigh, 4), "voltageHigh");
 
-			JsConfig.ExcludeTypes.Add(typeof(Circuit.Lead));
-			string js_out = JsonSerializer.SerializeToString(sim);
-			System.IO.File.WriteAllText("./out.json", js_out);
+				double voltageLow = sourceScope.Min((f) => f.voltage);
+				int voltageLowNdx = sourceScope.FindIndex((f) => f.voltage == voltageLow);
+				Debug.Log(Math.Round(voltageLow, 4), "voltageLow");
 
-			string js_in = System.IO.File.ReadAllText("./out.json");
-			sim = JsonSerializer.DeserializeFromString<Circuit>(js_in);
-			sim.needAnalyze();
-			sim.update(1);
+				//Assert.AreEqual(208 * 2, voltageLowNdx - voltageHighNdx);
+				//Assert.AreEqual(208 * 3, voltageLowNdx);
 
+				double currentHigh = sourceScope.Max((f) => f.current);
+				int currentHighNdx = sourceScope.FindIndex((f) => f.current == currentHigh);
+				Debug.Log(currentHighNdx, "currentHighNdx");
+
+				double currentLow = sourceScope.Min((f) => f.current);
+				int currentLowNdx = sourceScope.FindIndex((f) => f.current == currentLow);
+				Debug.Log(Math.Round(currentLow, 4), "currentLow");
+			}
+
+			// Resistor
+			{
+				double voltageHigh = resScope.Max((f) => f.voltage);
+				int voltageHighNdx = resScope.FindIndex((f) => f.voltage == voltageHigh);
+				Debug.Log(Math.Round(voltageHigh, 4), "voltageHigh");
+
+				double voltageLow = resScope.Min((f) => f.voltage);
+				int voltageLowNdx = resScope.FindIndex((f) => f.voltage == voltageLow);
+				Debug.Log(Math.Round(voltageLow, 4), "voltageLow");
+
+				double currentLow = resScope.Min((f) => f.current);
+				int currentLowNdx = resScope.FindIndex((f) => f.current == currentLow);
+				Debug.Log(Math.Round(currentLow, 4), "currentLow");
+
+				double currentHigh = resScope.Max((f) => f.current);
+				int currentHighNdx = resScope.FindIndex((f) => f.current == currentHigh);
+				Debug.Log(currentHighNdx, "currentHighNdx");
+			}
+
+			Debug.Log();
+			Debug.Log(sim.speed);
+			Debug.Log(sim.time, CircuitElement.getUnitText(sim.time, "s"));
+			//Debug.Log(CircuitElement.getUnitText(sim.timeStep, "s"));
+			
 			Console.WriteLine("program complete");
 			Console.ReadLine();
 		}

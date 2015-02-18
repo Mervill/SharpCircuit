@@ -37,7 +37,7 @@ namespace SharpCircuit {
 			arr[1] = "I = " + getCurrentText(current);
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return true;
 		}
 
