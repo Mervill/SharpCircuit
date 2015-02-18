@@ -15,10 +15,10 @@ namespace SharpCircuitTest {
 		public void SimpleOpAmpTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<RailElm>();
+			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			volt0.maxVoltage = 3;
 
-			var volt1 = sim.Create<RailElm>();
+			var volt1 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			volt1.maxVoltage = 4;
 
 			var opAmp0 = sim.Create<OpAmpElm>();
@@ -37,8 +37,8 @@ namespace SharpCircuitTest {
 		[Test]
 		public void OpAmpFeedbackTest() {
 			Circuit sim = new Circuit();
-			
-			var volt0 = sim.Create<RailElm>();
+
+			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			var opAmp0 = sim.Create<OpAmpElm>();
 			var analogOut0 = sim.Create<OutputElm>();
 

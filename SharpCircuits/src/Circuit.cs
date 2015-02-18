@@ -21,8 +21,7 @@ namespace SharpCircuit {
 
 		public double time { get; private set; }
 		public double timeStep { get; set; }
-		public int speed { get; set; } // 172 // Math.Log(10 * 14.3) * 24 + 61.5;
-
+		
 		public List<CircuitElement> elements { get; set; }
 		public List<long[]> nodeMesh { get; set; }
 
@@ -54,10 +53,10 @@ namespace SharpCircuit {
 		bool circuitNonLinear, 
 			 circuitNeedsMap;
 
-		long lastTime, 
-			 lastFrameTime, 
-			 lastIterTime, 
-			 secTime;
+#if CLASSIC_STEPRATE
+		public int speed { get; set; } // 172 // Math.Log(10 * 14.3) * 24 + 61.5;
+		double lastTime, lastFrameTime, lastIterTime, secTime;
+#endif
 
 		Dictionary<ICircuitComponent, List<ScopeFrame>> scopeMap;
 
@@ -67,7 +66,9 @@ namespace SharpCircuit {
 
 			time = 0;
 			timeStep = 5.0E-6;
+#if CLASSIC_STEPRATE
 			speed = 172;
+#endif
 
 			elements = new List<CircuitElement>();
 			nodeMesh = new List<long[]>();
@@ -111,6 +112,12 @@ namespace SharpCircuit {
 			long[] leftLeads = nodeMesh[leftNdx];
 			long[] rightLeads = nodeMesh[rightNdx];
 
+			if(leftLeadNdx >= leftLeads.Length)
+				Array.Resize(ref leftLeads, leftLeadNdx + 1);
+
+			if(rightLeadNdx >= rightLeads.Length)
+				Array.Resize(ref rightLeads, rightLeadNdx + 1);
+
 			long leftConn = leftLeads[leftLeadNdx];
 			long rightConn = rightLeads[rightLeadNdx];
 
@@ -141,7 +148,11 @@ namespace SharpCircuit {
 				return scopeMap[component];
 			}
 		}
-		
+
+		public void resetTime() {
+			time = 0;
+		}
+
 		public void needAnalyze() {
 			_analyze = true;
 		}
@@ -159,131 +170,146 @@ namespace SharpCircuit {
 			return (n < elements.Count) ? elements[n] : null;
 		}
 
-		public void update(long elapsedMilliseconds) {
+		public void update(double deltaTime) {
+
+			if(elements.Count == 0)
+				return;
 
 			if(_analyze)
 				analyze();
 
-			run(elapsedMilliseconds);
+			tick();
 
-			if(elapsedMilliseconds - secTime >= 1000)
-				secTime = elapsedMilliseconds;
+			if(circuitMatrix == null)
+				return;
+
+#if CLASSIC_STEPRATE
+			if(deltaTime - secTime >= 1000)
+				secTime = deltaTime;
 				
-			lastTime = elapsedMilliseconds;
+			lastTime = deltaTime;
 			lastFrameTime = lastTime;
+#endif
 
 			foreach(KeyValuePair<ICircuitComponent, List<ScopeFrame>> kvp in scopeMap)
-				kvp.Value.Add(kvp.Key.GetScopeFrame(elapsedMilliseconds));
+				kvp.Value.Add(kvp.Key.GetScopeFrame(time));
 		}
 
-		void run(long elapsedMilliseconds) {
-			if(circuitMatrix == null || elements.Count == 0) {
-				circuitMatrix = null;
-				return;
-			}
-			
-			long steprate = (long)(160 * getIterCount());
-			long tm = elapsedMilliseconds;
-			long lit = lastIterTime;
+		void tick() {
+#if CLASSIC_STEPRATE
+			double iterCount = (speed != 0) ? 0.1 * Math.Exp((speed - 61) / 24.0) : 0;
+			double steprate = 160 * iterCount;
+			double tm = deltaTime;
+			double lit = lastIterTime;
 
+			Debug.LogF("steprate: {0} deltaTime: {1} lastIterTime: {2} [1000 >= {3}]", steprate, tm, lit, steprate * (tm - lastIterTime));
 			if(1000 >= steprate * (tm - lastIterTime))
 				return;
 
 			for(int iter = 1; ; iter++) {
-				int subiter;
-				for(int i = 0; i != elements.Count; i++)
-					elements[i].startIteration(timeStep);
-				
-				int subiterCount = 5000;
-				for(subiter = 0; subiter != subiterCount; subiter++) {
-					converged = true;
-					subIterations = subiter;
+#endif
+			// Execute beginStep() on all elements
+			for(int i = 0; i != elements.Count; i++)
+				elements[i].beginStep(this);
 
+			int subiter;
+			int subiterCount = 5000;
+			for(subiter = 0; subiter != subiterCount; subiter++) {
+				converged = true;
+				subIterations = subiter;
+
+				// Copy `origRightSide` to `circuitRightSide`
+				for(int i = 0; i != circuitMatrixSize; i++)
+					circuitRightSide[i] = origRightSide[i];
+
+				// If the circuit is non linear copy
+				// `origMatrix` to `circuitMatrix`,
+				if(circuitNonLinear)
 					for(int i = 0; i != circuitMatrixSize; i++)
-						circuitRightSide[i] = origRightSide[i];
+						for(int j = 0; j != circuitMatrixSize; j++)
+							circuitMatrix[i][j] = origMatrix[i][j];
 
-					if(circuitNonLinear)
-						for(int i = 0; i != circuitMatrixSize; i++)
-							for(int j = 0; j != circuitMatrixSize; j++)
-								circuitMatrix[i][j] = origMatrix[i][j];
+				// Execute step() on all elements
+				for(int i = 0; i != elements.Count; i++)
+					elements[i].step(this);
 
-					for(int i = 0; i != elements.Count; i++)
-						elements[i].doStep(this);
+				if(errorMessage != null)
+					return;
 
-					if(errorMessage != null)
-						return;
-
-					for(int j = 0; j != circuitMatrixSize; j++) {
-						for(int i = 0; i != circuitMatrixSize; i++) {
-							double x = circuitMatrix[i][j];
-							if(Double.IsNaN(x) || Double.IsInfinity(x)) {
-								error("nan/infinite matrix!", null);
-								return;
-							}
-						}
-					}
-
-					if(circuitNonLinear) {
-						if(converged && subiter > 0) break;
-						if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
-							error("Singular matrix!", null);
+				// Can't have any values in the matrix be NaN or Inf
+				for(int j = 0; j != circuitMatrixSize; j++) {
+					for(int i = 0; i != circuitMatrixSize; i++) {
+						double x = circuitMatrix[i][j];
+						if(Double.IsNaN(x) || Double.IsInfinity(x)) {
+							error("NaN/Infinite matrix!", null);
 							return;
 						}
 					}
+				}
+				
+				// If the circuit is non-Linear, factor it now,
+				// if it's linear, it was factored in analyze()
+				if(circuitNonLinear) {
+					if(converged && subiter > 0) break;
+					if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
+						error("Singular matrix!", null);
+						return;
+					}
+				}
 
-					lu_solve(circuitMatrix, circuitMatrixSize, circuitPermute, circuitRightSide);
+				// Solve the factorized matrix
+				lu_solve(circuitMatrix, circuitMatrixSize, circuitPermute, circuitRightSide);
 
-					for(int j = 0; j != circuitMatrixFullSize; j++) {
-						RowInfo ri = circuitRowInfo[j];
-						double res = 0;
-						if(ri.type == RowInfo.ROW_CONST) {
-							res = ri.value;
-						} else {
-							res = circuitRightSide[ri.mapCol];
-						}
-						if(Double.IsNaN(res)) {
-							converged = false;
-							break;
-						}
-						if(j < nodeList.Count - 1) {
-							long node = getNodeId(j + 1);
-							for(int k = 0; k != nodeMesh.Count; k++) {
-								CircuitElement elm = elements[k];
-								List<long> leads = new List<long>(nodeMesh[k]);
-								int ndx = leads.IndexOf(node);
-								if(ndx != -1)
-									elm.setLeadVoltage(ndx, res);
-							}
-						} else {
-							int ji = j - (nodeList.Count - 1);
-							voltageSources[ji].setCurrent(ji, res);
-						}
+				for(int j = 0; j != circuitMatrixFullSize; j++) {
+					double res = 0;
+					RowInfo ri = circuitRowInfo[j];
+					if(ri.type == RowInfo.ROW_CONST) {
+						res = ri.value;
+					} else {
+						res = circuitRightSide[ri.mapCol];
 					}
 
-					if(!circuitNonLinear)
+					if(Double.IsNaN(res)) {
+						converged = false;
 						break;
+					}
+
+					if(j < nodeList.Count - 1) {
+						for(int k = 0; k != nodeMesh.Count; k++) {
+							CircuitElement elm = elements[k];
+							List<long> leads = new List<long>(nodeMesh[k]);
+							int ndx = leads.IndexOf(getNodeId(j + 1));
+							if(ndx != -1) 
+								elm.setLeadVoltage(ndx, res);
+						}
+					} else {
+						int ji = j - (nodeList.Count - 1);
+						voltageSources[ji].setCurrent(ji, res);
+					}
 				}
 
-				/*if (subiter > 5) {
-					System.out.print("converged after " + subiter + " iterations\n");
-				}*/
-				if(subiter == subiterCount) {
-					error("Convergence failed!", null);
+				// if the matrix is linear, we don't
+				// need to do any more iterations
+				if(!circuitNonLinear)
 					break;
-				}
+			}
 
-				time += timeStep;
-				tm = elapsedMilliseconds;
+			if(subiter > 5)
+				Debug.LogF("Converged after {0} iterations.", subiter);
+			
+			if(subiter == subiterCount)
+				error("Convergence failed!", null);
+
+			time = Math.Round(time + timeStep, 12); // Round to 12 digits
+#if CLASSIC_STEPRATE
+				tm = deltaTime;
 				lit = tm;
 
 				if(iter * 1000 >= steprate * (tm - lastIterTime) || (tm - lastFrameTime > 500))
 					break;
 			}
 			lastIterTime = lit;
-		}
-
-		double getIterCount() {
-			return (speed != 0) ? 0.1 * Math.Exp((speed - 61) / 24.0) : 0;
+#endif
 		}
 
 		public void analyze() {
@@ -336,10 +362,16 @@ namespace SharpCircuit {
 			int vscount = 0;
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement elm = elements[i];
-				int elmLeads = elm.getLeadCount();
+				int leads = elm.getLeadCount();
 
+				if(leads != nodeMesh[i].Length) {
+					long[] leadMap = nodeMesh[i];
+					Array.Resize(ref leadMap, leads);
+					nodeMesh[i] = leadMap;
+				}
+				
 				// Populate the node list
-				for(int leadX = 0; leadX != elmLeads; leadX++) {
+				for(int leadX = 0; leadX != leads; leadX++) {
 					// Id of the node at lead_index
 					long leadNode = nodeMesh[i][leadX];
 					int node_ndx = nodeList.IndexOf(leadNode);
@@ -354,23 +386,23 @@ namespace SharpCircuit {
 							elm.setLeadVoltage(leadX, 0);
 					}
 				}
-
-				int internal_nodes = elm.getInternalLeadCount();
-				for(int internal_lead_index = 0; internal_lead_index != internal_nodes; internal_lead_index++) {
+				
+				int internalLeads = elm.getInternalLeadCount();
+				for(int x = 0; x != internalLeads; x++) {
 					long id = snowflake.NextId();
-					elm.setLeadNode(elmLeads + internal_lead_index, nodeList.Count); // Associate the lead with the new node.
+					elm.setLeadNode(leads + x, nodeList.Count); // Associate the lead with the new node.
 					pushNode(id, true);
 				}
 
 				int ivs = elm.getVoltageSourceCount();
 				vscount += ivs;
 			}
-
-			voltageSources = new CircuitElement[vscount];
-			vscount = 0;
 			#endregion
 
 			// == Determine if circuit is nonlinear
+			voltageSources = new CircuitElement[vscount];
+			vscount = 0;
+
 			circuitNonLinear = false;
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement ce = elements[i];
@@ -427,14 +459,10 @@ namespace SharpCircuit {
 						if(!closure[ce.getLeadNode(leadX)]) {
 							if(ce.leadIsGround(leadX))
 								closure[ce.getLeadNode(leadX)] = changed = true;
-
 							continue;
 						}
-
 						for(int k = 0; k != ce.getLeadCount(); k++) {
-							if(leadX == k)
-								continue;
-
+							if(leadX == k) continue;
 							int kn = ce.getLeadNode(k);
 							if(ce.leadsAreConnected(leadX, k) && !closure[kn]) {
 								closure[kn] = true;
@@ -509,7 +537,7 @@ namespace SharpCircuit {
 			}
 			#endregion
 
-			#region //// Simplify the matrix ////
+			#region //// Simplify the matrix //// =D
 			for(int i = 0; i != matrixSize; i++) {
 				int qm = -1, qp = -1;
 				double qv = 0;
@@ -696,8 +724,8 @@ namespace SharpCircuit {
 			circuitNeedsMap = true;
 			_analyze = false;
 
-			// If the matrix is linear, we can do the lu_factor here instead of
-			// needing to do it every frame.
+			// If the matrix is linear, we can do the lu_factor 
+			// here instead of needing to do it every frame.
 			if(!circuitNonLinear)
 				if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute))
 					error("Singular matrix!", null);
@@ -874,9 +902,8 @@ namespace SharpCircuit {
 
 				// pivoting
 				if(j != largestRow) {
-					double x;
 					for(k = 0; k != n; k++) {
-						x = a[largestRow][k];
+						double x = a[largestRow][k];
 						a[largestRow][k] = a[j][k];
 						a[j][k] = x;
 					}

@@ -92,7 +92,7 @@ namespace SharpCircuit {
 				sim.stampRightSide(lead_node[i]);
 		}
 
-		public override void startIteration(double timeStep) {
+		public override void beginStep(Circuit sim) {
 			voltdiff[0] = lead_volt[0] - lead_volt[1];
 			voltdiff[1] = lead_volt[2] - lead_volt[3];
 			voltdiff[2] = lead_volt[3] - lead_volt[4];
@@ -103,7 +103,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			sim.stampCurrentSource(lead_node[0], lead_node[1], curSourceValue[0]);
 			sim.stampCurrentSource(lead_node[2], lead_node[3], curSourceValue[1]);
 			sim.stampCurrentSource(lead_node[3], lead_node[4], curSourceValue[2]);

@@ -55,7 +55,7 @@ namespace SharpCircuit {
 			return lead_volt[x] > 2.5;
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			bool f = calcFunction();
 			if(isInverting()) f = !f;
 			double res = f ? 5 : 0;

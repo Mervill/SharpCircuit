@@ -54,7 +54,7 @@ namespace SharpCircuit {
 			state = false;
 		}
 
-		public override void startIteration(double timeStep) {
+		public override void beginStep(Circuit sim) {
 			if(Math.Abs(current) < holdcurrent)
 				state = false;
 			double vd = lead_volt[0] - lead_volt[1];
@@ -62,7 +62,7 @@ namespace SharpCircuit {
 				state = true;
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			resistance = (state) ? onresistance : offresistance;
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}

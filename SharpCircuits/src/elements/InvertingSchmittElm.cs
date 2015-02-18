@@ -43,7 +43,7 @@ namespace SharpCircuit {
 			sim.stampVoltageSource(0, lead_node[1], voltSource);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double v0 = lead_volt[1];
 			double @out;
 			if(state) {

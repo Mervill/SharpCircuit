@@ -15,7 +15,7 @@ namespace SharpCircuitTest {
 		public void SimpleResistorTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<RailElm>();
+			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			var res1 = sim.Create<ResistorElm>();
 			var ground0 = sim.Create<GroundElm>();
 
@@ -32,7 +32,7 @@ namespace SharpCircuitTest {
 		public void OhmsLawTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<RailElm>();
+			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			var res0 = sim.Create<ResistorElm>( 100);
 			var res1 = sim.Create<ResistorElm>(1000);
 			var ground0 = sim.Create<GroundElm>();

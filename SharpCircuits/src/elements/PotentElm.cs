@@ -6,9 +6,9 @@ namespace SharpCircuit {
 
 	public class PotentElm : CircuitElement {
 
-		//public ElementLead leadOut 		{ get { return lead0; }}
-		//public ElementLead leadIn1 		{ get { return lead1; }}
-		//public ElementLead leadVoltage 	{ get { return leads[2]; }}
+		public Circuit.Lead leadOut { get { return lead0; } }
+		public Circuit.Lead leadIn { get { return lead0; } }
+		public Circuit.Lead leadVoltage { get { return new Circuit.Lead(this, 2); } }
 
 		public double position { get; set; }
 

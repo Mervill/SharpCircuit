@@ -26,7 +26,7 @@ namespace SharpCircuit {
 			sim.stampVoltageSource(0, lead_node[1], voltSource);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double v0 = lead_volt[1];
 			double @out = lead_volt[0] > 2.5 ? 0 : 5;
 			double maxStep = slewRate * sim.timeStep * 1e9;

@@ -66,7 +66,7 @@ namespace SharpCircuit {
 			diode.stamp(sim, lead_node[0], lead_node[1]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			diode.doStep(sim, lead_volt[0] - lead_volt[1]);
 		}
 

@@ -15,10 +15,10 @@ namespace SharpCircuitTest {
 			Circuit sim = new Circuit();
 			var transistor = sim.Create<NPNTransistorElm>();
 
-			var baseVoltage = sim.Create<RailElm>();
+			var baseVoltage = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			baseVoltage.maxVoltage = 0.7025;
 
-			var collectorVoltage = sim.Create<RailElm>();
+			var collectorVoltage = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			collectorVoltage.maxVoltage = 2;
 
 			var ground = sim.Create<GroundElm>();
@@ -49,13 +49,13 @@ namespace SharpCircuitTest {
 			Circuit sim = new Circuit();
 			var transistor = sim.Create<PNPTransistorElm>();
 
-			var baseVoltage = sim.Create<RailElm>();
+			var baseVoltage = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			baseVoltage.maxVoltage = 1.3;
 
-			var collectorVoltage = sim.Create<RailElm>();
+			var collectorVoltage = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			collectorVoltage.maxVoltage = 2;
 
-			var emitterVoltage = sim.Create<RailElm>();
+			var emitterVoltage = sim.Create<RailElm>(VoltageElm.WaveType.DC);
 			emitterVoltage.maxVoltage = 2;
 
 			var baseWire = sim.Create<WireElm>();
@@ -77,6 +77,21 @@ namespace SharpCircuitTest {
 			TestUtils.Compare(baseWire.getCurrent(), -0.07374479, 8);
 			TestUtils.Compare(collectorWire.getCurrent(), 0.00143194, 8);
 			TestUtils.Compare(emitterWire.getCurrent(), 0.07231284, 8);
+		}
+
+		[Test]
+		public void SwitchTest() {
+			Assert.Ignore("Not Implemented!");
+		}
+
+		[Test]
+		public void CurrentSourceRampTest() {
+			Assert.Ignore("Not Implemented!");
+		}
+
+		[Test]
+		public void DarlingtonPairTest() {
+			Assert.Ignore("Not Implemented!");
 		}
 
 	}

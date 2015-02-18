@@ -26,11 +26,9 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			open = (lead_volt[3] < 2.5);
-			if(invert) {
-				open = !open;
-			}
+			if(invert) open = !open;
 			if(open) {
 				sim.stampResistor(lead_node[0], lead_node[2], r_on);
 				sim.stampResistor(lead_node[0], lead_node[1], r_off);
@@ -41,10 +39,7 @@ namespace SharpCircuit {
 		}
 
 		public override bool leadsAreConnected(int n1, int n2) {
-			if(n1 == 3 || n2 == 3) {
-				return false;
-			}
-			return true;
+			return !(n1 == 3 || n2 == 3);
 		}
 
 		public override void getInfo(String[] arr) {

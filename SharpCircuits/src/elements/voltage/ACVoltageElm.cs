@@ -6,8 +6,8 @@ namespace SharpCircuit {
 	
 	public class ACVoltageElm : VoltageElm {
 
-		public Circuit.Lead leadIn { get { return lead0; } }
-		public Circuit.Lead leadOut { get { return lead1; } }
+		public Circuit.Lead leadPos { get { return lead0; } }
+		public Circuit.Lead leadNeg { get { return lead1; } }
 
 		public ACVoltageElm() : base(WaveType.AC) {
 

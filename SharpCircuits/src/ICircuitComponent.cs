@@ -6,15 +6,15 @@ using System.Linq;
 namespace SharpCircuit {
 
 	public class ScopeFrame {
-		public long time { get; set; }
+		public double time { get; set; }
 		public double current { get; set; }
 		public double voltage { get; set; }
 	}
 
 	public interface ICircuitComponent {
 
-		void startIteration(double timeStep);
-		void doStep(Circuit sim);
+		void beginStep(Circuit sim);
+		void step(Circuit sim);
 		void stamp(Circuit sim);
 		
 		void reset();
@@ -48,9 +48,9 @@ namespace SharpCircuit {
 
 	public static class ICircuitComponentExtensions {
 
-		public static ScopeFrame GetScopeFrame(this ICircuitComponent component, long elapsedMilliseconds) {
+		public static ScopeFrame GetScopeFrame(this ICircuitComponent component, double time) {
 			return new ScopeFrame {
-				time = elapsedMilliseconds,
+				time = time,
 				current = component.getCurrent(),
 				voltage = component.getVoltageDiff(),
 			};

@@ -160,28 +160,6 @@ namespace SharpCircuitTest {
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
-		[TestCase(1, false)]
-		[TestCase(0, true)]
-		public void InverterTest(int in0, bool out0) {
-			Circuit sim = new Circuit();
-
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var invert0 = sim.Create<InverterElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
-
-			sim.Connect(logicIn0.leadOut, invert0.leadIn);
-			sim.Connect(invert0.leadOut, logicOut.leadIn);
-
-			logicIn0.setPosition(in0);
-			sim.analyze();
-
-			int steps = 100;
-			for(int x = 1; x <= steps; x++)
-				sim.update(x);
-
-			Assert.AreEqual(out0, logicOut.isHigh());
-		}
-
 		[TestCase(0, 0, false)]
 		[TestCase(1, 0, true )]
 		[TestCase(0, 1, true )]
@@ -395,8 +373,8 @@ namespace SharpCircuitTest {
 		[TestCase(1, 1, 1, true )]
 		[TestCase(0, 1, 0, false)]
 		[TestCase(0, 1, 1, true )]
-		public void TwoToOneMuxTest(bool in0, bool in1, bool in2, bool out0) {
-
+		public void TwoToOneMuxTest(int in0, int in1, int in2, bool out0) {
+			Assert.Ignore("Not Implemented!");
 		}
 
 		[TestCase(0, 0, 0, false)]
@@ -426,7 +404,7 @@ namespace SharpCircuitTest {
 			sim.Connect(logicIn0, 0, nand2, 0);
 
 			sim.Connect(logicIn1, 0, nand0, 1);
-			sim.Connect(logicIn1, 0, nand2, 0);
+			sim.Connect(logicIn1, 0, nand1, 0);
 
 			sim.Connect(logicIn2, 0, nand1, 1);
 			sim.Connect(logicIn2, 0, nand2, 1);

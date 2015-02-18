@@ -69,7 +69,7 @@ namespace SharpCircuit {
 			sim.stampMatrix(lead_node[2], vn, 1);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double vd = lead_volt[1] - lead_volt[0];
 			if(Math.Abs(lastvd - vd) > 0.1) {
 				sim.converged = false;

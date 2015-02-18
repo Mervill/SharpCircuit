@@ -39,7 +39,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			for(int i = 0; i != getLeadCount(); i++) {
 				Pin p = pins[i];
 				if(!p.output)

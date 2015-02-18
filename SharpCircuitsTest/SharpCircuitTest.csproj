@@ -57,6 +57,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ACVoltageTest.cs" />
+    <Compile Include="src\ChipTest.cs" />
+    <Compile Include="src\SimpleTest.cs" />
+    <Compile Include="src\DCVoltageTest.cs" />
     <Compile Include="src\DiodeTest.cs" />
     <Compile Include="src\GateTest.cs" />
     <Compile Include="src\OpAmpTest.cs" />

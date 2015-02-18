@@ -98,7 +98,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double vbc = lead_volt[0] - lead_volt[1]; // typically negative
 			double vbe = lead_volt[0] - lead_volt[2]; // typically positive
 			if(Math.Abs(vbc - lastvbc) > 0.01 || // .01

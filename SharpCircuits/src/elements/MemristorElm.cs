@@ -82,9 +82,9 @@ namespace SharpCircuit {
 			_dopeWidth = 0;
 		}
 
-		public override void startIteration(double timeStep) {
+		public override void beginStep(Circuit sim) {
 			double wd = _dopeWidth / _totalWidth;
-			_dopeWidth += timeStep * _mobility * r_on * current / _totalWidth;
+			_dopeWidth += sim.timeStep * _mobility * r_on * current / _totalWidth;
 			if (_dopeWidth < 0)
 				_dopeWidth = 0;
 			if (_dopeWidth > _totalWidth)
@@ -97,7 +97,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 

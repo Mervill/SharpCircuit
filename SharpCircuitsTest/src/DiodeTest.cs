@@ -15,7 +15,7 @@ namespace SharpCircuitTest {
 		public void SimpleDiodeTest() {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<ACRailElm>();
+			var voltage0 = sim.Create<RailElm>(VoltageElm.WaveType.AC);
 			var diode = sim.Create<DiodeElm>();
 			var ground = sim.Create<GroundElm>();
 
@@ -124,7 +124,7 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void FullWaveRectifierTest(){
-			Assert.Fail();
+			Assert.Ignore("Not Implemented!");
 		}
 
 	}

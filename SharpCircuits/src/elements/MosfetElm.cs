@@ -69,7 +69,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double[] vs = new double[3];
 			vs[0] = lead_volt[0];
 			vs[1] = lead_volt[1];

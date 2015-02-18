@@ -66,7 +66,7 @@ namespace SharpCircuit {
 			sim.stampRightSide(lead_node[1]);
 		}
 
-		public override void startIteration(double timeStep) {
+		public override void beginStep(Circuit sim) {
 			if(isTrapezoidal) {
 				curSourceValue = -voltdiff / compResistance - current;
 			} else {
@@ -84,7 +84,7 @@ namespace SharpCircuit {
 				current = voltdiff / compResistance + curSourceValue;
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			sim.stampCurrentSource(lead_node[0], lead_node[1], curSourceValue);
 		}
 

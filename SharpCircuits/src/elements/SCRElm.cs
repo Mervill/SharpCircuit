@@ -83,7 +83,7 @@ namespace SharpCircuit {
 			diode.stamp(sim, lead_node[inode], lead_node[gnode]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			double vac = lead_volt[anode] - lead_volt[cnode]; // typically negative
 			double vag = lead_volt[anode] - lead_volt[gnode]; // typically positive
 			if(Math.Abs(vac - lastvac) > .01 || Math.Abs(vag - lastvag) > .01)

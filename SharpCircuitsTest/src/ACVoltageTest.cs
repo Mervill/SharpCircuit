@@ -23,7 +23,7 @@ namespace SharpCircuitTest {
 		public void SimpleACVoltageTest(double frequency) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<ACRailElm>();
+			var voltage0 = sim.Create<RailElm>(VoltageElm.WaveType.AC);
 			voltage0.frequency = frequency;
 
 			var resistor = sim.Create<ResistorElm>();
@@ -69,17 +69,17 @@ namespace SharpCircuitTest {
 			Debug.Log(Math.Round(currentLow, 4), "currentLow");
 		}
 
-		[TestCase(8E-5, 0.02478541)]
-		[TestCase(1E-5, 0.01772441)]
-		[TestCase(1E-6, 0.00250067)]
+		[TestCase(8E-5, 0.022253913066)]
+		[TestCase(1E-5, 0.012722352752)]
+		[TestCase(1E-6, 0.002487492691)]
 		public void CapacitorCapacitanceTest(double capacitance, double current) {
 			Circuit sim = new Circuit();
 
-			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
 			source0.frequency = 80;
 
-			ResistorElm resistor0 = sim.Create<ResistorElm>(200);
-			CapacitorElm cap0 = sim.Create<CapacitorElm>(capacitance);
+			var resistor0 = sim.Create<ResistorElm>(200);
+			var cap0 = sim.Create<CapacitorElm>(capacitance);
 
 			sim.Connect(source0, 1, resistor0, 0);
 			sim.Connect(resistor0, 1, cap0, 0);
@@ -94,20 +94,20 @@ namespace SharpCircuitTest {
 			for(int x = 1; x <= steps; x++)
 				sim.update(sim.timeStep);
 
-			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 8));
+			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 12));
 		}
 
-		[TestCase(15, 0.01230581)]
-		[TestCase(40, 0.02083503)]
-		[TestCase(80, 0.02372956)]
+		[TestCase(15, 0.010707831103)]
+		[TestCase(40, 0.015182310901)]
+		[TestCase(80, 0.018851527487)]
 		public void CapacitorFrequencyTest(double frequency, double current) {
 			Circuit sim = new Circuit();
 
-			VoltageElm source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
 			source0.frequency = frequency;
 
-			ResistorElm resistor0 = sim.Create<ResistorElm>(200);
-			CapacitorElm cap0 = sim.Create<CapacitorElm>(3E-5);
+			var resistor0 = sim.Create<ResistorElm>(200);
+			var cap0 = sim.Create<CapacitorElm>(3E-5);
 			
 			sim.Connect(source0, 1, resistor0, 0);
 			sim.Connect(resistor0, 1, cap0, 0);
@@ -122,27 +122,75 @@ namespace SharpCircuitTest {
 			for(int x = 1; x <= steps; x++)
 				sim.update(sim.timeStep);
 
-			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 8));
+			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 12));
+		}
+
+		[TestCase(1,    0.008321482318)]
+		[TestCase(0.02, 0.049487068655)]
+		[TestCase(0.4,  0.016742709632)]
+		public void InductorInductanceTest(double inductance, double current) {
+			Circuit sim = new Circuit();
+
+			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			source0.frequency = 80;
+			source0.phaseShift = 90;
+
+			var resistor0 = sim.Create<ResistorElm>(100);
+			var induct0 = sim.Create<InductorElm>(inductance);
+
+			sim.Connect(source0, 1, resistor0, 0);
+			sim.Connect(resistor0, 1, induct0, 0);
+			sim.Connect(induct0, 1, source0, 0);
+
+			var inductScope = sim.Watch(induct0);
+
+			double cycleTime = 1 / source0.frequency;
+			double quarterCycleTime = cycleTime / 4;
+
+			int steps = (int)(cycleTime / sim.timeStep);
+			for(int x = 1; x <= steps; x++)
+				sim.update(sim.timeStep);
+
+			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
+		}
+
+		[TestCase(40, 0.025321400958)]
+		[TestCase(80, 0.016742709632)]
+		[TestCase(200, 0.008335618187)]
+		public void InductorFrequencyTest(double frequency, double current) {
+			Circuit sim = new Circuit();
+
+			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			source0.frequency = frequency;
+			source0.phaseShift = 90;
+
+			var resistor0 = sim.Create<ResistorElm>(100);
+			var induct0 = sim.Create<InductorElm>(0.4);
+
+			sim.Connect(source0, 1, resistor0, 0);
+			sim.Connect(resistor0, 1, induct0, 0);
+			sim.Connect(induct0, 1, source0, 0);
+
+			var inductScope = sim.Watch(induct0);
+
+			double cycleTime = 1 / source0.frequency;
+			double quarterCycleTime = cycleTime / 4;
+
+			int steps = (int)(cycleTime / sim.timeStep);
+			for(int x = 1; x <= steps; x++)
+				sim.update(sim.timeStep);
+
+			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
 		}
 
 		[Test]
-		public void InductorInductanceTest(double inductance) {
-			Assert.Fail();
+		public void SeriesResonanceTest() {
+			Assert.Ignore("Not Implemented!");
 		}
 
 		[Test]
-		public void InductorFrequencyTest(double frequency) {
-			Assert.Fail();
-		}
-
-		[Test]
-		public void SeriesResonanceTest(double frequency) {
-			Assert.Fail();
-		}
-
-		[Test]
-		public void ParallelResonanceTest(double frequency) {
-			Assert.Fail();
+		public void ParallelResonanceTest() {
+			Assert.Ignore("Not Implemented!");
 		}
 
 	}

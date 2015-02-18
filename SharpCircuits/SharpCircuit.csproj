@@ -126,13 +126,12 @@
     <Compile Include="src\elements\PhotoResistorElm.cs" />
     <Compile Include="src\elements\PotentElm.cs" />
     <Compile Include="src\elements\ProbeElm.cs" />
-    <Compile Include="src\elements\rail\ACRailElm.cs" />
-    <Compile Include="src\elements\rail\AntennaElm.cs" />
-    <Compile Include="src\elements\rail\ClockElm.cs">
+    <Compile Include="src\elements\Switch2Elm.cs" />
+    <Compile Include="src\elements\voltage\rail\AntennaElm.cs" />
+    <Compile Include="src\elements\voltage\rail\ClockElm.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\elements\rail\SquareRailElm.cs" />
-    <Compile Include="src\elements\rail\VarRailElm.cs">
+    <Compile Include="src\elements\voltage\rail\VarRailElm.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\elements\ResistorElm.cs" />

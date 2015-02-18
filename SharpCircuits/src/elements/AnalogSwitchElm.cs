@@ -48,11 +48,9 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void doStep(Circuit sim) {
+		public override void step(Circuit sim) {
 			open = (lead_volt[2] < 2.5);
-			if(invert) {
-				open = !open;
-			}
+			if(invert) open = !open;
 			resistance = (open) ? r_off : r_on;
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
