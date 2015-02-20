@@ -67,7 +67,7 @@ namespace SharpCircuit {
 			return Math.Sin(w) * maxVoltage;
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 
@@ -79,11 +79,11 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return -getVoltageDiff() * current;
-		}
+		}*/
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "FM Source";
 			arr[1] = "I = " + getCurrentText(current);
 			arr[2] = "V = " + getVoltageText(getVoltageDiff());
@@ -91,7 +91,7 @@ namespace SharpCircuit {
 			arr[4] = "sf = " + getUnitText(signalfreq, "Hz");
 			arr[5] = "dev =" + getUnitText(deviation, "Hz");
 			arr[6] = "Vmax = " + getVoltageText(maxVoltage);
-		}
+		}*/
 
 	}
 }

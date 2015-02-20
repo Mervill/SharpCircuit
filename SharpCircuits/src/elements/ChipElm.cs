@@ -63,7 +63,7 @@ namespace SharpCircuit {
 			lastClock = false;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = getChipName();
 			int a = 1;
 			for(int i = 0; i != getLeadCount(); i++) {
@@ -82,7 +82,7 @@ namespace SharpCircuit {
 				if(i % 2 == 1)
 					a++;
 			}
-		}
+		}*/
 
 		public override void setCurrent(int x, double c) {
 			for(int i = 0; i != getLeadCount(); i++) {

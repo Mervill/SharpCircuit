@@ -11,7 +11,7 @@ namespace SharpCircuit {
 		public double voltage { get; set; }
 	}
 
-	public interface ICircuitComponent {
+	public interface ICircuitElement {
 
 		void beginStep(Circuit sim);
 		void step(Circuit sim);
@@ -32,7 +32,7 @@ namespace SharpCircuit {
 		void setCurrent(int voltSourceNdx, double cValue);
 
 		// voltage
-		double getVoltageDiff();
+		double getVoltageDelta();
 		int getVoltageSourceCount();
 		void setVoltageSource(int leadX, int voltSourceNdx);
 
@@ -48,11 +48,11 @@ namespace SharpCircuit {
 
 	public static class ICircuitComponentExtensions {
 
-		public static ScopeFrame GetScopeFrame(this ICircuitComponent component, double time) {
+		public static ScopeFrame GetScopeFrame(this ICircuitElement component, double time) {
 			return new ScopeFrame {
 				time = time,
 				current = component.getCurrent(),
-				voltage = component.getVoltageDiff(),
+				voltage = component.getVoltageDelta(),
 			};
 		}
 

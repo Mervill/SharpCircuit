@@ -15,11 +15,11 @@ namespace SharpCircuitTest {
 		public void SimpleDiodeTest() {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<RailElm>(VoltageElm.WaveType.AC);
+			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
 			var diode = sim.Create<DiodeElm>();
 			var ground = sim.Create<GroundElm>();
 
-			sim.Connect(voltage0.leadOut, diode.leadIn);
+			sim.Connect(voltage0.leadVoltage, diode.leadIn);
 			sim.Connect(diode.leadOut, ground.leadIn);
 
 			var diodeScope = sim.Watch(diode);
@@ -29,7 +29,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			double voltageHigh = diodeScope.Max((f) => f.voltage);
 			int voltageHighNdx = diodeScope.FindIndex((f) => f.voltage == voltageHigh);
@@ -85,7 +85,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			// A/C Voltage Source
 			{

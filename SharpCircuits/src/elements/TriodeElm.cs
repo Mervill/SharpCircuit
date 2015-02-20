@@ -33,9 +33,9 @@ namespace SharpCircuit {
 			return 3;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return (lead_volt[0] - lead_volt[2]) * current;
-		}
+		}*/
 
 		public override void step(Circuit sim) {
 			double[] vs = new double[3];
@@ -99,7 +99,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[2]);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "triode";
 			double vbc = lead_volt[0] - lead_volt[1];
 			double vbe = lead_volt[0] - lead_volt[2];
@@ -107,7 +107,7 @@ namespace SharpCircuit {
 			arr[1] = "Vbe = " + getVoltageText(vbe);
 			arr[2] = "Vbc = " + getVoltageText(vbc);
 			arr[3] = "Vce = " + getVoltageText(vce);
-		}
+		}*/
 
 		// grid not connected to other terminals
 		public override bool leadsAreConnected(int n1, int n2) {

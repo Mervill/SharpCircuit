@@ -16,11 +16,11 @@ namespace SharpCircuit {
 			setup();
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			base.getInfo(arr);
 			arr[0] = "Zener diode";
 			arr[5] = "Vz = " + getVoltageText(zvoltage);
-		}
+		}*/
 
 	}
 }

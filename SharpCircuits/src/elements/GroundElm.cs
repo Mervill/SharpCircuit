@@ -24,7 +24,7 @@ namespace SharpCircuit {
 			sim.stampVoltageSource(0, lead_node[0], voltSource, 0);
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return 0;
 		}
 
@@ -32,10 +32,10 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "ground";
 			arr[1] = "I = " + getCurrentText(current);
-		}
+		}*/
 
 		public override bool leadIsGround(int n1) {
 			return true;

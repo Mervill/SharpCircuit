@@ -101,12 +101,12 @@ namespace SharpCircuit {
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "memristor";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
-		}
+		}*/
 
 		//public override double getScopeValue(int x) {
 		//	return (x == 2) ? resistance : (x == 1) ? getPower() : getVoltageDiff();

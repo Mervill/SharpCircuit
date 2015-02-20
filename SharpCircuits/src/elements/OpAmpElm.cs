@@ -39,9 +39,9 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return lead_volt[2] * current;
-		}
+		}*/
 
 		public override int getLeadCount() {
 			return 3;
@@ -51,7 +51,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "op-amp";
 			arr[1] = "V+ = " + getVoltageText(lead_volt[1]);
 			arr[2] = "V- = " + getVoltageText(lead_volt[0]);
@@ -61,7 +61,7 @@ namespace SharpCircuit {
 			arr[3] = "Vout = " + getVoltageText(vo);
 			arr[4] = "Iout = " + getCurrentText(current);
 			arr[5] = "range = " + getVoltageText(minOut) + " to " + getVoltageText(maxOut);
-		}
+		}*/
 
 		public override void stamp(Circuit sim) {
 			int vn = sim.nodeCount + voltSource;
@@ -70,12 +70,14 @@ namespace SharpCircuit {
 		}
 
 		public override void step(Circuit sim) {
+			
 			double vd = lead_volt[1] - lead_volt[0];
 			if(Math.Abs(lastvd - vd) > 0.1) {
 				sim.converged = false;
 			} else if(lead_volt[2] > maxOut + 0.1 || lead_volt[2] < minOut - 0.1) {
 				sim.converged = false;
 			}
+
 			double x = 0;
 			int vn = sim.nodeCount + voltSource;
 			double dx = 0;
@@ -114,7 +116,7 @@ namespace SharpCircuit {
 			return (n1 == 2);
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[2] - lead_volt[1];
 		}
 

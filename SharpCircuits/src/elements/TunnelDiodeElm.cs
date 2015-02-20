@@ -64,11 +64,11 @@ namespace SharpCircuit {
 					* Math.Exp(voltdiff - pvv);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "tunnel diode";
 			arr[1] = "I = " + getCurrentText(current);
 			arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 			arr[3] = "P = " + getUnitText(getPower(), "W");
-		}
+		}*/
 	}
 }

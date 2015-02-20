@@ -30,12 +30,12 @@ namespace SharpCircuit {
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "resistor";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
-		}
+		}*/
 
 	}
 }

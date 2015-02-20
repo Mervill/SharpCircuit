@@ -11,16 +11,28 @@ namespace SharpCircuit {
 
 	public class Circuit {
 
-		public readonly static String ohmString = "ohm";
+		//public readonly static String ohmString = "ohm";
 
-		public class Lead : Tuple<CircuitElement, Int32> {
-			public CircuitElement elem { get { return Item1; } }
-			public Int32 ndx { get { return Item2; } }
-			public Lead(CircuitElement c, Int32 i) : base(c, i) { }
+		public class Lead {
+			public CircuitElement elem { get; private set; }
+			public Int32 ndx { get; private set; }
+			public Lead(CircuitElement e, Int32 i) { elem = e; ndx = i; }
 		}
 
-		public double time { get; private set; }
-		public double timeStep { get; set; }
+		public double time { 
+			get; 
+			private set; 
+		}
+		
+		public double timeStep {
+			get {
+				return _timeStep;
+			}
+			set {
+				_timeStep = value;
+				_analyze = true;
+			}
+		}
 		
 		public List<CircuitElement> elements { get; set; }
 		public List<long[]> nodeMesh { get; set; }
@@ -35,7 +47,8 @@ namespace SharpCircuit {
 
 		IdWorker snowflake;
 		
-		bool _analyze;
+		bool _analyze = true;
+		double _timeStep = 5.0E-6;
 
 		List<long> nodeList = new List<long>();
 		CircuitElement[] voltageSources;
@@ -53,26 +66,13 @@ namespace SharpCircuit {
 		bool circuitNonLinear, 
 			 circuitNeedsMap;
 
-#if CLASSIC_STEPRATE
-		public int speed { get; set; } // 172 // Math.Log(10 * 14.3) * 24 + 61.5;
-		double lastTime, lastFrameTime, lastIterTime, secTime;
-#endif
-
-		Dictionary<ICircuitComponent, List<ScopeFrame>> scopeMap;
+		Dictionary<ICircuitElement, List<ScopeFrame>> scopeMap;
 
 		public Circuit() {
-			
 			snowflake = new IdWorker(1, 1);
-
-			time = 0;
-			timeStep = 5.0E-6;
-#if CLASSIC_STEPRATE
-			speed = 172;
-#endif
-
 			elements = new List<CircuitElement>();
 			nodeMesh = new List<long[]>();
-			scopeMap = new Dictionary<ICircuitComponent, List<ScopeFrame>>();
+			scopeMap = new Dictionary<ICircuitElement, List<ScopeFrame>>();
 		}
 
 		public T Create<T>(params object[] args) where T : CircuitElement {
@@ -139,7 +139,7 @@ namespace SharpCircuit {
 			rightLeads[rightLeadNdx] = leftLeads[leftLeadNdx];
 		}
 
-		public List<ScopeFrame> Watch(ICircuitComponent component) {
+		public List<ScopeFrame> Watch(ICircuitElement component) {
 			if(!scopeMap.ContainsKey(component)) {
 				List<ScopeFrame> scope = new List<ScopeFrame>();
 				scopeMap.Add(component, scope);
@@ -170,44 +170,32 @@ namespace SharpCircuit {
 			return (n < elements.Count) ? elements[n] : null;
 		}
 
-		public void update(double deltaTime) {
+		public void update() {
+			doTicks(1);
+		}
 
+		public void doTicks(int ticks) {
 			if(elements.Count == 0)
 				return;
 
 			if(_analyze)
 				analyze();
 
-			tick();
-
-			if(circuitMatrix == null)
+			if(errorMessage != null)
 				return;
 
-#if CLASSIC_STEPRATE
-			if(deltaTime - secTime >= 1000)
-				secTime = deltaTime;
-				
-			lastTime = deltaTime;
-			lastFrameTime = lastTime;
-#endif
-
-			foreach(KeyValuePair<ICircuitComponent, List<ScopeFrame>> kvp in scopeMap)
-				kvp.Value.Add(kvp.Key.GetScopeFrame(time));
+			for(int x = 0; x < ticks; x++ )
+			{
+				tick();
+				if(circuitMatrix == null) return;
+				foreach(KeyValuePair<ICircuitElement, List<ScopeFrame>> kvp in scopeMap)
+					kvp.Value.Add(kvp.Key.GetScopeFrame(time));
+			}
+			
 		}
 
 		void tick() {
-#if CLASSIC_STEPRATE
-			double iterCount = (speed != 0) ? 0.1 * Math.Exp((speed - 61) / 24.0) : 0;
-			double steprate = 160 * iterCount;
-			double tm = deltaTime;
-			double lit = lastIterTime;
 
-			Debug.LogF("steprate: {0} deltaTime: {1} lastIterTime: {2} [1000 >= {3}]", steprate, tm, lit, steprate * (tm - lastIterTime));
-			if(1000 >= steprate * (tm - lastIterTime))
-				return;
-
-			for(int iter = 1; ; iter++) {
-#endif
 			// Execute beginStep() on all elements
 			for(int i = 0; i != elements.Count; i++)
 				elements[i].beginStep(this);
@@ -295,21 +283,12 @@ namespace SharpCircuit {
 			}
 
 			if(subiter > 5)
-				Debug.LogF("Converged after {0} iterations.", subiter);
+				Debug.LogF("Nonlinear curcuit converged after {0} iterations.", subiter);
 			
 			if(subiter == subiterCount)
 				error("Convergence failed!", null);
 
 			time = Math.Round(time + timeStep, 12); // Round to 12 digits
-#if CLASSIC_STEPRATE
-				tm = deltaTime;
-				lit = tm;
-
-				if(iter * 1000 >= steprate * (tm - lastIterTime) || (tm - lastFrameTime > 500))
-					break;
-			}
-			lastIterTime = lit;
-#endif
 		}
 
 		public void analyze() {
@@ -341,7 +320,7 @@ namespace SharpCircuit {
 					break;
 				}
 
-				if(ce is RailElm)
+				if(ce is VoltageInputElm)
 					gotRail = true;
 
 				if(voltageElm == null && ce is VoltageElm)
@@ -407,8 +386,7 @@ namespace SharpCircuit {
 			for(int i = 0; i != elements.Count; i++) {
 				CircuitElement ce = elements[i];
 				if(ce.nonLinear()) circuitNonLinear = true;
-				int ivs = ce.getVoltageSourceCount();
-				for(int leadX = 0; leadX != ivs; leadX++) {
+				for(int leadX = 0; leadX != ce.getVoltageSourceCount(); leadX++) {
 					voltageSources[vscount] = ce;
 					ce.setVoltageSource(leadX, vscount++);
 				}
@@ -503,7 +481,7 @@ namespace SharpCircuit {
 				}
 
 				// look for current sources with no current path
-				if(ce is CurrentElm) {
+				if(ce is CurrentSourceElm) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.INDUCT, ce, ce.getLeadNode(1));
 					if(!fpi.findPath(ce.getLeadNode(0))) {
 						error("No path for current source!", ce);
@@ -739,12 +717,11 @@ namespace SharpCircuit {
 		}
 
 		#region //// Stamp ////
-		// control voltage source vs with voltage from n1 to n2 
-		// (must also call stampVoltageSource())
-		public void stampVCVS(int n1, int n2, double coef, int vs) {
-			int vn = nodeList.Count + vs;
-			stampMatrix(vn, n1, coef);
-			stampMatrix(vn, n2, -coef);
+		// http://en.wikipedia.org/wiki/Electrical_element
+		
+		public void stampCurrentSource(int n1, int n2, double i) {
+			stampRightSide(n1, -i);
+			stampRightSide(n2, i);
 		}
 
 		// stamp independent voltage source #vs, from n1 to n2, amount v
@@ -757,7 +734,7 @@ namespace SharpCircuit {
 			stampMatrix(n2, vn, -1);
 		}
 
-		// use this if the amount of voltage is going to be updated in doStep(CirSim sim)
+		// use this if the amount of voltage is going to be updated in doStep()
 		public void stampVoltageSource(int n1, int n2, int vs) {
 			int vn = nodeList.Count + vs;
 			stampMatrix(vn, n1, -1);
@@ -782,20 +759,34 @@ namespace SharpCircuit {
 			stampMatrix(n2, n1, -r0);
 		}
 
-		// current from cn1 to cn2 is equal to voltage from vn1 to 2, divided by g
-		public void stampVCCurrentSource(int cn1, int cn2, int vn1, int vn2, double g) {
+		/// <summary>
+		/// Voltage-controlled voltage source.
+		/// Control voltage source vs with voltage from n1 to n2 
+		/// (must also call stampVoltageSource())
+		/// </summary>
+		public void stampVCVS(int n1, int n2, double coef, int vs) {
+			int vn = nodeList.Count + vs;
+			stampMatrix(vn, n1, coef);
+			stampMatrix(vn, n2, -coef);
+		}
+
+		/// <summary>
+		/// Current-controlled voltage source.
+		/// Current from cn1 to cn2 is equal to voltage from vn1 to vn2, divided by g 
+		/// </summary>
+		public void stampVCCS(int cn1, int cn2, int vn1, int vn2, double g) {
 			stampMatrix(cn1, vn1, g);
 			stampMatrix(cn2, vn2, g);
 			stampMatrix(cn1, vn2, -g);
 			stampMatrix(cn2, vn1, -g);
 		}
 
-		public void stampCurrentSource(int n1, int n2, double i) {
-			stampRightSide(n1, -i);
-			stampRightSide(n2, i);
-		}
+		/// Current-controlled voltage source (CCVS)?
 
-		// stamp a current source from n1 to n2 depending on current through vs
+		/// <summary>
+		/// Current-controlled current source.
+		/// Stamp a current source from n1 to n2 depending on current through vs 
+		/// </summary>
 		public void stampCCCS(int n1, int n2, int vs, double gain) {
 			int vn = nodeList.Count + vs;
 			stampMatrix(n1, vn, gain);
@@ -803,7 +794,7 @@ namespace SharpCircuit {
 		}
 
 		// stamp value x in row i, column j, meaning that a voltage change
-		// of dv in node j will increase the current into node i by x dv.
+		// of dv in node j will increase the current into node i by x dv
 		// (Unless i or j is a voltage source node.)
 		public void stampMatrix(int i, int j, double x) {
 			if(i > 0 && j > 0) {
@@ -1010,7 +1001,7 @@ namespace SharpCircuit {
 						continue;
 
 					if(type == PathType.INDUCT)
-						if(ce is CurrentElm)
+						if(ce is CurrentSourceElm)
 							continue;
 
 					if(type == PathType.VOLTAGE)

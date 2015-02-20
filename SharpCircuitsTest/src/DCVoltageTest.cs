@@ -40,9 +40,9 @@ namespace SharpCircuitTest {
 			var capScope0 = sim.Watch(cap0);
 
 			for(int x = 1; x <= 28000; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
-			Debug.LogF("{0} [{1}]", sim.time, CircuitElement.getUnitText(sim.time, "s"));
+			Debug.LogF("{0} [{1}]", sim.time, SIUnits.Normalize(sim.time, "s"));
 			{
 				double voltageHigh = capScope0.Max((f) => f.voltage);
 				int voltageHighNdx = capScope0.FindIndex((f) => f.voltage == voltageHigh);
@@ -75,11 +75,11 @@ namespace SharpCircuitTest {
 			capScope0.Clear();
 
 			for(int x = 1; x <= 28000; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			Debug.Log();
 
-			Debug.LogF("{0} [{1}]", sim.time, CircuitElement.getUnitText(sim.time, "s"));
+			Debug.LogF("{0} [{1}]", sim.time, SIUnits.Normalize(sim.time, "s"));
 			{
 				double voltageHigh = capScope0.Max((f) => f.voltage);
 				int voltageHighNdx = capScope0.FindIndex((f) => f.voltage == voltageHigh);

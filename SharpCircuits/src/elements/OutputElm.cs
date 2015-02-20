@@ -12,14 +12,14 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "output";
 			arr[1] = "V = " + getVoltageText(lead_volt[0]);
-		}
+		}*/
 
 	}
 }

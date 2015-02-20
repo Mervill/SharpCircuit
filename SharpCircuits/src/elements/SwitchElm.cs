@@ -45,7 +45,7 @@ namespace SharpCircuit {
 			return (position == 1) ? 0 : 1;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = string.Empty;
 			if(position == 1) {
 				arr[1] = "open";
@@ -55,7 +55,7 @@ namespace SharpCircuit {
 				arr[2] = "V = " + getVoltageText(lead_volt[0]);
 				arr[3] = "I = " + getCurrentDText(current);
 			}
-		}
+		}*/
 
 		public override bool leadsAreConnected(int n1, int n2) {
 			return position == 0;

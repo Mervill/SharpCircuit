@@ -74,13 +74,13 @@ namespace SharpCircuit {
 			current = diode.calculateCurrent(lead_volt[0] - lead_volt[1]);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "diode";
 			arr[1] = "I = " + getCurrentText(current);
 			arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 			arr[3] = "P = " + getUnitText(getPower(), "W");
 			arr[4] = "Vf = " + getVoltageText(forwardDrop);
-		}
+		}*/
 
 	}
 }

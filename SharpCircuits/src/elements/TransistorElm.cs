@@ -69,9 +69,9 @@ namespace SharpCircuit {
 			return 3;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return (lead_volt[0] - lead_volt[2]) * ib + (lead_volt[1] - lead_volt[2]) * ic;
-		}
+		}*/
 
 		public double limitStep(Circuit sim, double vnew, double vold) {
 			double arg;
@@ -101,54 +101,35 @@ namespace SharpCircuit {
 		public override void step(Circuit sim) {
 			double vbc = lead_volt[0] - lead_volt[1]; // typically negative
 			double vbe = lead_volt[0] - lead_volt[2]; // typically positive
-			if(Math.Abs(vbc - lastvbc) > 0.01 || // .01
-					Math.Abs(vbe - lastvbe) > 0.01) {
+			if(Math.Abs(vbc - lastvbc) > 0.01 || Math.Abs(vbe - lastvbe) > 0.01)
 				sim.converged = false;
-			}
+			
 			gmin = 0;
 			if(sim.subIterations > 100) {
 				// if we have trouble converging, put a conductance in parallel with
 				// all P-N junctions. Gradually increase the conductance value for each iteration.
 				gmin = Math.Exp(-9 * Math.Log(10) * (1 - sim.subIterations / 3000.0));
-				if(gmin > .1) {
-					gmin = .1;
-				}
+				if(gmin > .1) gmin = .1;
 			}
-			// System.out.print("T " + vbc + " " + vbe + "\n");
+			
 			vbc = pnp * limitStep(sim, pnp * vbc, pnp * lastvbc);
 			vbe = pnp * limitStep(sim, pnp * vbe, pnp * lastvbe);
 			lastvbc = vbc;
 			lastvbe = vbe;
 			double pcoef = vdcoef * pnp;
 			double expbc = Math.Exp(vbc * pcoef);
-			/*
-			 * if (expbc > 1e13 || Double.isInfinite(expbc)) expbc = 1e13;
-			 */
+			
 			double expbe = Math.Exp(vbe * pcoef);
-			if(expbe < 1) {
-				expbe = 1;
-			}
-			/*
-			 * if (expbe > 1e13 || Double.isInfinite(expbe)) expbe = 1e13;
-			 */
+			if(expbe < 1) expbe = 1;
+			
 			ie = pnp * leakage * (-(expbe - 1) + rgain * (expbc - 1));
 			ic = pnp * leakage * (fgain * (expbe - 1) - (expbc - 1));
 			ib = -(ie + ic);
-			// System.out.println("gain " + ic/ib);
-			// System.out.print("T " + vbc + " " + vbe + " " + ie + " " + ic +
-			// "\n");
+			
 			double gee = -leakage * vdcoef * expbe;
 			double gec = rgain * leakage * vdcoef * expbc;
 			double gce = -gee * fgain;
 			double gcc = -gec * (1 / rgain);
-
-			/*
-			 * System.out.print("gee = " + gee + "\n"); System.out.print("gec = " +
-			 * gec + "\n"); System.out.print("gce = " + gce + "\n");
-			 * System.out.print("gcc = " + gcc + "\n");
-			 * System.out.print("gce+gcc = " + (gce+gcc) + "\n");
-			 * System.out.print("gee+gec = " + (gee+gec) + "\n");
-			 */
 
 			// stamps from page 302 of Pillage. Node 0 is the base,
 			// node 1 the collector, node 2 the emitter. Also stamp
@@ -170,7 +151,7 @@ namespace SharpCircuit {
 			sim.stampRightSide(lead_node[2], -ie + gee * vbe + gec * vbc);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "transistor (" + ((pnp == -1) ? "PNP)" : "NPN)") + " beta=" + beta;
 			double vbc = lead_volt[0] - lead_volt[1];
 			double vbe = lead_volt[0] - lead_volt[2];
@@ -185,7 +166,7 @@ namespace SharpCircuit {
 			arr[4] = "Vbe = " + getVoltageText(vbe);
 			arr[5] = "Vbc = " + getVoltageText(vbc);
 			arr[6] = "Vce = " + getVoltageText(vce);
-		}
+		}*/
 
 		/*public override double getScopeValue(int x) {
 			switch (x) {

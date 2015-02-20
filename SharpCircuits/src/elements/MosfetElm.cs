@@ -6,7 +6,7 @@ namespace SharpCircuit {
 
 	public class MosfetElm : CircuitElement {
 
-		public Circuit.Lead leadBase { get { return lead0; } }
+		public Circuit.Lead leadGate { get { return lead0; } }
 		public Circuit.Lead leadSrc { get { return lead1; } }
 		public Circuit.Lead leadDrain { get { return new Circuit.Lead(this, 2); } }
 
@@ -56,9 +56,9 @@ namespace SharpCircuit {
 			return ids;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return ids * (lead_volt[2] - lead_volt[1]);
-		}
+		}*/
 
 		public override int getLeadCount() {
 			return 3;
@@ -136,7 +136,7 @@ namespace SharpCircuit {
 				ids = -ids;
 		}
 
-		public void getFetInfo(String[] arr, String n) {
+		/*public void getFetInfo(String[] arr, String n) {
 			arr[0] = (((pnp ? -1 : 1) == -1) ? "p-" : "n-") + n;
 			arr[0] += " (Vt = " + getVoltageText((pnp ? -1 : 1) * _threshold) + ")";
 			arr[1] = (((pnp ? -1 : 1) == 1) ? "Ids = " : "Isd = ") + getCurrentText(ids);
@@ -144,13 +144,17 @@ namespace SharpCircuit {
 			arr[3] = (((pnp ? -1 : 1) == 1) ? "Vds = " : "Vsd = ") + getVoltageText(lead_volt[2] - lead_volt[1]);
 			arr[4] = (mode == 0) ? "off" : (mode == 1) ? "linear" : "saturation";
 			arr[5] = "gm = " + getUnitText(gm, "A/V");
+		}*/
+
+		public string getState(){
+			return (mode == 0) ? "off" : (mode == 1) ? "linear" : "saturation";
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			getFetInfo(arr, "MOSFET");
-		}
+		}*/
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[2] - lead_volt[1];
 		}
 

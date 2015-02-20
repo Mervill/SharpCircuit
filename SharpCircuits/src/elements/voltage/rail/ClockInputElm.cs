@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class ClockElm : RailElm {
+	public class ClockInputElm : VoltageInputElm {
 		
-		public ClockElm() : base(WaveType.SQUARE) {
+		public ClockInputElm() : base(WaveType.SQUARE) {
 			maxVoltage = 2.5;
 			bias = 2.5;
 			frequency = 100;

@@ -28,7 +28,7 @@ namespace SharpCircuit {
 				sim.stampResistor(lead_node[0], 0, 1E6);
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 
@@ -36,11 +36,11 @@ namespace SharpCircuit {
 			return (lead_volt[0] < threshold) ? false : true;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "logic output";
 			arr[1] = (lead_volt[0] < threshold) ? "low" : "high";
 			arr[2] = "V = " + getVoltageText(lead_volt[0]);
-		}
+		}*/
 
 	}
 }

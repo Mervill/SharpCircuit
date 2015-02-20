@@ -12,9 +12,11 @@ Licence: MIT/Boost C++
 - Test everything!
 - Is there a better way to handle elements resizing their lead array?
 - Is there a simpler way to model node relationships?.
+- Refactor voltage elements
+- Remove empty classes
 
 Testing priority:
-Voltage waves, SweepElm, MosfetElm, Chips
+Voltage waves, SweepElm, Chips
 
 ## Licence
 

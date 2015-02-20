@@ -41,11 +41,11 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "Logic Gate";
 			arr[1] = "Vout = " + getVoltageText(lead_volt[inputCount]);
 			arr[2] = "Iout = " + getCurrentText(current);
-		}
+		}*/
 
 		public override void stamp(Circuit sim) {
 			sim.stampVoltageSource(0, lead_node[inputCount], voltSource);

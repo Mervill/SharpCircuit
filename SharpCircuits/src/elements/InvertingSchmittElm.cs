@@ -71,15 +71,15 @@ namespace SharpCircuit {
 			sim.updateVoltageSource(0, lead_node[1], voltSource, @out);
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "InvertingSchmitt";
 			arr[1] = "Vi = " + getVoltageText(lead_volt[0]);
 			arr[2] = "Vo = " + getVoltageText(lead_volt[1]);
-		}
+		}*/
 
 		// There is no current path through the InvertingSchmitt input, but there
 		// is an indirect path through the output to ground.

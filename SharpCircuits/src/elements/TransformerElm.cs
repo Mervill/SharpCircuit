@@ -83,8 +83,8 @@ namespace SharpCircuit {
 			a3 = -m * deti * ts;
 			a4 = l1 * deti * ts;
 			sim.stampConductance(lead_node[0], lead_node[2], a1);
-			sim.stampVCCurrentSource(lead_node[0], lead_node[2], lead_node[1], lead_node[3], a2);
-			sim.stampVCCurrentSource(lead_node[1], lead_node[3], lead_node[0], lead_node[2], a3);
+			sim.stampVCCS(lead_node[0], lead_node[2], lead_node[1], lead_node[3], a2);
+			sim.stampVCCS(lead_node[1], lead_node[3], lead_node[0], lead_node[2], a3);
 			sim.stampConductance(lead_node[1], lead_node[3], a4);
 			sim.stampRightSide(lead_node[0]);
 			sim.stampRightSide(lead_node[1]);
@@ -116,7 +116,7 @@ namespace SharpCircuit {
 			current[1] = voltdiff1 * a3 + voltdiff2 * a4 + curSourceValue2;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
 			arr[1] = "L = " + getUnitText(inductance, "H");
 			arr[2] = "Ratio = 1:" + ratio;
@@ -124,7 +124,7 @@ namespace SharpCircuit {
 			arr[4] = "Vd2 = " + getVoltageText(lead_volt[1] - lead_volt[3]);
 			arr[5] = "I1 = " + getCurrentText(current[0]);
 			arr[6] = "I2 = " + getCurrentText(current[1]);
-		}
+		}*/
 
 		public override bool leadsAreConnected(int n1, int n2) {
 			if(comparePair(n1, n2, 0, 2)) return true;

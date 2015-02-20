@@ -81,7 +81,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			// FIXME
 			arr[0] = "spark gap";
 			getBasicInfo(arr);
@@ -90,7 +90,7 @@ namespace SharpCircuit {
 			arr[5] = "Roff = " + getUnitText(offResistance, Circuit.ohmString);
 			arr[6] = "Vbrkdn = " + getUnitText(breakdown, "V");
 			arr[7] = "Ihold = " + getUnitText(holdCurrent, "A");
-		}
+		}*/
 
 	}
 }

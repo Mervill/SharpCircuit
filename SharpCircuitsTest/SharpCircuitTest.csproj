@@ -65,7 +65,9 @@
     <Compile Include="src\OpAmpTest.cs" />
     <Compile Include="src\ResistorTest.cs" />
     <Compile Include="src\TestUtils.cs" />
+    <Compile Include="src\MosfetTest.cs" />
     <Compile Include="src\TransistorTest.cs" />
+    <Compile Include="src\VoltageWaveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpCircuits\SharpCircuit.csproj">

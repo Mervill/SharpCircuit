@@ -59,13 +59,13 @@ namespace SharpCircuit {
 			return 3;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "analog switch";
 			arr[1] = open ? "open" : "closed";
 			arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[3] = "I = " + getCurrentDText(current);
 			arr[4] = "Vc = " + getVoltageText(lead_volt[2]);
-		}
+		}*/
 
 		// we have to just assume current will flow either way, even though that
 		// might cause singular matrix errors

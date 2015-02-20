@@ -68,9 +68,9 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return (lead_volt[anode] - lead_volt[gnode]) * ia + (lead_volt[cnode] - lead_volt[gnode]) * ic;
-		}
+		}*/
 
 		public double aresistance;
 
@@ -97,7 +97,7 @@ namespace SharpCircuit {
 			sim.stampResistor(lead_node[anode], lead_node[inode], aresistance);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "SCR";
 			double vac = lead_volt[anode] - lead_volt[cnode];
 			double vag = lead_volt[anode] - lead_volt[gnode];
@@ -107,7 +107,7 @@ namespace SharpCircuit {
 			arr[3] = "Vac = " + getVoltageText(vac);
 			arr[4] = "Vag = " + getVoltageText(vag);
 			arr[5] = "Vgc = " + getVoltageText(vgc);
-		}
+		}*/
 
 		public override void calculateCurrent() {
 			ic = (lead_volt[cnode] - lead_volt[gnode]) / cresistance;

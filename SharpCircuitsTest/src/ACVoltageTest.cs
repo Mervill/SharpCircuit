@@ -23,13 +23,13 @@ namespace SharpCircuitTest {
 		public void SimpleACVoltageTest(double frequency) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<RailElm>(VoltageElm.WaveType.AC);
+			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
 			voltage0.frequency = frequency;
 
 			var resistor = sim.Create<ResistorElm>();
 			var ground = sim.Create<GroundElm>();
 
-			sim.Connect(voltage0.leadOut, resistor.leadIn);
+			sim.Connect(voltage0.leadVoltage, resistor.leadIn);
 			sim.Connect(resistor.leadOut, ground.leadIn);
 
 			var voltScope = sim.Watch(voltage0);
@@ -46,7 +46,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			double voltageHigh = voltScope.Max((f) => f.voltage);
 			int voltageHighNdx = voltScope.FindIndex((f) => f.voltage == voltageHigh);
@@ -92,8 +92,14 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
+			double charge = cap0.capacitance * cap0.getVoltageDelta();
+
+			Debug.Log(charge); // F = I x L
+			Debug.Log(cap0.getCurrent(), charge / cap0.capacitance); // I = F / L
+			Debug.Log(cap0.capacitance, charge / cap0.getCurrent()); // L = F / I
+			
 			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 12));
 		}
 
@@ -120,7 +126,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 12));
 		}
@@ -149,8 +155,8 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
-
+				sim.update();
+			
 			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
 		}
 
@@ -178,7 +184,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
 		}

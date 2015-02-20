@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class AntennaElm : RailElm {
+	public class AntennaInputElm : VoltageInputElm {
 
 		private double fmphase;
 
-		public AntennaElm() : base(WaveType.DC) {
+		public AntennaInputElm() : base(WaveType.DC) {
 			
 		}
 

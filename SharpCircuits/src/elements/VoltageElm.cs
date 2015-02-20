@@ -133,11 +133,11 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getPower() {
+		/*public override double getPower() {
 			return -getVoltageDiff() * current;
-		}
+		}*/
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[1] - lead_volt[0];
 		}
 

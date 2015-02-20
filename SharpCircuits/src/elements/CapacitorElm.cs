@@ -78,8 +78,8 @@ namespace SharpCircuit {
 		public override void calculateCurrent() {
 			double voltdiff = lead_volt[0] - lead_volt[1];
 			// We check compResistance because this might get called
-			// before stamp(CirSim sim), which sets compResistance, causing
-			// infinite current
+			// before stamp(CirSim sim), which sets compResistance,
+			// causing infinite current
 			if(compResistance > 0)
 				current = voltdiff / compResistance + curSourceValue;
 		}
@@ -88,14 +88,18 @@ namespace SharpCircuit {
 			sim.stampCurrentSource(lead_node[0], lead_node[1], curSourceValue);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "capacitor";
 			getBasicInfo(arr);
 			arr[3] = "C = " + getUnitText(capacitance, "F");
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 			// double v = getVoltageDiff();
 			// arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");
-		}
+		}*/
 
+		/*Get the capacitance. For the special case of a parallel plate capacitor this is given by the 
+		formula C=epsilon0*A/d Farads, where epsilon0 is the permittivity of free space or a vacuum with 
+		a value of 8.854e-12, A is the area across the face of the conductors and d is the distance 
+		between the plates.*/
 	}
 }

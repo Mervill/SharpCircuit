@@ -75,7 +75,9 @@ namespace SharpCircuit {
 			double capw = cap * warmTime / .4;
 			double capc = cap * coolTime / .4;
 			// System.out.println(nom_r + " " + (resistance/nom_r));
-			temp += getPower() * sim.timeStep / capw;
+			double voltageDiff = lead_volt[0] - lead_volt[1];
+			double power = voltageDiff * current;
+			temp += power * sim.timeStep / capw;
 			double cr = 2600 / nom_pow;
 			temp -= sim.timeStep * (temp - roomTemp) / (capc * cr);
 			// System.out.println(capw + " " + capc + " " + temp + " " +resistance);
@@ -85,13 +87,13 @@ namespace SharpCircuit {
 			sim.stampResistor(lead_node[0], lead_node[1], resistance);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "lamp";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "P = " + getUnitText(getPower(), "W");
 			arr[5] = "T = " + ((int)temp) + " K";
-		}
+		}*/
 
 	}
 }

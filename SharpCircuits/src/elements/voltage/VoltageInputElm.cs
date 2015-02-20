@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 	
-	public class RailElm : VoltageElm {
+	public class VoltageInputElm : VoltageElm {
 
-		public Circuit.Lead leadOut { get { return lead0; } }
+		public Circuit.Lead leadVoltage { get { return lead0; } }
 
-		public RailElm() : base(WaveType.DC) {
+		public VoltageInputElm() : base(WaveType.DC) {
 
 		}
 
-		public RailElm(WaveType wf) : base(wf) {
+		public VoltageInputElm(WaveType wf) : base(wf) {
 
 		}
 
@@ -20,7 +20,7 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 

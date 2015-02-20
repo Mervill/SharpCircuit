@@ -28,10 +28,10 @@ namespace SharpCircuit {
 			return (position == 2) ? 0 : 1;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "switch (SPDT)";
 			arr[1] = "I = " + CircuitElement.getCurrentDText(getCurrent());
-		}
+		}*/
 
 		public override bool leadsAreConnected(int leadX, int leadY) {
 			if(position == 2) return false;

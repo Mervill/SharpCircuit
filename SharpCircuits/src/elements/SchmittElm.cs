@@ -35,9 +35,9 @@ namespace SharpCircuit {
 			sim.updateVoltageSource(0, lead_node[1], voltSource, @out);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "Schmitt";
-		}
+		}*/
 
 	}
 }

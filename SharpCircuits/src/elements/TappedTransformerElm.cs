@@ -77,15 +77,15 @@ namespace SharpCircuit {
 				a[i] *= sim.timeStep / 2;
 
 			sim.stampConductance(lead_node[0], lead_node[1], a[0]);
-			sim.stampVCCurrentSource(lead_node[0], lead_node[1], lead_node[2], lead_node[3], a[1]);
-			sim.stampVCCurrentSource(lead_node[0], lead_node[1], lead_node[3], lead_node[4], a[2]);
+			sim.stampVCCS(lead_node[0], lead_node[1], lead_node[2], lead_node[3], a[1]);
+			sim.stampVCCS(lead_node[0], lead_node[1], lead_node[3], lead_node[4], a[2]);
 
-			sim.stampVCCurrentSource(lead_node[2], lead_node[3], lead_node[0], lead_node[1], a[3]);
+			sim.stampVCCS(lead_node[2], lead_node[3], lead_node[0], lead_node[1], a[3]);
 			sim.stampConductance(lead_node[2], lead_node[3], a[4]);
-			sim.stampVCCurrentSource(lead_node[2], lead_node[3], lead_node[3], lead_node[4], a[5]);
+			sim.stampVCCS(lead_node[2], lead_node[3], lead_node[3], lead_node[4], a[5]);
 
-			sim.stampVCCurrentSource(lead_node[3], lead_node[4], lead_node[0], lead_node[1], a[6]);
-			sim.stampVCCurrentSource(lead_node[3], lead_node[4], lead_node[2], lead_node[3], a[7]);
+			sim.stampVCCS(lead_node[3], lead_node[4], lead_node[0], lead_node[1], a[6]);
+			sim.stampVCCS(lead_node[3], lead_node[4], lead_node[2], lead_node[3], a[7]);
 			sim.stampConductance(lead_node[3], lead_node[4], a[8]);
 
 			for(i = 0; i != 5; i++)
@@ -120,7 +120,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "transformer";
 			arr[1] = "L = " + getUnitText(inductance, "H");
 			arr[2] = "Ratio = " + ratio;
@@ -128,7 +128,7 @@ namespace SharpCircuit {
 			arr[3] = "Vd1 = " + getVoltageText(lead_volt[0] - lead_volt[2]);
 			// arr[5] = "I2 = " + getCurrentText(current2);
 			arr[4] = "Vd2 = " + getVoltageText(lead_volt[1] - lead_volt[3]);
-		}
+		}*/
 
 		public override bool leadsAreConnected(int n1, int n2) {
 			if(comparePair(n1, n2, 0, 1)) return true;

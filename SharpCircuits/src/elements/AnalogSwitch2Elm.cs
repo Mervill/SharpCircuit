@@ -42,9 +42,9 @@ namespace SharpCircuit {
 			return !(n1 == 3 || n2 == 3);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "analog switch (SPDT)";
 			arr[1] = "I = " + getCurrentDText(current);
-		}
+		}*/
 	}
 }

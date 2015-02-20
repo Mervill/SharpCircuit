@@ -23,4 +23,20 @@ namespace SharpCircuit {
 			getFetInfo(arr, "JFET");
 		}*/
 	}
+
+	public class NJfetElm : JfetElm {
+
+		public NJfetElm() : base(false) {
+
+		}
+
+	}
+
+	public class PJfetElm : JfetElm {
+
+		public PJfetElm() : base(false) {
+
+		}
+
+	}
 }

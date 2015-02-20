@@ -28,12 +28,12 @@ namespace SharpCircuit {
 			pins[2] = new Pin("Z");
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = (gain == 1) ? "CCII+" : "CCII-";
 			arr[1] = "X,Y = " + getVoltageText(lead_volt[0]);
 			arr[2] = "Z = " + getVoltageText(lead_volt[2]);
 			arr[3] = "I = " + getCurrentText(pins[0].current);
-		}
+		}*/
 
 		// boolean nonLinear() { return true; }
 		public override void stamp(Circuit sim) {

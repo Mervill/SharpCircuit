@@ -36,17 +36,17 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override double getVoltageDiff() {
+		public override double getVoltageDelta() {
 			return lead_volt[0];
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "logic input";
 			arr[1] = (position == 0) ? "low" : "high";
 			if(isNumeric) arr[1] = "" + position;
 			arr[1] += " (" + getVoltageText(lead_volt[0]) + ")";
 			arr[2] = "I = " + getCurrentText(current);
-		}
+		}*/
 
 		public override bool leadIsGround(int n1) {
 			return true;

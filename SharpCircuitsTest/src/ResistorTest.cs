@@ -12,27 +12,10 @@ namespace SharpCircuitTest {
 	public class ResistorTest {
 
 		[Test]
-		public void SimpleResistorTest() {
+		public void LeastResistanceTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
-			var res1 = sim.Create<ResistorElm>();
-			var ground0 = sim.Create<GroundElm>();
-
-			sim.Connect(volt0.leadOut, res1.leadIn);
-			sim.Connect(res1.leadOut, ground0.leadIn);
-
-			for(int x = 1; x <= 100; x++)
-				sim.update(sim.timeStep);
-
-			TestUtils.Compare(ground0.getCurrent(), 0.05, 8);
-		}
-
-		[Test]
-		public void OhmsLawTest() {
-			Circuit sim = new Circuit();
-
-			var volt0 = sim.Create<RailElm>(VoltageElm.WaveType.DC);
+			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
 			var res0 = sim.Create<ResistorElm>( 100);
 			var res1 = sim.Create<ResistorElm>(1000);
 			var ground0 = sim.Create<GroundElm>();
@@ -44,7 +27,7 @@ namespace SharpCircuitTest {
 			sim.Connect(res1,  1, ground1, 0);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 			
 			TestUtils.Compare(ground0.getCurrent(), 0.05, 8);
 			TestUtils.Compare(ground1.getCurrent(), 0.005, 8);
@@ -86,19 +69,19 @@ namespace SharpCircuitTest {
 			sim.Connect(out3, 0, res4, 1);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
-			TestUtils.Compare(res0.getVoltageDiff(), 5.0, 8);
-			TestUtils.Compare(res1.getVoltageDiff(), 5.0, 8);
-			TestUtils.Compare(res2.getVoltageDiff(), 2.5, 8);
-			TestUtils.Compare(res3.getVoltageDiff(), 2.5, 8);
-			TestUtils.Compare(res4.getVoltageDiff(), 2.5, 8);
-			TestUtils.Compare(res5.getVoltageDiff(), 2.5, 8);
+			TestUtils.Compare(res0.getVoltageDelta(), 5.0, 8);
+			TestUtils.Compare(res1.getVoltageDelta(), 5.0, 8);
+			TestUtils.Compare(res2.getVoltageDelta(), 2.5, 8);
+			TestUtils.Compare(res3.getVoltageDelta(), 2.5, 8);
+			TestUtils.Compare(res4.getVoltageDelta(), 2.5, 8);
+			TestUtils.Compare(res5.getVoltageDelta(), 2.5, 8);
 
-			TestUtils.Compare(out0.getVoltageDiff(), 5.0, 8);
-			TestUtils.Compare(out1.getVoltageDiff(), 7.5, 8);
-			TestUtils.Compare(out2.getVoltageDiff(), 5.0, 8);
-			TestUtils.Compare(out3.getVoltageDiff(), 2.5, 8);
+			TestUtils.Compare(out0.getVoltageDelta(), 5.0, 8);
+			TestUtils.Compare(out1.getVoltageDelta(), 7.5, 8);
+			TestUtils.Compare(out2.getVoltageDelta(), 5.0, 8);
+			TestUtils.Compare(out3.getVoltageDelta(), 2.5, 8);
 		}
 
 		[Test]
@@ -128,7 +111,7 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0, 0, resX, 1);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update(sim.timeStep);
+				sim.update();
 
 			TestUtils.Compare(0.025, volt0.getCurrent(), 3);
 

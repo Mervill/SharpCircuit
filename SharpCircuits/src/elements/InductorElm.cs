@@ -9,66 +9,73 @@ namespace SharpCircuit {
 		public Circuit.Lead leadIn { get { return lead0; } }
 		public Circuit.Lead leadOut { get { return lead1; } }
 
-		public Inductor ind;
-
 		/// <summary>
 		/// Inductance (H)
 		/// </summary>
-		public double inductance {
-			get {
-				return _inductance;
-			}
-			set {
-				_inductance = value;
-				ind.setup(_inductance, current, true);
-			}
-		}
+		public double inductance { get; set; }
+		public bool isTrapezoidal { get; set; }
 
-		private double _inductance;
+		int[] nodes;
+		double compResistance;
+		double curSourceValue;
 
 		public InductorElm() : base() {
-			ind = new Inductor();
+			nodes = new int[2];
 			inductance = 1;
 		}
 
 		public InductorElm(double induc) : base() {
-			ind = new Inductor();
+			nodes = new int[2];
 			inductance = induc;
 		}
 
 		public override void reset() {
 			current = lead_volt[0] = lead_volt[1] = 0;
-			ind.reset();
 		}
 
 		public override void stamp(Circuit sim) {
-			ind.stamp(sim, lead_node[0], lead_node[1]);
+			nodes[0] = lead_node[0];
+			nodes[1] = lead_node[1];
+			if(isTrapezoidal) {
+				compResistance = 2 * inductance / sim.timeStep;
+			} else {
+				compResistance = inductance / sim.timeStep; // backward euler
+			}
+			sim.stampResistor(nodes[0], nodes[1], compResistance);
+			sim.stampRightSide(nodes[0]);
+			sim.stampRightSide(nodes[1]);
 		}
 
 		public override void beginStep(Circuit sim) {
-			ind.startIteration(lead_volt[0] - lead_volt[1]);
+			double voltdiff = lead_volt[0] - lead_volt[1];
+			if(isTrapezoidal) {
+				curSourceValue = voltdiff / compResistance + current;
+			} else {
+				curSourceValue = current; // backward euler
+			}
 		}
 
 		public override bool nonLinear() {
-			return ind.nonLinear();
+			return false;
 		}
 
 		public override void calculateCurrent() {
 			double voltdiff = lead_volt[0] - lead_volt[1];
-			current = ind.calculateCurrent(voltdiff);
+			if(compResistance > 0)
+				current = voltdiff / compResistance + curSourceValue;
 		}
 
 		public override void step(Circuit sim) {
 			double voltdiff = lead_volt[0] - lead_volt[1];
-			ind.doStep(sim, voltdiff);
+			sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "inductor";
 			getBasicInfo(arr);
 			arr[3] = "L = " + getUnitText(inductance, "H");
 			arr[4] = "P = " + getUnitText(getPower(), "W");
-		}
+		}*/
 
 	}
 }

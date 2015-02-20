@@ -45,14 +45,14 @@ namespace SharpCircuit {
 			sim.stampResistor(lead_node[2], lead_node[1], resistance2);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "potentiometer";
-			arr[1] = "Vd = " + getVoltageDText(getVoltageDiff());
+			//arr[1] = "Vd = " + getVoltageDText(getVoltageDiff());
 			arr[2] = "R1 = " + getUnitText(resistance1, Circuit.ohmString);
 			arr[3] = "R2 = " + getUnitText(resistance2, Circuit.ohmString);
 			arr[4] = "I1 = " + getCurrentDText(current1);
 			arr[5] = "I2 = " + getCurrentDText(current2);
-		}
+		}*/
 
 	}
 }

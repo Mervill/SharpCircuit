@@ -19,10 +19,10 @@ namespace SharpCircuit {
 		Color cc = new Color((int) (colorR * w), (int) (colorG * w),(int) (colorB * w));
 		*/
 		
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			base.getInfo(arr);
 			arr[0] = "LED";
-		}
+		}*/
 
 	}
 }

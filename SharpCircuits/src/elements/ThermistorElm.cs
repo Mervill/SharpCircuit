@@ -55,13 +55,13 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "Thermistor";
 			getBasicInfo(arr);
 			arr[3] = "R = " + getUnitText(resistance, Circuit.ohmString);
 			arr[4] = "RMin = " + getUnitText(minResistance, Circuit.ohmString);
 			arr[5] = "RMax = " + getUnitText(maxResistance, Circuit.ohmString);
-		}
+		}*/
 
 	}
 }

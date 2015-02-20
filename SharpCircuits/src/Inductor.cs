@@ -1,3 +1,4 @@
+#if DEPRECIATED
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ namespace SharpCircuit {
 
 		public int[] nodes;
 
-		public double inductance = 1;
-		public double compResistance;
-		public double current;
-		public double curSourceValue;
+		double current;
+		double inductance = 1;
+		double compResistance;
+		double curSourceValue;
 
 		public Inductor() {
 			nodes = new int[2];
@@ -29,7 +30,7 @@ namespace SharpCircuit {
 			current = 0;
 		}
 
-		public void stamp(Circuit sim, int n0, int n1) {
+		public void stamp(Circuit sim, double deltaTime, int n0, int n1) {
 			// inductor companion model using trapezoidal or backward euler
 			// approximations (Norton equivalent) consists of a current
 			// source in parallel with a resistor. Trapezoidal is more
@@ -38,17 +39,13 @@ namespace SharpCircuit {
 			nodes[0] = n0;
 			nodes[1] = n1;
 			if(isTrapezoidal) {
-				compResistance = 2 * inductance / sim.timeStep;
+				compResistance = 2 * inductance / deltaTime;
 			} else {
-				compResistance = inductance / sim.timeStep; // backward euler
+				compResistance = inductance / deltaTime; // backward euler
 			}
 			sim.stampResistor(nodes[0], nodes[1], compResistance);
 			sim.stampRightSide(nodes[0]);
 			sim.stampRightSide(nodes[1]);
-		}
-
-		public bool nonLinear() {
-			return false;
 		}
 
 		public void startIteration(double voltdiff) {
@@ -73,3 +70,4 @@ namespace SharpCircuit {
 		}
 	}
 }
+#endif

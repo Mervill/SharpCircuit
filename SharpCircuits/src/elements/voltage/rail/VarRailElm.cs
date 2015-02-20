@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class VarRailElm : RailElm {
+	public class VarRailElm : VoltageInputElm {
 
 		public double output { get; set; }
 
