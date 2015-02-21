@@ -50,9 +50,7 @@ namespace SharpCircuit {
 			triggerI = 0.01;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void reset() {
 			lead_volt[anode] = lead_volt[cnode] = lead_volt[gnode] = 0;

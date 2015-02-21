@@ -19,6 +19,9 @@ namespace SharpCircuit {
 		
 		void reset();
 
+		int getLeadNode(int lead_ndx);
+		void setLeadNode(int lead_ndx, int node_ndx);
+
 		// lead count
 		int getLeadCount();
 		int getInternalLeadCount();

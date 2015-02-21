@@ -61,9 +61,7 @@ namespace SharpCircuit {
 			sim.stampNonLinear(lead_node[1]);
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void beginStep(Circuit sim) {
 			// based on http://www.intusoft.com/nlpdf/nl11.pdf

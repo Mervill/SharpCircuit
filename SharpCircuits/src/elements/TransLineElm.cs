@@ -30,8 +30,8 @@ namespace SharpCircuit {
 		public override int getLeadCount() {
 			return 4;
 		}
-
-		public override int getInternalNodeCount() {
+		
+		public override int getInternalLeadCount() {
 			return 2;
 		}
 
@@ -67,21 +67,21 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(nodes[4], nodes[0], voltSource1);
-			sim.stampVoltageSource(nodes[5], nodes[1], voltSource2);
-			sim.stampResistor(nodes[2], nodes[4], impedance);
-			sim.stampResistor(nodes[3], nodes[5], impedance);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(lead_node[4], lead_node[0], voltSource1);
+			sim.stampVoltageSource(lead_node[5], lead_node[1], voltSource2);
+			sim.stampResistor(lead_node[2], lead_node[4], impedance);
+			sim.stampResistor(lead_node[3], lead_node[5], impedance);
 		}
-
-		public override void startIteration(double timeStep) {
+		
+		public override void beginStep(Circuit sim) {
 			// calculate voltages, currents sent over wire
 			if(voltageL == null) {
-				sim.stop("Transmission line delay too large!", this);
+				sim.panic("Transmission line delay too large!", this);
 				return;
 			}
-			voltageL[ptr] = volts[2] - volts[0] + volts[2] - volts[4];
-			voltageR[ptr] = volts[3] - volts[1] + volts[3] - volts[5];
+			voltageL[ptr] = lead_volt[2] - lead_volt[0] + lead_volt[2] - lead_volt[4];
+			voltageR[ptr] = lead_volt[3] - lead_volt[1] + lead_volt[3] - lead_volt[5];
 			// System.out.println(volts[2] + " " + volts[0] + " " +
 			// (volts[2]-volts[0]) + " " + (imped*current1) + " " + voltageL[ptr]);
 			/*
@@ -92,17 +92,17 @@ namespace SharpCircuit {
 			ptr = (ptr + 1) % lenSteps;
 		}
 
-		public override void doStep(CirSim sim) {
+		public override void step(Circuit sim) {
 			if(voltageL == null) {
-				sim.stop("Transmission line delay too large!", this);
+				sim.panic("Transmission line delay too large!", this);
 				return;
 			}
 
-			sim.updateVoltageSource(nodes[4], nodes[0], voltSource1, -voltageR[ptr]);
-			sim.updateVoltageSource(nodes[5], nodes[1], voltSource2, -voltageL[ptr]);
+			sim.updateVoltageSource(lead_node[4], lead_node[0], voltSource1, -voltageR[ptr]);
+			sim.updateVoltageSource(lead_node[5], lead_node[1], voltSource2, -voltageL[ptr]);
 
-			if(Math.Abs(volts[0]) > 1e-5 || Math.Abs(volts[1]) > 1e-5) {
-				sim.stop("Need to ground transmission line!", this);
+			if(Math.Abs(lead_volt[0]) > 1e-5 || Math.Abs(lead_volt[1]) > 1e-5) {
+				sim.panic("Need to ground transmission line!", this);
 				return;
 			}
 		}
@@ -112,21 +112,21 @@ namespace SharpCircuit {
 			return 2;
 		}
 
-		public override bool hasGroundConnection(int n1) {
+		public override bool leadIsGround(int n1) {
 			return false;
 		}
 
-		public override bool getConnection(int n1, int n2) {
+		public override bool leadsAreConnected(int n1, int n2) {
 			return false;
 			// if (comparePair(n1, n2, 0, 1)) return true; if (comparePair(n1, n2, 2, 3)) return true; return false;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "transmission line";
 			arr[1] = getUnitText(impedance, CirSim.ohmString);
 			arr[2] = "length = " + getUnitText(2.9979e8 * delay, "m");
 			arr[3] = "delay = " + getUnitText(delay, "s");
-		}
+		}*/
 
 	}
 }

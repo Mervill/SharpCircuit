@@ -27,7 +27,7 @@ namespace SharpCircuitTest {
 			sim.Connect(res1,  1, ground1, 0);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 			
 			TestUtils.Compare(ground0.getCurrent(), 0.05, 8);
 			TestUtils.Compare(ground1.getCurrent(), 0.005, 8);
@@ -69,7 +69,7 @@ namespace SharpCircuitTest {
 			sim.Connect(out3, 0, res4, 1);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			TestUtils.Compare(res0.getVoltageDelta(), 5.0, 8);
 			TestUtils.Compare(res1.getVoltageDelta(), 5.0, 8);
@@ -111,7 +111,7 @@ namespace SharpCircuitTest {
 			sim.Connect(volt0, 0, resX, 1);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			TestUtils.Compare(0.025, volt0.getCurrent(), 3);
 

@@ -40,7 +40,7 @@ namespace SharpCircuitTest {
 			var capScope0 = sim.Watch(cap0);
 
 			for(int x = 1; x <= 28000; x++)
-				sim.update();
+				sim.doTick();
 
 			Debug.LogF("{0} [{1}]", sim.time, SIUnits.Normalize(sim.time, "s"));
 			{
@@ -75,7 +75,7 @@ namespace SharpCircuitTest {
 			capScope0.Clear();
 
 			for(int x = 1; x <= 28000; x++)
-				sim.update();
+				sim.doTick();
 
 			Debug.Log();
 

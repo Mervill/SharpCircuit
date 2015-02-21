@@ -49,9 +49,7 @@ namespace SharpCircuit {
 			setup();
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public virtual void setup() {
 			diode.setup(forwardDrop, zvoltage);

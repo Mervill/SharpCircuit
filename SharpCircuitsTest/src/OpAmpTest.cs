@@ -29,7 +29,7 @@ namespace SharpCircuitTest {
 			sim.Connect(opAmp0.leadOut, analogOut0.leadIn);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			Debug.Log("Neg", opAmp0.getLeadVoltage(0));
 			Debug.Log("Pos", opAmp0.getLeadVoltage(1));
@@ -52,7 +52,7 @@ namespace SharpCircuitTest {
 			sim.Connect(analogOut0.leadIn, opAmp0.leadOut);
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			TestUtils.Compare(analogOut0.getVoltageDelta(), 5, 2);
 		}

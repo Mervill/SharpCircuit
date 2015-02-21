@@ -50,9 +50,7 @@ namespace SharpCircuit {
 			pins[N_RST] = new Pin("rst");
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void stamp(Circuit sim) {
 			// stamp voltage divider to put ctl pin at 2/3 V

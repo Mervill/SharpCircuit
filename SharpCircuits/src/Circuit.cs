@@ -14,9 +14,9 @@ namespace SharpCircuit {
 		//public readonly static String ohmString = "ohm";
 
 		public class Lead {
-			public CircuitElement elem { get; private set; }
+			public ICircuitElement elem { get; private set; }
 			public Int32 ndx { get; private set; }
-			public Lead(CircuitElement e, Int32 i) { elem = e; ndx = i; }
+			public Lead(ICircuitElement e, Int32 i) { elem = e; ndx = i; }
 		}
 
 		public double time { 
@@ -33,12 +33,11 @@ namespace SharpCircuit {
 				_analyze = true;
 			}
 		}
-		
-		public List<CircuitElement> elements { get; set; }
-		public List<long[]> nodeMesh { get; set; }
 
-		public String errorMessage { get; private set; }
-		public CircuitElement errorElement { get; private set; }
+		public int speed { get; set; } // 172 // Math.Log(10 * 14.3) * 24 + 61.5;
+
+		public List<ICircuitElement> elements { get; set; }
+		public List<long[]> nodeMesh { get; set; }
 
 		public int nodeCount { get { return nodeList.Count; } }
 
@@ -48,10 +47,10 @@ namespace SharpCircuit {
 		IdWorker snowflake;
 		
 		bool _analyze = true;
-		double _timeStep = 5.0E-6;
+		double _timeStep = 5E-6;
 
 		List<long> nodeList = new List<long>();
-		CircuitElement[] voltageSources;
+		ICircuitElement[] voltageSources;
 
 		double[][] circuitMatrix; // contains circuit state
 		double[] circuitRightSide;
@@ -69,19 +68,20 @@ namespace SharpCircuit {
 		Dictionary<ICircuitElement, List<ScopeFrame>> scopeMap;
 
 		public Circuit() {
+			speed = 172;
 			snowflake = new IdWorker(1, 1);
-			elements = new List<CircuitElement>();
+			elements = new List<ICircuitElement>();
 			nodeMesh = new List<long[]>();
 			scopeMap = new Dictionary<ICircuitElement, List<ScopeFrame>>();
 		}
 
-		public T Create<T>(params object[] args) where T : CircuitElement {
+		public T Create<T>(params object[] args) where T : class, ICircuitElement {
 			T circuit = Activator.CreateInstance(typeof(T), args) as T;
 			AddElement(circuit);
 			return circuit;
 		}
 
-		public void AddElement(CircuitElement elm) {
+		public void AddElement(ICircuitElement elm) {
 			if(!elements.Contains(elm)) {
 				elements.Add(elm);
 				
@@ -100,7 +100,7 @@ namespace SharpCircuit {
 			Connect(left.elem, left.ndx, right.elem, right.ndx);
 		}
 
-		public void Connect(CircuitElement left, int leftLeadNdx, CircuitElement right, int rightLeadNdx) {
+		public void Connect(ICircuitElement left, int leftLeadNdx, ICircuitElement right, int rightLeadNdx) {
 			int leftNdx = elements.IndexOf(left);
 			int rightNdx = elements.IndexOf(right);
 			Connect(leftNdx, leftLeadNdx, rightNdx, rightLeadNdx);
@@ -166,24 +166,18 @@ namespace SharpCircuit {
 			return (ndx < nodeList.Count) ? nodeList[ndx] : 0;
 		}
 
-		public CircuitElement getElm(int n) {
+		public ICircuitElement getElm(int n) {
 			return (n < elements.Count) ? elements[n] : null;
 		}
 
-		public void update() {
+		public void doTick() {
 			doTicks(1);
 		}
 
 		public void doTicks(int ticks) {
-			if(elements.Count == 0)
-				return;
-
-			if(_analyze)
-				analyze();
-
-			if(errorMessage != null)
-				return;
-
+			if(elements.Count == 0) return;
+			if(_analyze) analyze();
+			if(_analyze) return;
 			for(int x = 0; x < ticks; x++ )
 			{
 				tick();
@@ -210,8 +204,8 @@ namespace SharpCircuit {
 				for(int i = 0; i != circuitMatrixSize; i++)
 					circuitRightSide[i] = origRightSide[i];
 
-				// If the circuit is non linear copy
-				// `origMatrix` to `circuitMatrix`,
+				// If the circuit is non linear, copy
+				// `origMatrix` to `circuitMatrix`
 				if(circuitNonLinear)
 					for(int i = 0; i != circuitMatrixSize; i++)
 						for(int j = 0; j != circuitMatrixSize; j++)
@@ -220,29 +214,23 @@ namespace SharpCircuit {
 				// Execute step() on all elements
 				for(int i = 0; i != elements.Count; i++)
 					elements[i].step(this);
-
-				if(errorMessage != null)
-					return;
-
+				
 				// Can't have any values in the matrix be NaN or Inf
 				for(int j = 0; j != circuitMatrixSize; j++) {
 					for(int i = 0; i != circuitMatrixSize; i++) {
 						double x = circuitMatrix[i][j];
-						if(Double.IsNaN(x) || Double.IsInfinity(x)) {
-							error("NaN/Infinite matrix!", null);
-							return;
-						}
+						if(Double.IsNaN(x) || Double.IsInfinity(x))
+							panic("NaN/Infinite matrix!", null);
 					}
 				}
 				
 				// If the circuit is non-Linear, factor it now,
 				// if it's linear, it was factored in analyze()
 				if(circuitNonLinear) {
+					// Break if the circuit has converged.
 					if(converged && subiter > 0) break;
-					if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
-						error("Singular matrix!", null);
-						return;
-					}
+					if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute))
+						panic("Singular matrix!", null);
 				}
 
 				// Solve the factorized matrix
@@ -250,25 +238,23 @@ namespace SharpCircuit {
 
 				for(int j = 0; j != circuitMatrixFullSize; j++) {
 					double res = 0;
-					RowInfo ri = circuitRowInfo[j];
-					if(ri.type == RowInfo.ROW_CONST) {
-						res = ri.value;
-					} else {
-						res = circuitRightSide[ri.mapCol];
-					}
 
+					RowInfo ri = circuitRowInfo[j];
+					res = (ri.type == RowInfo.ROW_CONST) ? ri.value : circuitRightSide[ri.mapCol];
+
+					// If any resuit is NaN, break
 					if(Double.IsNaN(res)) {
 						converged = false;
 						break;
 					}
 
 					if(j < nodeList.Count - 1) {
+						// For each node in the mesh
 						for(int k = 0; k != nodeMesh.Count; k++) {
-							CircuitElement elm = elements[k];
-							List<long> leads = new List<long>(nodeMesh[k]);
-							int ndx = leads.IndexOf(getNodeId(j + 1));
+							List<long> leads = new List<long>(nodeMesh[k]); // Get the leads conected to the node
+							int ndx = leads.IndexOf(getNodeId(j + 1)); 
 							if(ndx != -1) 
-								elm.setLeadVoltage(ndx, res);
+								elements[k].setLeadVoltage(ndx, res);
 						}
 					} else {
 						int ji = j - (nodeList.Count - 1);
@@ -286,7 +272,7 @@ namespace SharpCircuit {
 				Debug.LogF("Nonlinear curcuit converged after {0} iterations.", subiter);
 			
 			if(subiter == subiterCount)
-				error("Convergence failed!", null);
+				panic("Convergence failed!", null);
 
 			time = Math.Round(time + timeStep, 12); // Round to 12 digits
 		}
@@ -296,10 +282,7 @@ namespace SharpCircuit {
 			if(elements.Count == 0)
 				return;
 
-			errorMessage = null;
-			errorElement = null;
-
-			CircuitElement voltageElm = null;
+			ICircuitElement voltageElm = null;
 
 			nodeList.Clear();
 			List<bool> internalList = new List<bool>();
@@ -311,10 +294,12 @@ namespace SharpCircuit {
 			};
 
 			#region //// Look for Voltage or Ground element ////
+			// The node at pos 0 in the nodeList acts as the 'ground' node.
 			bool gotGround = false;
 			bool gotRail = false;
-			for(int i = 0; i != elements.Count; i++) {
-				CircuitElement ce = elements[i];
+			for(int i = 0; i != elements.Count; i++)
+			{
+				ICircuitElement ce = elements[i];
 				if(ce is GroundElm) {
 					gotGround = true;
 					break;
@@ -323,68 +308,73 @@ namespace SharpCircuit {
 				if(ce is VoltageInputElm)
 					gotRail = true;
 
-				if(voltageElm == null && ce is VoltageElm)
+				if(ce is VoltageElm && voltageElm == null)
 					voltageElm = ce;
 			}
 
+			// If no ground and no rails, then the voltage elm's first terminal is ground.
 			if(!gotGround && !gotRail && voltageElm != null) {
-				// If no ground, and no rails, then the voltage elm's first terminal is ground.
 				int elm_ndx = elements.IndexOf(voltageElm);
 				long[] ndxs = nodeMesh[elm_ndx];
 				pushNode(ndxs[0], false);
 			} else {
+				// If the circuit contains no gound or voltage elements,
+				// push a temporary node to the node list.
 				pushNode(snowflake.NextId(), false);
 			}
 			#endregion
 
 			#region //// Nodes and Voltage Sources ////
-			int vscount = 0;
-			for(int i = 0; i != elements.Count; i++) {
-				CircuitElement elm = elements[i];
+			int vscount = 0; // Number of voltage sources
+			for(int i = 0; i != elements.Count; i++) 
+			{
+				ICircuitElement elm = elements[i];
 				int leads = elm.getLeadCount();
 
+				// If the leadCount reported by the element does
+				// not match the number of leads allocated, 
+				// resize the array.
 				if(leads != nodeMesh[i].Length) {
 					long[] leadMap = nodeMesh[i];
 					Array.Resize(ref leadMap, leads);
 					nodeMesh[i] = leadMap;
 				}
 				
-				// Populate the node list
+				// For each lead in the element
 				for(int leadX = 0; leadX != leads; leadX++) {
-					// Id of the node at lead_index
-					long leadNode = nodeMesh[i][leadX];
-					int node_ndx = nodeList.IndexOf(leadNode);
+					long leadNode = nodeMesh[i][leadX];        // Id of the node at leadX
+					int node_ndx = nodeList.IndexOf(leadNode); // Index of the leadNode in the nodeList
 					if(node_ndx == -1) {
 						elm.setLeadNode(leadX, nodeList.Count);
 						pushNode(leadNode, false);
 					} else {
 						elm.setLeadNode(leadX, node_ndx);
-						// if it's the ground node, make sure the node voltage is 0,
-						// cause it may not get set later
+						// if it's the ground node, make sure the 
+						// node voltage is 0, cause it may not get set later
 						if(leadNode == 0)
 							elm.setLeadVoltage(leadX, 0);
 					}
 				}
 				
+				// Push an internal node onto the list for
+				// each internal lead on the element.
 				int internalLeads = elm.getInternalLeadCount();
 				for(int x = 0; x != internalLeads; x++) {
-					long id = snowflake.NextId();
-					elm.setLeadNode(leads + x, nodeList.Count); // Associate the lead with the new node.
-					pushNode(id, true);
+					elm.setLeadNode(leads + x, nodeList.Count);
+					pushNode(snowflake.NextId(), true);
 				}
 
-				int ivs = elm.getVoltageSourceCount();
-				vscount += ivs;
+				vscount += elm.getVoltageSourceCount();
 			}
 			#endregion
 
 			// == Determine if circuit is nonlinear
-			voltageSources = new CircuitElement[vscount];
+			voltageSources = new ICircuitElement[vscount];
 			vscount = 0;
 
 			circuitNonLinear = false;
 			for(int i = 0; i != elements.Count; i++) {
-				CircuitElement ce = elements[i];
+				ICircuitElement ce = elements[i];
 				if(ce.nonLinear()) circuitNonLinear = true;
 				for(int leadX = 0; leadX != ce.getVoltageSourceCount(); leadX++) {
 					voltageSources[vscount] = ce;
@@ -430,7 +420,7 @@ namespace SharpCircuit {
 			while(changed) {
 				changed = false;
 				for(int i = 0; i != elements.Count; i++) {
-					CircuitElement ce = elements[i];
+					ICircuitElement ce = elements[i];
 					// loop through all ce's nodes to see if they are connected
 					// to other nodes not in closure
 					for(int leadX = 0; leadX < ce.getLeadCount(); leadX++) {
@@ -467,8 +457,9 @@ namespace SharpCircuit {
 			#endregion
 
 			#region //// Sanity checks ////
-			for(int i = 0; i != elements.Count; i++) {
-				CircuitElement ce = elements[i];
+			for(int i = 0; i != elements.Count; i++) 
+			{
+				ICircuitElement ce = elements[i];
 
 				// look for inductors with no current path
 				if(ce is InductorElm) {
@@ -483,19 +474,15 @@ namespace SharpCircuit {
 				// look for current sources with no current path
 				if(ce is CurrentSourceElm) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.INDUCT, ce, ce.getLeadNode(1));
-					if(!fpi.findPath(ce.getLeadNode(0))) {
-						error("No path for current source!", ce);
-						return;
-					}
+					if(!fpi.findPath(ce.getLeadNode(0)))
+						panic("No path for current source!", ce);
 				}
 
 				// look for voltage source loops
 				if((ce is VoltageElm && ce.getLeadCount() == 2) || ce is WireElm) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.VOLTAGE, ce, ce.getLeadNode(1));
-					if(fpi.findPath(ce.getLeadNode(0))) {
-						error("Voltage source/wire loop with no resistance!", ce);
-						return;
-					}
+					if(fpi.findPath(ce.getLeadNode(0)))
+						panic("Voltage source/wire loop with no resistance!", ce);
 				}
 
 				// look for shorted caps, or caps w/ voltage but no R
@@ -506,10 +493,8 @@ namespace SharpCircuit {
 						ce.reset();
 					} else {
 						fpi = new FindPathInfo(this, FindPathInfo.PathType.CAP_V, ce, ce.getLeadNode(1));
-						if(fpi.findPath(ce.getLeadNode(0))) {
-							error("Capacitor loop with no resistance!", ce);
-							return;
-						}
+						if(fpi.findPath(ce.getLeadNode(0)))
+							panic("Capacitor loop with no resistance!", ce);
 					}
 				}
 			}
@@ -556,10 +541,8 @@ namespace SharpCircuit {
 
 				if(leadX == matrixSize) {
 
-					if(qp == -1) {
-						error("Matrix error", null);
-						return;
-					}
+					if(qp == -1)
+						panic("Matrix error", null);
 
 					RowInfo elt = circuitRowInfo[qp];
 					if(qm == -1) {
@@ -706,14 +689,13 @@ namespace SharpCircuit {
 			// here instead of needing to do it every frame.
 			if(!circuitNonLinear)
 				if(!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute))
-					error("Singular matrix!", null);
+					panic("Singular matrix!", null);
 		}
 
-		public void error(String why, CircuitElement elm) {
+		public void panic(String why, ICircuitElement elem) {
 			circuitMatrix = null;
-			errorMessage = why;
-			errorElement = elm;
-			needAnalyze();
+			_analyze = true;
+			throw new Exception(why, elem);
 		}
 
 		#region //// Stamp ////
@@ -771,7 +753,7 @@ namespace SharpCircuit {
 		}
 
 		/// <summary>
-		/// Current-controlled voltage source.
+		/// Voltage-controlled current source.
 		/// Current from cn1 to cn2 is equal to voltage from vn1 to vn2, divided by g 
 		/// </summary>
 		public void stampVCCS(int cn1, int cn2, int vn1, int vn2, double g) {
@@ -781,7 +763,7 @@ namespace SharpCircuit {
 			stampMatrix(cn2, vn1, -g);
 		}
 
-		/// Current-controlled voltage source (CCVS)?
+		// Current-controlled voltage source (CCVS)?
 
 		/// <summary>
 		/// Current-controlled current source.
@@ -818,25 +800,19 @@ namespace SharpCircuit {
 		// independent current source flowing into node i
 		public void stampRightSide(int i, double x) {
 			if(i > 0) {
-				if(circuitNeedsMap) {
-					i = circuitRowInfo[i - 1].mapRow;
-				} else {
-					i--;
-				}
+				i = (circuitNeedsMap) ? circuitRowInfo[i - 1].mapRow : i - 1;
 				circuitRightSide[i] += x;
 			}
 		}
 
 		// indicate that the value on the right side of row i changes in doStep()
 		public void stampRightSide(int i) {
-			if(i > 0)
-				circuitRowInfo[i - 1].rsChanges = true;
+			if(i > 0) circuitRowInfo[i - 1].rsChanges = true;
 		}
 
 		// indicate that the values on the left side of row i change in doStep()
 		public void stampNonLinear(int i) {
-			if(i > 0)
-				circuitRowInfo[i - 1].lsChanges = true;
+			if(i > 0) circuitRowInfo[i - 1].lsChanges = true;
 		}
 		#endregion
 
@@ -968,10 +944,10 @@ namespace SharpCircuit {
 			Circuit sim;
 			bool[] used;
 			int dest;
-			CircuitElement firstElm;
+			ICircuitElement firstElm;
 			PathType type;
 
-			public FindPathInfo(Circuit r, PathType t, CircuitElement e, int d) {
+			public FindPathInfo(Circuit r, PathType t, ICircuitElement e, int d) {
 				sim = r;
 				dest = d;
 				type = t;
@@ -996,7 +972,7 @@ namespace SharpCircuit {
 				used[n1] = true;
 				for(int i = 0; i != sim.elements.Count; i++) {
 
-					CircuitElement ce = sim.getElm(i);
+					ICircuitElement ce = sim.getElm(i);
 					if(ce == firstElm)
 						continue;
 
@@ -1069,6 +1045,16 @@ namespace SharpCircuit {
 				// System.out.println(n1 + " failed");
 				return false;
 			}
+		}
+
+		public class Exception : System.Exception {
+
+			public ICircuitElement element { get; private set; }
+
+			public Exception(string why, ICircuitElement elem) : base(why) {
+				element = elem;
+			}
+
 		}
 
 	}

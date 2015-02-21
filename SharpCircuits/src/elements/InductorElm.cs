@@ -55,9 +55,7 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override bool nonLinear() {
-			return false;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void calculateCurrent() {
 			double voltdiff = lead_volt[0] - lead_volt[1];

@@ -70,9 +70,7 @@ namespace SharpCircuit {
 			resistance = 100;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void calculateCurrent() {
 			current = (lead_volt[0] - lead_volt[1]) / resistance;

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class LogicOutputElm : CircuitElement {
-
-		public Circuit.Lead leadIn { get { return lead0; } }
+	public class LogicOutputElm : OutputElm {
 
 		/// <summary>
 		/// The Threshold Voltage.
@@ -19,17 +17,9 @@ namespace SharpCircuit {
 			threshold = 2.5;
 		}
 
-		public override int getLeadCount() {
-			return 1;
-		}
-
 		public override void stamp(Circuit sim) {
 			if(needsPullDown)
 				sim.stampResistor(lead_node[0], 0, 1E6);
-		}
-
-		public override double getVoltageDelta() {
-			return lead_volt[0];
 		}
 
 		public bool isHigh() {

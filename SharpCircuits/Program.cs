@@ -38,8 +38,8 @@ namespace SharpCircuit {
 			double quarterCycleTime = cycleTime / 4;
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++) {
-				sim.update(sim.timeStep);
-				string utime = CircuitElement.getUnitText(sim.time, "s");
+				sim.doTick();
+				string utime = SIUnits.Normalize(sim.time, "s");
 				Debug.LogF(" [{0,4}, {1}]", x, utime);
 			}
 
@@ -89,7 +89,7 @@ namespace SharpCircuit {
 
 			Debug.Log();
 
-			JsConfig.ExcludeTypes.Add(typeof(Circuit.Lead));
+			/*JsConfig.ExcludeTypes.Add(typeof(Circuit.Lead));
 			System.IO.File.WriteAllText("./out.json", JsonSerializer.SerializeToString(sim));
 
 			string json = System.IO.File.ReadAllText("./out.json");
@@ -100,14 +100,14 @@ namespace SharpCircuit {
 			sourceScope = sim2.Watch(sim2.getElm(0));
 			
 			for(int x = 1; x <= steps; x++) {
-				sim2.update(sim2.timeStep);
-				string utime = CircuitElement.getUnitText(sim2.time, "s");
+				sim2.ticks();
+				string utime = SIUnits.Normalize(sim2.time, "s");
 				Debug.LogF(" [{0,4}, {1}]", x, utime);
 			}
 
 			double voltageHigh0 = sourceScope.Max((f) => f.voltage);
 			int voltageHighNdx0 = sourceScope.FindIndex((f) => f.voltage == voltageHigh0);
-			Debug.LogF("voltageHigh {0,-12} ({1})", Math.Round(voltageHigh0, double_acc), voltageHigh0);
+			Debug.LogF("voltageHigh {0,-12} ({1})", Math.Round(voltageHigh0, double_acc), voltageHigh0);*/
 
 			Console.WriteLine("program complete");
 			Console.ReadLine();

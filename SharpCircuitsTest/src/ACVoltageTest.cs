@@ -46,7 +46,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			double voltageHigh = voltScope.Max((f) => f.voltage);
 			int voltageHighNdx = voltScope.FindIndex((f) => f.voltage == voltageHigh);
@@ -92,7 +92,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			double charge = cap0.capacitance * cap0.getVoltageDelta();
 
@@ -126,7 +126,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			Assert.AreEqual(current, Math.Round(capScope.Max((f) => f.current), 12));
 		}
@@ -155,7 +155,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 			
 			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
 		}
@@ -184,7 +184,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			Assert.AreEqual(current, Math.Round(inductScope.Max((f) => f.current), 12));
 		}

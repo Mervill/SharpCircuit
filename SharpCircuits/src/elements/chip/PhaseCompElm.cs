@@ -24,9 +24,7 @@ namespace SharpCircuit {
 			pins[2].output = true;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void stamp(Circuit sim) {
 			int vn = sim.nodeCount + pins[2].voltSource;

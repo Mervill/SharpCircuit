@@ -36,7 +36,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			double voltageHigh = resScope0.Max((f) => f.voltage);
 			int voltageHighNdx = resScope0.FindIndex((f) => f.voltage == voltageHigh);
@@ -78,7 +78,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			double voltageHigh = resScope0.Max((f) => f.voltage);
 			int voltageHighNdx = resScope0.FindIndex((f) => f.voltage == voltageHigh);

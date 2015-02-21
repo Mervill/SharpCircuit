@@ -39,10 +39,10 @@ namespace SharpCircuitTest {
 			Assert.AreEqual(current * res0.resistance, res0.getVoltageDelta());
 		}
 
-		[TestCase(20)]
-		[TestCase(40)]
-		[TestCase(60)]
-		[TestCase(80)]
+		[TestCase( 20)]
+		[TestCase( 40)]
+		[TestCase( 60)]
+		[TestCase( 80)]
 		[TestCase(100)]
 		[TestCase(120)]
 		[TestCase(140)]
@@ -58,7 +58,7 @@ namespace SharpCircuitTest {
 			sim.Connect(res0.leadIn, volt0.leadNeg);
 
 			for(int x = 1; x <= 100; x++) {
-				sim.update();
+				sim.doTick();
 				// Ohm's Law
 				Assert.AreEqual(res0.getVoltageDelta(), res0.resistance * res0.getCurrent()); // V = I x R
 				Assert.AreEqual(res0.getCurrent(), res0.getVoltageDelta() / res0.resistance); // I = V / R
@@ -66,10 +66,10 @@ namespace SharpCircuitTest {
 			}
 		}
 
-		[TestCase(20)]
-		[TestCase(40)]
-		[TestCase(60)]
-		[TestCase(80)]
+		[TestCase( 20)]
+		[TestCase( 40)]
+		[TestCase( 60)]
+		[TestCase( 80)]
 		[TestCase(100)]
 		[TestCase(120)]
 		[TestCase(140)]
@@ -86,7 +86,7 @@ namespace SharpCircuitTest {
 			sim.Connect(res0.leadOut, ground0.leadIn);
 
 			for(int x = 1; x <= 100; x++) {
-				sim.update();
+				sim.doTick();
 				// Ohm's Law
 				Assert.AreEqual(res0.getVoltageDelta(), res0.resistance * res0.getCurrent()); // V = I x R
 				Assert.AreEqual(res0.getCurrent(), res0.getVoltageDelta() / res0.resistance); // I = V / R
@@ -112,10 +112,8 @@ namespace SharpCircuitTest {
 			sim.doTicks((int)(cycleTime / sim.timeStep));
 
 			double flux = inductor0.inductance * inductor0.getCurrent();	// F = I x L
-			Debug.Log(inductor0.getCurrent(), flux / inductor0.inductance); // I = F / L
-			Debug.Log(inductor0.inductance, flux / inductor0.getCurrent()); // L = F / I
-
-			Assert.Ignore();
+			Assert.AreEqual(inductor0.getCurrent(), flux / inductor0.inductance); // I = F / L
+			Assert.AreEqual(inductor0.inductance, flux / inductor0.getCurrent()); // L = F / I
 		}
 
 		[TestCase(1)]
@@ -140,9 +138,42 @@ namespace SharpCircuitTest {
 			Assert.Ignore();
 		}
 
+		[TestCase(true )]
+		[TestCase(false)]
+		public void AnalogSwitchElmTest(bool in0) {
+			Circuit sim = new Circuit();
+
+			var volt0 = sim.Create<VoltageInputElm>();
+			var switch0 = sim.Create<SwitchElm>();
+			var res0 = sim.Create<ResistorElm>();
+			var logicOut0 = sim.Create<LogicOutputElm>();
+
+			sim.Connect(volt0, 0, switch0, 0);
+			sim.Connect(switch0, 1, res0, 0);
+			sim.Connect(res0, 1, logicOut0, 0);
+
+			var volt1 = sim.Create<VoltageInputElm>();
+			var switch1 = sim.Create<SwitchElm>();
+			var res1 = sim.Create<ResistorElm>();
+			var grnd1 = sim.Create<GroundElm>();
+
+			sim.Connect(volt1, 0, switch1, 0);
+			sim.Connect(switch1, 1, res1, 0);
+			sim.Connect(res1, 1, grnd1, 0);
+
+			if(in0) {
+				switch0.toggle();
+				switch1.toggle();
+			}
+
+			sim.doTicks(100);
+
+			Debug.Log(logicOut0.getVoltageDelta(), logicOut0.getCurrent());
+			Debug.Log(grnd1.getVoltageDelta(), grnd1.getCurrent());
+		}
 
 		[TestCase(1, false)]
-		[TestCase(0, true)]
+		[TestCase(0, true )]
 		public void InverterElmTest(int in0, bool out0) {
 			Circuit sim = new Circuit();
 
@@ -159,6 +190,16 @@ namespace SharpCircuitTest {
 			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
+		}
+
+		[TestCase(true )]
+		[TestCase(false)]
+		public void LogicInputElm(bool in0) {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInputElm>();
+			var logicOut0 = sim.Create<LogicOutputElm>();
+
 		}
 
 	}

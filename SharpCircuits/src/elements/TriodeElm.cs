@@ -21,9 +21,7 @@ namespace SharpCircuit {
 			kg1 = 680;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void reset() {
 			lead_volt[0] = lead_volt[1] = lead_volt[2] = 0;

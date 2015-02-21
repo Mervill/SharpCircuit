@@ -7,7 +7,8 @@ namespace SharpCircuit {
 	public class SwitchElm : CircuitElement {
 
 		// position 0 == closed, position 1 == open
-		protected int position, posCount;
+		public int position { get; set; }
+		protected int posCount;
 
 		public SwitchElm() : base() {
 			position = 0;

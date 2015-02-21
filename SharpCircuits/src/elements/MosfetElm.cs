@@ -44,9 +44,7 @@ namespace SharpCircuit {
 			return 0.02;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void reset() {
 			lastv1 = lastv2 = lead_volt[0] = lead_volt[1] = lead_volt[2] = 0;
@@ -100,7 +98,7 @@ namespace SharpCircuit {
 			double Gds = 0;
 			double beta = getBeta();
 			if(vgs > .5 && this is JfetElm) {
-				sim.error("JFET is reverse biased!", this);
+				sim.panic("JFET is reverse biased!", this);
 				return;
 			}
 			if(vgs < _threshold) {

@@ -31,6 +31,12 @@ namespace SharpCircuit {
 			lead_volt = new double[getLeadCount() + getInternalLeadCount()];
 		}
 
+		public virtual void calculateCurrent() { }
+		//public virtual double getPower() { return getVoltageDiff() * current; }
+		//public virtual void getInfo(String[] arr) { }
+
+		#region //// Interface ////
+
 		public int getLeadNode(int lead_ndx) {
 			if(lead_node == null) allocLeads();
 			return lead_node[lead_ndx];
@@ -40,12 +46,6 @@ namespace SharpCircuit {
 			if(lead_node == null) allocLeads();
 			lead_node[lead_ndx] = node_ndx;
 		}
-
-		public virtual void calculateCurrent() { }
-		//public virtual double getPower() { return getVoltageDiff() * current; }
-		//public virtual void getInfo(String[] arr) { }
-
-		#region //// Interface ////
 
 		public virtual void beginStep(Circuit sim) { }
 		public virtual void step(Circuit sim) { }

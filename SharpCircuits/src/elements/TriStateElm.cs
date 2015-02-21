@@ -43,9 +43,7 @@ namespace SharpCircuit {
 		}
 
 		// we need this to be able to change the matrix for each step
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void stamp(Circuit sim) {
 			sim.stampVoltageSource(0, lead_node[3], voltSource);

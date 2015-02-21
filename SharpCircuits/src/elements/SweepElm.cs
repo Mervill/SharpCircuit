@@ -77,8 +77,8 @@ namespace SharpCircuit {
 			return 1;
 		}
 
-		public override void stamp(CirSim sim) {
-			sim.stampVoltageSource(0, nodes[0], voltSource);
+		public override void stamp(Circuit sim) {
+			sim.stampVoltageSource(0, lead_node[0], voltSource);
 		}
 
 		public void setParams(double timeStep) {
@@ -129,12 +129,12 @@ namespace SharpCircuit {
 			}
 		}
 
-		public override void doStep(CirSim sim) {
-			sim.updateVoltageSource(0, nodes[0], voltSource, v);
+		public override void doStep(Circuit sim) {
+			sim.updateVoltageSource(0, lead_node[0], voltSource, v);
 		}
 
-		public override double getVoltageDiff() {
-			return volts[0];
+		public override double getVoltageDelta() {
+			return lead_volt[0];
 		}
 
 		public override int getVoltageSourceCount() {
@@ -145,14 +145,14 @@ namespace SharpCircuit {
 			return true;
 		}
 
-		public override void getInfo(String[] arr) {
+		/*public override void getInfo(String[] arr) {
 			arr[0] = "sweep " + (logarithmic ? "(log)" : "(linear)");
 			arr[1] = "I = " + getCurrentDText(current);
 			arr[2] = "V = " + getVoltageText(volts[0]);
 			arr[3] = "f = " + getUnitText(frequency, "Hz");
 			arr[4] = "range = " + getUnitText(minF, "Hz") + " .. " + getUnitText(maxF, "Hz");
 			arr[5] = "time = " + getUnitText(sweepTime, "s");
-		}
+		}*/
 
 	}
 }

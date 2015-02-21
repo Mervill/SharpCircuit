@@ -29,7 +29,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			double voltageHigh = diodeScope.Max((f) => f.voltage);
 			int voltageHighNdx = diodeScope.FindIndex((f) => f.voltage == voltageHigh);
@@ -85,7 +85,7 @@ namespace SharpCircuitTest {
 
 			int steps = (int)(cycleTime / sim.timeStep);
 			for(int x = 1; x <= steps; x++)
-				sim.update();
+				sim.doTick();
 
 			// A/C Voltage Source
 			{

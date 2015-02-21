@@ -108,8 +108,6 @@ namespace SharpCircuitTest {
 			//if(In0) switch0.toggle();
 
 			sim.doTicks(100);
-			if(sim.errorMessage != null)
-				Debug.Log(sim.errorMessage);
 
 			//Debug.Log(res0.getVoltageDiff());
 			//Debug.Log(res0.getCurrent());

@@ -35,9 +35,7 @@ namespace SharpCircuit {
 			gain = (lowGain) ? 1000 : 100000;
 		}
 
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		/*public override double getPower() {
 			return lead_volt[2] * current;

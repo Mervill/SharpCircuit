@@ -36,7 +36,7 @@ namespace SharpCircuitTest {
 			sim.analyze();
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			int i = 0;
 			if(logicOut0.isHigh()) i += 2;
@@ -78,7 +78,7 @@ namespace SharpCircuitTest {
 			sim.analyze();
 
 			for(int x = 1; x <= 100; x++)
-				sim.update();
+				sim.doTick();
 
 			int i = 0;
 			if(logicOut0.isHigh()) i += 1;

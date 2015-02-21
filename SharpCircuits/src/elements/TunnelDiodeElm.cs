@@ -18,9 +18,7 @@ namespace SharpCircuit {
 
 		private double lastvoltdiff;
 		
-		public override bool nonLinear() {
-			return true;
-		}
+		public override bool nonLinear() { return true; }
 
 		public override void reset() {
 			lastvoltdiff = lead_volt[0] = lead_volt[1] = 0;
