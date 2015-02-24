@@ -7,6 +7,10 @@ Most of the circuit elements are untested. Initial testing suggests that the maj
 
 Licence: MIT/Boost C++
 
+**DISCLAIMER**
+
+This project is rated 'H' for hobbyist, I am not an electrical engineer! The tests in this project compare the output of the simulation to values extracted from falstad's original applet, they have not been independently verified for mathematical or experimental rigour.
+
 ## ToDo
 
 - Test everything!
