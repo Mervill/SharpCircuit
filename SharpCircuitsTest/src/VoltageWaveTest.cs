@@ -21,12 +21,12 @@ namespace SharpCircuitTest {
 		public void ACWaveTest() {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
+			var voltage0 = sim.Create<VoltageInput>(Voltage.WaveType.AC);
 
-			var res0 = sim.Create<ResistorElm>();
-			var ground0 = sim.Create<GroundElm>();
+			var res0 = sim.Create<Resistor>();
+			var ground0 = sim.Create<Ground>();
 
-			sim.Connect(voltage0.leadVoltage, res0.leadIn);
+			sim.Connect(voltage0.leadPos, res0.leadIn);
 			sim.Connect(res0.leadOut, ground0.leadIn);
 
 			var resScope0 = sim.Watch(res0);
@@ -63,12 +63,12 @@ namespace SharpCircuitTest {
 		public void SquareWaveTest() {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.SQUARE);
+			var voltage0 = sim.Create<VoltageInput>(Voltage.WaveType.SQUARE);
 
-			var res0 = sim.Create<ResistorElm>();
-			var ground0 = sim.Create<GroundElm>();
+			var res0 = sim.Create<Resistor>();
+			var ground0 = sim.Create<Ground>();
 
-			sim.Connect(voltage0.leadVoltage, res0.leadIn);
+			sim.Connect(voltage0.leadPos, res0.leadIn);
 			sim.Connect(res0.leadOut, ground0.leadIn);
 
 			var resScope0 = sim.Watch(res0);

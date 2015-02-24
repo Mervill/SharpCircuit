@@ -278,11 +278,9 @@ namespace SharpCircuit {
 		}
 
 		public void analyze() {
-
+			
 			if(elements.Count == 0)
 				return;
-
-			ICircuitElement voltageElm = null;
 
 			nodeList.Clear();
 			List<bool> internalList = new List<bool>();
@@ -294,22 +292,24 @@ namespace SharpCircuit {
 			};
 
 			#region //// Look for Voltage or Ground element ////
-			// The node at pos 0 in the nodeList acts as the 'ground' node.
+			// Search the circuit for a Ground, or Voltage sourcre
+			ICircuitElement voltageElm = null;
 			bool gotGround = false;
 			bool gotRail = false;
 			for(int i = 0; i != elements.Count; i++)
 			{
-				ICircuitElement ce = elements[i];
-				if(ce is GroundElm) {
+				ICircuitElement elem = elements[i];
+				if(elem is Ground) {
 					gotGround = true;
 					break;
 				}
 
-				if(ce is VoltageInputElm)
+				if(elem is VoltageInput)
 					gotRail = true;
 
-				if(ce is VoltageElm && voltageElm == null)
-					voltageElm = ce;
+				if(elem is Voltage && voltageElm == null)
+					voltageElm = elem;
+					
 			}
 
 			// If no ground and no rails, then the voltage elm's first terminal is ground.
@@ -318,11 +318,13 @@ namespace SharpCircuit {
 				long[] ndxs = nodeMesh[elm_ndx];
 				pushNode(ndxs[0], false);
 			} else {
-				// If the circuit contains no gound or voltage elements,
-				// push a temporary node to the node list.
+				// If the circuit contains a ground, rail, or voltage
+				// element, push a temporary node to the node list.
 				pushNode(snowflake.NextId(), false);
 			}
 			#endregion
+
+			// At this point, there is 1 node in the list, the special `global ground` node.
 
 			#region //// Nodes and Voltage Sources ////
 			int vscount = 0; // Number of voltage sources
@@ -342,17 +344,23 @@ namespace SharpCircuit {
 				
 				// For each lead in the element
 				for(int leadX = 0; leadX != leads; leadX++) {
-					long leadNode = nodeMesh[i][leadX];        // Id of the node at leadX
+					long leadNode = nodeMesh[i][leadX];        // Id of the node leadX is connected too
 					int node_ndx = nodeList.IndexOf(leadNode); // Index of the leadNode in the nodeList
 					if(node_ndx == -1) {
+						// If the nodeList doesn't contain the node, push it
+						// onto the list and assign it's new index to the lead.
 						elm.setLeadNode(leadX, nodeList.Count);
 						pushNode(leadNode, false);
 					} else {
+						// Otherwise, assign the lead the index of 
+						// the node in the nodeList.
 						elm.setLeadNode(leadX, node_ndx);
-						// if it's the ground node, make sure the 
-						// node voltage is 0, cause it may not get set later
-						if(leadNode == 0)
-							elm.setLeadVoltage(leadX, 0);
+
+						if(leadNode == 0) {
+							// if it's the ground node, make sure the 
+							// node voltage is 0, cause it may not get set later
+							elm.setLeadVoltage(leadX, 0); // TODO: ??
+						}
 					}
 				}
 				
@@ -368,17 +376,25 @@ namespace SharpCircuit {
 			}
 			#endregion
 
-			// == Determine if circuit is nonlinear
+			// == Creeate the voltageSources array.
+			// Also determine if circuit is nonlinear.
+
+			// VoltageSourceId -> ICircuitElement map
 			voltageSources = new ICircuitElement[vscount];
 			vscount = 0;
 
 			circuitNonLinear = false;
-			for(int i = 0; i != elements.Count; i++) {
-				ICircuitElement ce = elements[i];
-				if(ce.nonLinear()) circuitNonLinear = true;
-				for(int leadX = 0; leadX != ce.getVoltageSourceCount(); leadX++) {
-					voltageSources[vscount] = ce;
-					ce.setVoltageSource(leadX, vscount++);
+			//for(int i = 0; i != elements.Count; i++) {
+			//	ICircuitElement elem = elements[i];
+			foreach(ICircuitElement elem in elements){
+				
+				if(elem.nonLinear()) circuitNonLinear = true;
+
+				// Assign each votage source in the element a globally unique id,
+				// (the index of the next open slot in voltageSources)
+				for(int leadX = 0; leadX != elem.getVoltageSourceCount(); leadX++) {
+					voltageSources[vscount] = elem; 
+					elem.setVoltageSource(leadX, vscount++);
 				}
 			}
 
@@ -472,14 +488,14 @@ namespace SharpCircuit {
 				}
 
 				// look for current sources with no current path
-				if(ce is CurrentSourceElm) {
+				if(ce is CurrentSource) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.INDUCT, ce, ce.getLeadNode(1));
 					if(!fpi.findPath(ce.getLeadNode(0)))
 						panic("No path for current source!", ce);
 				}
 
 				// look for voltage source loops
-				if((ce is VoltageElm && ce.getLeadCount() == 2) || ce is WireElm) {
+				if((ce is Voltage && ce.getLeadCount() == 2) || ce is Wire) {
 					FindPathInfo fpi = new FindPathInfo(this, FindPathInfo.PathType.VOLTAGE, ce, ce.getLeadNode(1));
 					if(fpi.findPath(ce.getLeadNode(0)))
 						panic("Voltage source/wire loop with no resistance!", ce);
@@ -820,6 +836,7 @@ namespace SharpCircuit {
 		// gaussian elimination. On entry, a[0..n-1][0..n-1] is the
 		// matrix to be factored. ipvt[] returns an integer vector of pivot
 		// indices, used in the lu_solve() routine.
+		// http://en.wikipedia.org/wiki/Crout_matrix_decomposition
 		public static bool lu_factor(double[][] a, int n, int[] ipvt) {
 			double[] scaleFactors;
 			int i, j, k;
@@ -977,18 +994,18 @@ namespace SharpCircuit {
 						continue;
 
 					if(type == PathType.INDUCT)
-						if(ce is CurrentSourceElm)
+						if(ce is CurrentSource)
 							continue;
 
 					if(type == PathType.VOLTAGE)
-						if(!(ce.isWire() || ce is VoltageElm))
+						if(!(ce.isWire() || ce is Voltage))
 							continue;
 
 					if(type == PathType.SHORT && !ce.isWire())
 						continue;
 
 					if(type == PathType.CAP_V)
-						if(!(ce.isWire() || ce is CapacitorElm || ce is VoltageElm))
+						if(!(ce.isWire() || ce is CapacitorElm || ce is Voltage))
 							continue;
 
 					if(n1 == 0) {

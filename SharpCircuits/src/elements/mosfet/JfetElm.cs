@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class JfetElm : MosfetElm {
+	public class JfetElm : Mosfet {
 		
 		public JfetElm(bool pnpflag) : base(pnpflag) {
 

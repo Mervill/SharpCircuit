@@ -15,11 +15,11 @@ namespace SharpCircuitTest {
 		public void SimpleDiodeTest() {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
+			var voltage0 = sim.Create<VoltageInput>(Voltage.WaveType.AC);
 			var diode = sim.Create<DiodeElm>();
-			var ground = sim.Create<GroundElm>();
+			var ground = sim.Create<Ground>();
 
-			sim.Connect(voltage0.leadVoltage, diode.leadIn);
+			sim.Connect(voltage0.leadPos, diode.leadIn);
 			sim.Connect(diode.leadOut, ground.leadIn);
 
 			var diodeScope = sim.Watch(diode);
@@ -67,10 +67,10 @@ namespace SharpCircuitTest {
 
 			Circuit sim = new Circuit();
 			
-			VoltageElm voltage0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			Voltage voltage0 = sim.Create<Voltage>(Voltage.WaveType.AC);
 			DiodeElm diode0 = sim.Create<DiodeElm>();
-			ResistorElm res0 = sim.Create<ResistorElm>(640);
-			WireElm wire0 = sim.Create<WireElm>();
+			Resistor res0 = sim.Create<Resistor>(640);
+			Wire wire0 = sim.Create<Wire>();
 
 			sim.Connect(voltage0, 1, diode0, 0);
 			sim.Connect(diode0, 1, res0, 0);

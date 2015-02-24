@@ -14,11 +14,11 @@ namespace SharpCircuitTest {
 		public void CapacitorTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<DCVoltageElm>();
+			var volt0 = sim.Create<DCVoltageSource>();
 			var cap0 = sim.Create<CapacitorElm>(2E-4);
-			var res0 = sim.Create<ResistorElm>();
+			var res0 = sim.Create<Resistor>();
 
-			var switch0 = sim.Create<Switch2Elm>();
+			var switch0 = sim.Create<SwitchSPDT>();
 
 			/*sim.Connect(volt0, 1, switch0, 1);
 			sim.Connect(switch0, 1, switch0, 1);

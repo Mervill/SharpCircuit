@@ -10,6 +10,16 @@ namespace SharpCircuitTest {
 	[TestFixture]
 	public class ChipTest {
 
+		[Test]
+		public void CounterTest() {
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+
+			var counter0 = sim.Create<CounterElm>();
+		}
+
 		[TestCase(0, 0, 0)]
 		[TestCase(1, 0, 1)]
 		[TestCase(0, 1, 1)]
@@ -17,13 +27,13 @@ namespace SharpCircuitTest {
 		public void HalfAdderTest(int in0, int in1, int i0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
 
-			var chip0 = sim.Create<HalfAdderElm>();
+			var chip0 = sim.Create<HalfAdder>();
 
-			var logicOut0 = sim.Create<LogicOutputElm>();
-			var logicOut1 = sim.Create<LogicOutputElm>();
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0.leadOut, chip0.leadIn0);
 			sim.Connect(logicIn1.leadOut, chip0.leadIn1);
@@ -56,14 +66,14 @@ namespace SharpCircuitTest {
 		public void FullAdderTest(int in0, int in1, int in2, int i0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicIn2 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicIn2 = sim.Create<LogicInput>();
 
-			var chip0 = sim.Create<FullAdderElm>();
+			var chip0 = sim.Create<FullAdder>();
 
-			var logicOut0 = sim.Create<LogicOutputElm>();
-			var logicOut1 = sim.Create<LogicOutputElm>();
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0.leadOut, chip0.leadIn0);
 			sim.Connect(logicIn1.leadOut, chip0.leadIn1);
@@ -89,7 +99,56 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void DFlipFlopTest() {
-			Assert.Ignore("Not Implemented!");
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+
+			var dflip0 = sim.Create<DFlipFlop>();
+
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
+
+			sim.Connect(logicIn0.leadOut, dflip0.leadD);
+			sim.Connect(logicIn1.leadOut, dflip0.leadCLK);
+
+			sim.Connect(logicOut0.leadIn, dflip0.leadQ);
+			sim.Connect(logicOut0.leadIn, dflip0.leadQL);
+
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("D  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			logicIn0.toggle();
+			logicIn1.toggle();
+			sim.analyze();
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("D  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			logicIn0.toggle();
+			logicIn1.toggle();
+			sim.analyze();
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("D  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			Assert.Ignore();
 		}
 
 		[Test]
@@ -99,7 +158,57 @@ namespace SharpCircuitTest {
 
 		[Test]
 		public void TFlipFlopTest() {
-			Assert.Ignore("Not Implemented!");
+			Circuit sim = new Circuit();
+
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+
+			var dflip0 = sim.Create<TFlipFlopElm>();
+
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
+
+			sim.Connect(logicIn0.leadOut, dflip0.leadT);
+			sim.Connect(logicIn1.leadOut, dflip0.leadCLK);
+
+			sim.Connect(logicOut0.leadIn, dflip0.leadQ);
+			sim.Connect(logicOut0.leadIn, dflip0.leadQL);
+
+			logicIn0.toggle();
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("T  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			//logicIn0.toggle();
+			logicIn1.toggle();
+			sim.analyze();
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("T  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			//logicIn0.toggle();
+			logicIn1.toggle();
+			sim.analyze();
+			sim.doTicks(200);
+
+			Debug.Log();
+			Debug.Log("T  ", dflip0.getLeadVoltage(0));
+			Debug.Log("CLK", dflip0.getLeadVoltage(3));
+			Debug.Log(" Q ", dflip0.getLeadVoltage(1));
+			Debug.Log("|Q ", dflip0.getLeadVoltage(2));
+			Debug.Log();
+
+			Assert.Ignore();
 		}
 
 	}

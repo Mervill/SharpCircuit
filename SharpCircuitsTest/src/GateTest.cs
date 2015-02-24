@@ -24,11 +24,11 @@ namespace SharpCircuitTest {
 
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicOut = sim.Create<LogicOutput>();
 
-			var gate = sim.Create<AndGateElm>();
+			var gate = sim.Create<AndGate>();
 
 			sim.Connect(logicIn0, 0, gate, 0);
 			sim.Connect(logicIn1, 0, gate, 1);
@@ -39,10 +39,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
-			sim.analyze();
 
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.analyze();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 
@@ -55,11 +54,11 @@ namespace SharpCircuitTest {
 		public void OrGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicOut = sim.Create<LogicOutput>();
 
-			var gate = sim.Create<OrGateElm>();
+			var gate = sim.Create<OrGate>();
 
 			sim.Connect(logicIn0, 0, gate, 0);
 			sim.Connect(logicIn1, 0, gate, 1);
@@ -67,10 +66,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
@@ -82,11 +80,11 @@ namespace SharpCircuitTest {
 		public void NandGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicOut = sim.Create<LogicOutput>();
 
-			var gate = sim.Create<NandGateElm>();
+			var gate = sim.Create<NandGate>();
 
 			sim.Connect(logicIn0, 0, gate, 0);
 			sim.Connect(logicIn1, 0, gate, 1);
@@ -94,10 +92,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
-			sim.analyze();
 
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.analyze();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
@@ -109,11 +106,11 @@ namespace SharpCircuitTest {
 		public void NorGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicOut = sim.Create<LogicOutput>();
 
-			var gate = sim.Create<NorGateElm>();
+			var gate = sim.Create<NorGate>();
 
 			sim.Connect(logicIn0, 0, gate, 0);
 			sim.Connect(logicIn1, 0, gate, 1);
@@ -121,10 +118,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
@@ -136,11 +132,11 @@ namespace SharpCircuitTest {
 		public void XorGateTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicOut = sim.Create<LogicOutput>();
 
-			var gate = sim.Create<XorGateElm>();
+			var gate = sim.Create<XorGate>();
 
 			sim.Connect(logicIn0, 0, gate, 0);
 			sim.Connect(logicIn1, 0, gate, 1);
@@ -148,11 +144,10 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
-
+			sim.doTicks(100);
+			
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
 
@@ -163,15 +158,15 @@ namespace SharpCircuitTest {
 		public void NandXorTest(int in0, int in1, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
 
-			var nand0 = sim.Create<NandGateElm>();
-			var nand1 = sim.Create<NandGateElm>();
-			var nand2 = sim.Create<NandGateElm>();
-			var nand3 = sim.Create<NandGateElm>();
+			var nand0 = sim.Create<NandGate>();
+			var nand1 = sim.Create<NandGate>();
+			var nand2 = sim.Create<NandGate>();
+			var nand3 = sim.Create<NandGate>();
 
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicOut = sim.Create<LogicOutput>();
 
 			// upper input
 			sim.Connect(logicIn0, 0, nand1, 0);
@@ -193,10 +188,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}
@@ -208,14 +202,14 @@ namespace SharpCircuitTest {
 		public void HalfAdderTest(int in0, int in1, int i0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
 
-			var andGate = sim.Create<AndGateElm>();
-			var xorGate = sim.Create<XorGateElm>();
+			var andGate = sim.Create<AndGate>();
+			var xorGate = sim.Create<XorGate>();
 
-			var logicOut0 = sim.Create<LogicOutputElm>();
-			var logicOut1 = sim.Create<LogicOutputElm>();
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0, 0, andGate, 1);
 			sim.Connect(logicIn0, 0, xorGate, 1);
@@ -228,10 +222,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			int i = 0;
 			if(logicOut0.isHigh()) i += 2;
@@ -251,20 +244,20 @@ namespace SharpCircuitTest {
 		public void FullAdderTest(int in0, int in1, int in2, int i0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicIn2 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicIn2 = sim.Create<LogicInput>();
 
-			var andGate0 = sim.Create<AndGateElm>();
-			var andGate1 = sim.Create<AndGateElm>();
+			var andGate0 = sim.Create<AndGate>();
+			var andGate1 = sim.Create<AndGate>();
 			
-			var orGate0 = sim.Create<OrGateElm>();
+			var orGate0 = sim.Create<OrGate>();
 
-			var xorGate0 = sim.Create<XorGateElm>();
-			var xorGate1 = sim.Create<XorGateElm>();
+			var xorGate0 = sim.Create<XorGate>();
+			var xorGate1 = sim.Create<XorGate>();
 
-			var logicOut0 = sim.Create<LogicOutputElm>();
-			var logicOut1 = sim.Create<LogicOutputElm>();
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0, 0, andGate1, 0);
 			sim.Connect(logicIn0, 0, xorGate1, 0);
@@ -287,10 +280,9 @@ namespace SharpCircuitTest {
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
 			logicIn2.setPosition(in2);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			int i = 0;
 			if(logicOut0.isHigh()) i += 2;
@@ -306,21 +298,21 @@ namespace SharpCircuitTest {
 		public void OneOfFourDecoderTest(int in0, int in1, int i0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
 
-			var invert0 = sim.Create<InverterElm>();
-			var invert1 = sim.Create<InverterElm>();
+			var invert0 = sim.Create<Inverter>();
+			var invert1 = sim.Create<Inverter>();
 
-			var and0 = sim.Create<AndGateElm>();
-			var and1 = sim.Create<AndGateElm>();
-			var and2 = sim.Create<AndGateElm>();
-			var and3 = sim.Create<AndGateElm>();
+			var and0 = sim.Create<AndGate>();
+			var and1 = sim.Create<AndGate>();
+			var and2 = sim.Create<AndGate>();
+			var and3 = sim.Create<AndGate>();
 
-			var logicOut0 = sim.Create<LogicOutputElm>();
-			var logicOut1 = sim.Create<LogicOutputElm>();
-			var logicOut2 = sim.Create<LogicOutputElm>();
-			var logicOut3 = sim.Create<LogicOutputElm>();
+			var logicOut0 = sim.Create<LogicOutput>();
+			var logicOut1 = sim.Create<LogicOutput>();
+			var logicOut2 = sim.Create<LogicOutput>();
+			var logicOut3 = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0, 0, and0, 0);
 			sim.Connect(logicIn0, 0, and1, 0);
@@ -343,10 +335,9 @@ namespace SharpCircuitTest {
 
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			int i = 0;
 			if(logicOut0.isHigh()) i += 4;
@@ -366,7 +357,82 @@ namespace SharpCircuitTest {
 		[TestCase(0, 1, 0, false)]
 		[TestCase(0, 1, 1, true )]
 		public void TwoToOneMuxTest(int in0, int in1, int in2, bool out0) {
-			Assert.Ignore("Not Implemented!");
+			Circuit sim = new Circuit();
+
+			// tri-state buffer 0
+
+			var volt0 = sim.Create<VoltageInput>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var nand0 = sim.Create<NandGate>();
+			var and0 = sim.Create<AndGate>();
+			var invert0 = sim.Create<Inverter>();
+			var pmos0 = sim.Create<PMosfet>();
+			var nmos0 = sim.Create<NMosfet>();
+			var grnd0 = sim.Create<Ground>();
+
+			sim.Connect(nand0, 0, and0, 1);
+			sim.Connect(nand0, 1, logicIn0, 0);
+			sim.Connect(nand0, 1, invert0, 0);
+			sim.Connect(invert0, 1, and0, 0);
+
+			sim.Connect(logicIn0.leadOut, invert0.leadIn);
+
+			sim.Connect(pmos0.leadGate, nand0.leadOut);
+			sim.Connect(nmos0.leadGate, and0.leadOut);
+			sim.Connect(volt0.leadPos, pmos0.leadSrc);
+			sim.Connect(pmos0.leadDrain, nmos0.leadDrain);
+			sim.Connect(nmos0.leadSrc, grnd0.leadIn);
+
+			// tri-state buffer 1
+
+			var volt1 = sim.Create<VoltageInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var nand1 = sim.Create<NandGate>();
+			var and1 = sim.Create<AndGate>();
+			var invert1 = sim.Create<Inverter>();
+			var pmos1 = sim.Create<PMosfet>();
+			var nmos1 = sim.Create<NMosfet>();
+			var grnd1 = sim.Create<Ground>();
+
+			sim.Connect(nand1, 0, and1, 1);
+			sim.Connect(nand1, 1, logicIn1, 0);
+			sim.Connect(nand1, 1, invert1, 0);
+			sim.Connect(invert1, 1, and1, 0);
+
+			sim.Connect(logicIn1.leadOut, invert1.leadIn);
+			
+			sim.Connect(pmos1.leadGate, nand1.leadOut);
+			sim.Connect(nmos1.leadGate, and1.leadOut);
+			sim.Connect(volt1.leadPos, pmos1.leadSrc);
+			sim.Connect(pmos1.leadDrain, nmos1.leadDrain);
+			sim.Connect(nmos1.leadSrc, grnd1.leadIn);
+
+			//
+
+			var invert2 = sim.Create<Inverter>();
+			var logicIn2 = sim.Create<LogicInput>();
+			var logicOut0 = sim.Create<LogicOutput>();
+
+			var or0 = sim.Create<OrGate>();
+
+			sim.Connect(invert2, 1, nand0, 0);
+			sim.Connect(invert2, 1, and0, 1);
+			sim.Connect(invert2, 0, nand1, 0);
+			sim.Connect(invert2, 0, and1, 1);
+
+			sim.Connect(logicIn2, 0, and1, 1);
+			sim.Connect(or0, 0, nmos0, 2);
+			sim.Connect(or0, 1, nmos1, 2);
+			sim.Connect(or0.leadOut, logicOut0.leadIn);
+
+			logicIn0.setPosition(in0);
+			logicIn1.setPosition(in1);
+			logicIn2.setPosition(in2);
+
+			sim.analyze();
+			sim.doTicks(100);
+
+			Assert.AreEqual(out0, logicOut0.isHigh());
 		}
 
 		[TestCase(0, 0, 0, false)]
@@ -380,17 +446,17 @@ namespace SharpCircuitTest {
 		public void MajorityLogicTest(int in0, int in1, int in2, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicIn1 = sim.Create<LogicInputElm>();
-			var logicIn2 = sim.Create<LogicInputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicIn1 = sim.Create<LogicInput>();
+			var logicIn2 = sim.Create<LogicInput>();
 			
-			var nand0 = sim.Create<NandGateElm>();
-			var nand1 = sim.Create<NandGateElm>();
-			var nand2 = sim.Create<NandGateElm>();
-			var nand3 = sim.Create<NandGateElm>();
+			var nand0 = sim.Create<NandGate>();
+			var nand1 = sim.Create<NandGate>();
+			var nand2 = sim.Create<NandGate>();
+			var nand3 = sim.Create<NandGate>();
 			nand3.inputCount = 3;
 
-			var logicOut = sim.Create<LogicOutputElm>();
+			var logicOut = sim.Create<LogicOutput>();
 
 			sim.Connect(logicIn0, 0, nand0, 0);
 			sim.Connect(logicIn0, 0, nand2, 0);
@@ -410,10 +476,9 @@ namespace SharpCircuitTest {
 			logicIn0.setPosition(in0);
 			logicIn1.setPosition(in1);
 			logicIn2.setPosition(in2);
+			
 			sim.analyze();
-
-			for(int x = 1; x <= 100; x++)
-				sim.doTick();
+			sim.doTicks(100);
 
 			Assert.AreEqual(out0, logicOut.isHigh());
 		}

@@ -6,7 +6,7 @@ namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
-	public class SipoShiftElm : ChipElm {
+	public class SipoShiftElm : Chip {
 
 		// This has to be a short because there's no unsigned byte
 		// and it's screwing with my code

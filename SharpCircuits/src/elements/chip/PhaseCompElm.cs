@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class PhaseCompElm : ChipElm {
+	public class PhaseCompElm : Chip {
 
 		private bool ff1, ff2;
 

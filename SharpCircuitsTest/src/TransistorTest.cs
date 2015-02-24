@@ -13,25 +13,25 @@ namespace SharpCircuitTest {
 		[Test]
 		public void NPNTransistorTest() {
 			Circuit sim = new Circuit();
-			
-			var npn0 = sim.Create<NPNTransistorElm>();
 
-			var baseVoltage = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var npn0 = sim.Create<Transistor>(false);
+
+			var baseVoltage = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			baseVoltage.maxVoltage = 0.7025;
 
-			var collectorVoltage = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var collectorVoltage = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			collectorVoltage.maxVoltage = 2;
 
-			var ground = sim.Create<GroundElm>();
+			var ground = sim.Create<Ground>();
 
-			var baseWire = sim.Create<WireElm>();
-			var collectorWire = sim.Create<WireElm>();
-			var emitterWire = sim.Create<WireElm>();
+			var baseWire = sim.Create<Wire>();
+			var collectorWire = sim.Create<Wire>();
+			var emitterWire = sim.Create<Wire>();
 
-			sim.Connect(baseVoltage.leadVoltage, baseWire.leadIn);
+			sim.Connect(baseVoltage.leadPos, baseWire.leadIn);
 			sim.Connect(baseWire.leadOut, npn0.leadBase);
 			
-			sim.Connect(collectorVoltage.leadVoltage, collectorWire.leadIn);
+			sim.Connect(collectorVoltage.leadPos, collectorWire.leadIn);
 			sim.Connect(collectorWire.leadOut, npn0.leadCollector);
 
 			sim.Connect(ground.leadIn, emitterWire.leadIn);
@@ -47,29 +47,29 @@ namespace SharpCircuitTest {
 		[Test]
 		public void PNPTransistorTest() {
 			Circuit sim = new Circuit();
-			
-			var pnp0 = sim.Create<PNPTransistorElm>();
 
-			var baseVoltage = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var pnp0 = sim.Create<Transistor>(true);
+
+			var baseVoltage = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			baseVoltage.maxVoltage = 1.3;
 
-			var collectorVoltage = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var collectorVoltage = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			collectorVoltage.maxVoltage = 2;
 
-			var emitterVoltage = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var emitterVoltage = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			emitterVoltage.maxVoltage = 2;
 
-			var baseWire = sim.Create<WireElm>();
-			var collectorWire = sim.Create<WireElm>();
-			var emitterWire = sim.Create<WireElm>();
+			var baseWire = sim.Create<Wire>();
+			var collectorWire = sim.Create<Wire>();
+			var emitterWire = sim.Create<Wire>();
 
-			sim.Connect(baseVoltage.leadVoltage, baseWire.leadIn);
+			sim.Connect(baseVoltage.leadPos, baseWire.leadIn);
 			sim.Connect(baseWire.leadOut, pnp0.leadBase);
 
-			sim.Connect(collectorVoltage.leadVoltage, collectorWire.leadIn);
+			sim.Connect(collectorVoltage.leadPos, collectorWire.leadIn);
 			sim.Connect(collectorWire.leadOut, pnp0.leadCollector);
 
-			sim.Connect(emitterVoltage.leadVoltage, emitterWire.leadIn);
+			sim.Connect(emitterVoltage.leadPos, emitterWire.leadIn);
 			sim.Connect(emitterWire.leadOut, pnp0.leadEmitter);
 
 			sim.doTicks(100);
@@ -84,14 +84,14 @@ namespace SharpCircuitTest {
 		public void SwitchTest(bool In0) {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<DCVoltageElm>();
+			var volt0 = sim.Create<DCVoltageSource>();
 
-			var res0 = sim.Create<ResistorElm>(10000);
-			var res1 = sim.Create<ResistorElm>(300);
+			var res0 = sim.Create<Resistor>(10000);
+			var res1 = sim.Create<Resistor>(300);
 
-			var switch0 = sim.Create<SwitchElm>();
+			var switch0 = sim.Create<SwitchSPST>();
 
-			var npn0 = sim.Create<NPNTransistorElm>();
+			var npn0 = sim.Create<Transistor>(false);
 
 			sim.Connect(volt0.leadPos, res0.leadIn);
 			sim.Connect(res0.leadOut, volt0.leadNeg);
@@ -140,20 +140,20 @@ namespace SharpCircuitTest {
 		public void DarlingtonPairTest(bool In0, double i0) {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<VoltageInputElm>();
+			var volt0 = sim.Create<VoltageInput>();
 
-			var res0 = sim.Create<ResistorElm>(2000000);
-			var res1 = sim.Create<ResistorElm>(300);
+			var res0 = sim.Create<Resistor>(2000000);
+			var res1 = sim.Create<Resistor>(300);
 
-			var switch0 = sim.Create<SwitchElm>();
+			var switch0 = sim.Create<SwitchSPST>();
 
-			var npn0 = sim.Create<NPNTransistorElm>();
-			var npn1 = sim.Create<NPNTransistorElm>();
+			var npn0 = sim.Create<Transistor>(false);
+			var npn1 = sim.Create<Transistor>(false);
 
-			var groun0 = sim.Create<GroundElm>();
+			var groun0 = sim.Create<Ground>();
 
-			sim.Connect(volt0.leadVoltage, res0.leadIn);
-			sim.Connect(volt0.leadVoltage, res1.leadIn);
+			sim.Connect(volt0.leadPos, res0.leadIn);
+			sim.Connect(volt0.leadPos, res1.leadIn);
 
 			sim.Connect(switch0, 0, res0, 1);
 

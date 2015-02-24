@@ -4,7 +4,13 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class JKFlipFlopElm : ChipElm {
+	public class JKFlipFlopElm : Chip {
+
+		public Circuit.Lead leadJ { get { return lead0; } }
+		public Circuit.Lead leadCLK { get { return lead1; } }
+		public Circuit.Lead leadK { get { return new Circuit.Lead(this, 2); } }
+		public Circuit.Lead leadQ { get { return new Circuit.Lead(this, 3); } }
+		public Circuit.Lead leadQL { get { return new Circuit.Lead(this, 3); } }
 
 		public bool hasResetPin {
 			get {
@@ -19,10 +25,6 @@ namespace SharpCircuit {
 
 		private bool _hasReset;
 
-		public JKFlipFlopElm() : base() {
-
-		}
-
 		public override String getChipName() {
 			return "JK flip-flop";
 		}
@@ -30,12 +32,16 @@ namespace SharpCircuit {
 		public override void setupPins() {
 			pins = new Pin[getLeadCount()];
 			pins[0] = new Pin("J");
+
 			pins[1] = new Pin("");
 			pins[1].clock = true;
+
 			pins[2] = new Pin("K");
-			pins[3] = new Pin("Q");
+
+			pins[3] = new Pin(" Q");
 			pins[3].output = true;
-			pins[4] = new Pin("Q");
+
+			pins[4] = new Pin("|Q");
 			pins[4].output = true;
 			pins[4].lineOver = true;
 

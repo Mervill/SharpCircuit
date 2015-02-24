@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class LatchElm : ChipElm {
+	public class LatchElm : Chip {
 
 		private int loadPin;
 		private bool lastLoad = false;

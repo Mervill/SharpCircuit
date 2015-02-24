@@ -6,7 +6,7 @@ namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
-	public class SeqGenElm : ChipElm {
+	public class SeqGenElm : Chip {
 
 		public bool Bit0Set {
 			get {

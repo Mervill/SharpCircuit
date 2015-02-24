@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class CounterElm : ChipElm {
+	public class CounterElm : Chip {
 
 		public bool hasEnable {
 			get {
@@ -19,10 +19,6 @@ namespace SharpCircuit {
 		public bool invertReset { get; set; }
 
 		private bool _hasEnable;
-
-		public CounterElm() : base() {
-
-		}
 
 		public override bool needsBits() {
 			return true;

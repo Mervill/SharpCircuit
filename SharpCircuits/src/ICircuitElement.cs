@@ -51,12 +51,20 @@ namespace SharpCircuit {
 
 	public static class ICircuitComponentExtensions {
 
-		public static ScopeFrame GetScopeFrame(this ICircuitElement component, double time) {
+		public static ScopeFrame GetScopeFrame(this ICircuitElement elem, double time) {
 			return new ScopeFrame {
 				time = time,
-				current = component.getCurrent(),
-				voltage = component.getVoltageDelta(),
+				current = elem.getCurrent(),
+				voltage = elem.getVoltageDelta(),
 			};
+		}
+
+		public static string GetCurrentString(this ICircuitElement elem) {
+			return SIUnits.Current(elem.getCurrent());
+		}
+
+		public static string GetVoltageString(this ICircuitElement elem) {
+			return SIUnits.Voltage(elem.getVoltageDelta());
 		}
 
 	}

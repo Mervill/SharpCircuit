@@ -6,7 +6,7 @@ namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
-	public class DeMultiplexerElm : ChipElm {
+	public class DeMultiplexerElm : Chip {
 
 		public DeMultiplexerElm() : base() {
 

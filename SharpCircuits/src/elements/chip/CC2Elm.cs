@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class CC2Elm : ChipElm {
+	public class CC2Elm : Chip {
 
 		private double gain;
 

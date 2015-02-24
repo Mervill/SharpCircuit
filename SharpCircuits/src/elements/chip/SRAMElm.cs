@@ -6,7 +6,7 @@ namespace SharpCircuit {
 
 	// Contributed by Edward Calver
 
-	public class SRAMElm : ChipElm {
+	public class SRAMElm : Chip {
 
 		public SRAMElm() : base() {
 			short i;

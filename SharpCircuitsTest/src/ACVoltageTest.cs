@@ -23,13 +23,13 @@ namespace SharpCircuitTest {
 		public void SimpleACVoltageTest(double frequency) {
 			Circuit sim = new Circuit();
 
-			var voltage0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
+			var voltage0 = sim.Create<VoltageInput>(Voltage.WaveType.AC);
 			voltage0.frequency = frequency;
 
-			var resistor = sim.Create<ResistorElm>();
-			var ground = sim.Create<GroundElm>();
+			var resistor = sim.Create<Resistor>();
+			var ground = sim.Create<Ground>();
 
-			sim.Connect(voltage0.leadVoltage, resistor.leadIn);
+			sim.Connect(voltage0.leadPos, resistor.leadIn);
 			sim.Connect(resistor.leadOut, ground.leadIn);
 
 			var voltScope = sim.Watch(voltage0);
@@ -75,10 +75,10 @@ namespace SharpCircuitTest {
 		public void CapacitorCapacitanceTest(double capacitance, double current) {
 			Circuit sim = new Circuit();
 
-			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<Voltage>(Voltage.WaveType.AC);
 			source0.frequency = 80;
 
-			var resistor0 = sim.Create<ResistorElm>(200);
+			var resistor0 = sim.Create<Resistor>(200);
 			var cap0 = sim.Create<CapacitorElm>(capacitance);
 
 			sim.Connect(source0, 1, resistor0, 0);
@@ -109,10 +109,10 @@ namespace SharpCircuitTest {
 		public void CapacitorFrequencyTest(double frequency, double current) {
 			Circuit sim = new Circuit();
 
-			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<Voltage>(Voltage.WaveType.AC);
 			source0.frequency = frequency;
 
-			var resistor0 = sim.Create<ResistorElm>(200);
+			var resistor0 = sim.Create<Resistor>(200);
 			var cap0 = sim.Create<CapacitorElm>(3E-5);
 			
 			sim.Connect(source0, 1, resistor0, 0);
@@ -137,11 +137,11 @@ namespace SharpCircuitTest {
 		public void InductorInductanceTest(double inductance, double current) {
 			Circuit sim = new Circuit();
 
-			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<Voltage>(Voltage.WaveType.AC);
 			source0.frequency = 80;
 			source0.phaseShift = 90;
 
-			var resistor0 = sim.Create<ResistorElm>(100);
+			var resistor0 = sim.Create<Resistor>(100);
 			var induct0 = sim.Create<InductorElm>(inductance);
 
 			sim.Connect(source0, 1, resistor0, 0);
@@ -166,11 +166,11 @@ namespace SharpCircuitTest {
 		public void InductorFrequencyTest(double frequency, double current) {
 			Circuit sim = new Circuit();
 
-			var source0 = sim.Create<VoltageElm>(VoltageElm.WaveType.AC);
+			var source0 = sim.Create<Voltage>(Voltage.WaveType.AC);
 			source0.frequency = frequency;
 			source0.phaseShift = 90;
 
-			var resistor0 = sim.Create<ResistorElm>(100);
+			var resistor0 = sim.Create<Resistor>(100);
 			var induct0 = sim.Create<InductorElm>(0.4);
 
 			sim.Connect(source0, 1, resistor0, 0);

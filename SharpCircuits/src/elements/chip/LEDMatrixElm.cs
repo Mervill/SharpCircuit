@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class LEDMatrixElm : ChipElm {
+	public class LEDMatrixElm : Chip {
 
 		public bool negateRows { get; set; }
 		public bool negateColumns { get; set; }

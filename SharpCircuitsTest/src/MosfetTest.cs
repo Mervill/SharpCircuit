@@ -14,18 +14,18 @@ namespace SharpCircuitTest {
 		public void NMosfetTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			volt0.maxVoltage = 3.5;
 
-			var volt1 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var volt1 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			volt1.maxVoltage = 5;
 
-			var nmosf0 = sim.Create<NMosfetElm>();
+			var nmosf0 = sim.Create<NMosfet>();
 
-			var grnd0 = sim.Create<GroundElm>();
+			var grnd0 = sim.Create<Ground>();
 
-			sim.Connect(volt0.leadVoltage, nmosf0.leadGate);
-			sim.Connect(volt1.leadVoltage, nmosf0.leadDrain);
+			sim.Connect(volt0.leadPos, nmosf0.leadGate);
+			sim.Connect(volt1.leadPos, nmosf0.leadDrain);
 			sim.Connect(grnd0.leadIn, nmosf0.leadSrc);
 
 			sim.doTicks(100);
@@ -34,24 +34,51 @@ namespace SharpCircuitTest {
 			Assert.AreEqual(0.04, Math.Round(volt1.getCurrent(), 6));
 		}
 
+		[TestCase(1.5, 1.4, true )]
+		[TestCase(1.5, 1.6, false)]
+		public void NMosfetTheshholdTest(double in0, double in1, bool in2) {
+			Circuit sim = new Circuit();
+
+			var nmosf0 = sim.Create<NMosfet>();
+			nmosf0.threshold = in0;
+
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
+			volt0.maxVoltage = in1;
+
+			var volt1 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
+			volt1.maxVoltage = 5;
+
+			var grnd0 = sim.Create<Ground>();
+
+			sim.Connect(volt0.leadPos, nmosf0.leadGate);
+			sim.Connect(volt1.leadPos, nmosf0.leadDrain);
+			sim.Connect(grnd0.leadIn, nmosf0.leadSrc);
+
+			sim.doTicks(100);
+
+			double i = Math.Round(nmosf0.getCurrent(), 6);
+			Assert.AreEqual(i == 0, in2);
+			
+		}
+
 		[Test]
 		public void PMosfetTest() {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			volt0.maxVoltage = 2.5;
 
-			var volt1 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var volt1 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			volt1.maxVoltage = 5;
 
-			var volt2 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
+			var volt2 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
 			volt2.maxVoltage = 3;
 
-			var pmosf0 = sim.Create<PMosfetElm>();
+			var pmosf0 = sim.Create<PMosfet>();
 
-			sim.Connect(volt0.leadVoltage, pmosf0.leadGate);
-			sim.Connect(volt1.leadVoltage, pmosf0.leadSrc);
-			sim.Connect(volt2.leadVoltage, pmosf0.leadDrain);
+			sim.Connect(volt0.leadPos, pmosf0.leadGate);
+			sim.Connect(volt1.leadPos, pmosf0.leadSrc);
+			sim.Connect(volt2.leadPos, pmosf0.leadDrain);
 
 			sim.doTicks(100);
 
@@ -64,11 +91,11 @@ namespace SharpCircuitTest {
 		public void SwitchTest(bool in0, double out0) {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
-			var switch0 = sim.Create<SwitchElm>();
-			var res0 = sim.Create<ResistorElm>(300);
-			var nmosf0 = sim.Create<NMosfetElm>();
-			var grnd0 = sim.Create<GroundElm>();
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
+			var switch0 = sim.Create<SwitchSPST>();
+			var res0 = sim.Create<Resistor>(300);
+			var nmosf0 = sim.Create<NMosfet>();
+			var grnd0 = sim.Create<Ground>();
 
 			sim.Connect(volt0, 0, switch0, 0);
 			sim.Connect(volt0, 0, res0, 0);
@@ -94,19 +121,19 @@ namespace SharpCircuitTest {
 		public void CMOSInverterTest(bool in0, bool out0) {
 			Circuit sim = new Circuit();
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var logicOut0 = sim.Create<LogicOutputElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var logicOut0 = sim.Create<LogicOutput>();
 
-			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.DC);
-			var grnd0 = sim.Create<GroundElm>();
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.DC);
+			var grnd0 = sim.Create<Ground>();
 
-			var pmosf0 = sim.Create<PMosfetElm>();
-			var nmosf0 = sim.Create<NMosfetElm>();
+			var pmosf0 = sim.Create<PMosfet>();
+			var nmosf0 = sim.Create<NMosfet>();
 
 			sim.Connect(logicIn0.leadOut, pmosf0.leadGate);
 			sim.Connect(logicIn0.leadOut, nmosf0.leadGate);
 
-			sim.Connect(pmosf0.leadSrc, volt0.leadVoltage);
+			sim.Connect(pmosf0.leadSrc, volt0.leadPos);
 			sim.Connect(pmosf0.leadDrain, nmosf0.leadDrain);
 			sim.Connect(nmosf0.leadSrc, grnd0.leadIn);
 
@@ -134,20 +161,20 @@ namespace SharpCircuitTest {
 		public void CMOSTransmissionGateTest(bool in0, double out0) {
 			Circuit sim = new Circuit();
 
-			var volt0 = sim.Create<VoltageInputElm>(VoltageElm.WaveType.AC);
+			var volt0 = sim.Create<VoltageInput>(Voltage.WaveType.AC);
 			volt0.maxVoltage = 2.5;
 			volt0.bias = 2.5;
 
-			var logicIn0 = sim.Create<LogicInputElm>();
-			var invert0 = sim.Create<InverterElm>();
+			var logicIn0 = sim.Create<LogicInput>();
+			var invert0 = sim.Create<Inverter>();
 
-			var pmosf0 = sim.Create<PMosfetElm>();
-			var nmosf0 = sim.Create<NMosfetElm>();
+			var pmosf0 = sim.Create<PMosfet>();
+			var nmosf0 = sim.Create<NMosfet>();
 
-			var res0 = sim.Create<ResistorElm>();
-			var grnd0 = sim.Create<GroundElm>();
+			var res0 = sim.Create<Resistor>();
+			var grnd0 = sim.Create<Ground>();
 
-			sim.Connect(volt0.leadVoltage, pmosf0.leadDrain);
+			sim.Connect(volt0.leadPos, pmosf0.leadDrain);
 
 			sim.Connect(pmosf0.leadDrain, nmosf0.leadSrc);
 			sim.Connect(pmosf0.leadSrc, nmosf0.leadDrain);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpCircuit {
 
-	public class VarRailElm : VoltageInputElm {
+	public class VarRailElm : VoltageInput {
 
 		public double output { get; set; }
 
@@ -14,7 +14,7 @@ namespace SharpCircuit {
 			waveform = WaveType.VAR;
 		}
 
-		public override double getVoltage(Circuit sim) {
+		protected override double getVoltage(Circuit sim) {
 			frequency = output * (maxVoltage - bias) + bias;
 			return base.getVoltage(sim);
 		}
